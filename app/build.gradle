@@ -1,0 +1,101 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.frogermcs.androiddevmetrics'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
+    defaultConfig {
+        applicationId "com.wut.indoornavigation"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            //TODO change when proguard dependencies will be prepared
+            minifyEnabled false
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            useProguard false
+            minifyEnabled false
+            versionNameSuffix "-DEBUG"
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+def compile_libs = [
+        'com.android.support:appcompat-v7:24.2.1',
+        'com.android.support:design:24.2.1',
+        'com.android.support:support-annotations:24.2.1',
+        'com.google.dagger:dagger:2.6',
+        'io.reactivex:rxandroid:1.2.1',
+        'io.reactivex:rxjava:1.1.9',
+        "com.hannesdorfmann.mosby:mvp:2.0.1",
+        'com.jakewharton:butterknife:8.4.0',
+        'com.jakewharton.timber:timber:4.3.1',
+        'org.parceler:parceler-api:1.1.6',
+        'com.f2prateek.rx.preferences:rx-preferences:1.0.2',
+        'com.jakewharton.threetenabp:threetenabp:1.0.4',
+]
+
+def debug_compile_libs = [
+        'com.nshmura:strictmode-notifier:0.9.3',
+        'com.squareup.leakcanary:leakcanary-android:1.5',
+]
+
+def provided_libs = [
+        'org.projectlombok:lombok:1.16.10',
+        'org.glassfish:javax.annotation:10.0-b28',
+]
+
+def apt_libs = [
+        'com.google.dagger:dagger-compiler:2.6',
+        'com.jakewharton:butterknife-compiler:8.4.0',
+        'org.parceler:parceler:1.1.6',
+]
+
+def test_compile_libs = [
+        'junit:junit:4.12', "org.mockito:mockito-core:1.+",
+]
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile compile_libs
+    debugCompile debug_compile_libs
+    provided provided_libs
+    apt apt_libs
+    testCompile test_compile_libs
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
