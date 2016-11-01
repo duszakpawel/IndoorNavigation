@@ -1,6 +1,8 @@
 package com.wut.indoornavigation.view.base;
 
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -13,8 +15,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
-        injectDependencies();
         unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        injectDependencies();
+        super.onCreate(savedInstanceState);
     }
 
     @Override

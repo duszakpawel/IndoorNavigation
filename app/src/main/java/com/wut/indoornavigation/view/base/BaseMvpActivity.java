@@ -1,6 +1,8 @@
 package com.wut.indoornavigation.view.base;
 
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.LayoutRes;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
@@ -18,8 +20,13 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
-        injectDependencies();
         unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        injectDependencies();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
