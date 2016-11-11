@@ -18,9 +18,9 @@
 </RoomsCollection>
 <StairsCollection>
      <Stairs floor="-1">
-	       <Stair id="0" end="3" />
-               <Stair id="1" end="4" />
-               <Stair id="2" end="4" />
+	       <Stair id="0" endfloor="0" endid="0" />
+               <Stair id="1" endfloor="0" endid="2" />
+               <Stair id="2" endfloor="0" endid="7" />
      </Stairs>
 </StairsCollection>
 <ElevatorsCollection>
@@ -63,8 +63,8 @@
 -                   ~ - P - ~                                                         -                                         -
 -                   -       -                                                         ~ - - - - - - - - - - - - - - D - - - - - ~ - - - - - - - - ~ 
 -                   -       P                                                                                                                     -
-~ - - - - - - - - - ~ - P - ~                                                                                                                     ~ - - - - - - - - - - - - ~
--                                                                                                                                                 -                         -
+-                   -       -                                                                                                                     ~ - - - - - - - - - - - - ~
+~ - - - - - - - - - ~ - P - ~                                                                                                                     -                         -
 -                                                                                                                                                 D                         -
 -                                                                                                                                                 -                         -
 -                                                                                                                                                 -                         -
