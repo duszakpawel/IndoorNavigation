@@ -1,0 +1,67 @@
+<Description>
+    <RoomsCollection>    
+     <Rooms floor="0">
+            <Room>00</Room>
+            <Room>01</Room>
+     </Rooms>
+     <Rooms floor="1">
+            <Room>10</Room>
+            <Room>11</Room>
+            <Room>12</Room>
+     </Rooms>
+</RoomsCollection>
+<StairsCollection>
+     <Stairs floor="0">
+	       <Stair id="0" endfloor="1" endid="0" />
+	       <Stair id="1" endfloor="1" endid="1" />
+     </Stairs>
+     <Stairs floor="1">
+	       <Stair id="0" endfloor="0" endid="0" />
+	       <Stair id="1" endfloor="1" endid="1" />
+     </Stairs>
+</StairsCollection>
+<ElevatorsCollection>
+     <Elavators floor="0">
+               <Elevator id="0">
+               </Elevator>
+     </Elevators>
+     <Elavators floor="1">
+               <Elevator id="0">
+               </Elevator>
+     </Elevators>
+</ElevatorsCollection>
+    <Maps>
+        <Map floor="0">
+~ - - - - - - ~ - - - ~ - ~ - - ~ - - - - ~
+-             -       -   -     -         -
+-             -       -   -     -         -
+-             -       ~ S ~     -         -
+-             -                 -         -
+-             D                 D         -
+-             -                 -         -
+~ - - - - - - ~ - - - - P - - - ~ - - - - ~
+-                                         -
+~ - - ~                             ~ - - ~
+-     S                             E     -
+~ - - ~                             ~ - - ~
+-                                         -
+~ - - - - P - - - - - - - - - - - - - - - ~
+        </Map>
+        <Map floor="1">
+~ - - - - - - ~ - - - ~ - ~ - - ~ - - - - ~
+-             -       -   -     -         -
+-             -       -   -     -         -
+-             -       ~ S ~     -         -
+-             -                 -         -
+-             D                 D         -
+-             -                 -         -
+~ - - - - - - ~ - - - - P - - - ~ - - - - ~
+-                                         -
+~ - - ~                             ~ - - ~
+-     S         ~ - - - D - ~       E     -
+~ - - ~         -           -       ~ - - ~
+-               -           -             -
+~ - - - - - - - ~ - - - - - ~ - - - - - - ~
+        </Map>
+    </Maps>
+</Description>
