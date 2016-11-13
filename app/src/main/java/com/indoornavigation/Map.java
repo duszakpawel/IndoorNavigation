@@ -5,8 +5,9 @@ import android.content.res.TypedArray;
 
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 
-public class Map extends CanvasView
+public class Map extends ViewGroup
 {
     private IDrawerProvider drawerProvider;
 
