@@ -11,7 +11,5 @@ public class MapActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-        //final Map map = (Map) this.findViewById(R.id.map);
     }
 }

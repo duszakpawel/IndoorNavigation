@@ -8,9 +8,12 @@ import android.util.AttributeSet;
 
 public class Map extends CanvasView
 {
+    private IDrawerProvider drawerProvider;
+
     public Map(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        drawerProvider = new DrawProvider();
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
@@ -25,14 +28,12 @@ public class Map extends CanvasView
         setWillNotDraw(false);
     }
 
-    @Override
-    protected void onLayout(boolean b, int i, int i1, int i2, int i3)
-    {
-
-    }
-
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // TODO: the painting
+        drawerProvider.DrawMap(canvas);
     }
+
+    @Override
+    protected void onLayout(boolean b, int i, int j, int k, int l) { }
 }
