@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.presenter.map.MapActivityPresenter;
+import com.wut.indoornavigation.presenter.map.MapActivityViewContract;
 import com.wut.indoornavigation.view.base.BaseMvpActivity;
 
 import javax.inject.Inject;

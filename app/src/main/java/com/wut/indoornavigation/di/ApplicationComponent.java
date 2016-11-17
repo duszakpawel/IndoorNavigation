@@ -19,8 +19,8 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     MainActivityComponent plus(MainActivityModule module);
-    MapActivityComponent plus(MapActivityModule module);
 
+    MapActivityComponent plus(MapActivityModule module);
 
     void inject(IndoorNavigationApp indoorNavigationApp);
 }

@@ -27,7 +27,7 @@ public final class MapEngineImpl implements MapEngine {
     }
 
     @Override
-    public void setonMapReadyListener(OnMapReadyListener onMapReadyListener) {
+    public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
         this.onMapReadyListener = onMapReadyListener == null ? OnMapReadyListener.NULL : onMapReadyListener;
     }
 }
