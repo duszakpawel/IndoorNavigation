@@ -2,7 +2,13 @@ package com.wut.indoornavigation.di.module;
 
 import android.content.Context;
 
+import com.wut.indoornavigation.map.MapEngine;
+import com.wut.indoornavigation.map.impl.MapEngineImpl;
+
+import javax.inject.Singleton;
+
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Application module
@@ -14,5 +20,11 @@ public class ApplicationModule {
 
     public ApplicationModule(Context context) {
         this.context = context;
+    }
+
+    @Singleton
+    @Provides
+    MapEngine provideMapEngine() {
+        return new MapEngineImpl();
     }
 }

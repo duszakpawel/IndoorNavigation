@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.presenter.main.MainActivityPresenter;
+import com.wut.indoornavigation.presenter.main.MainActivityViewContract;
 import com.wut.indoornavigation.view.base.BaseMvpActivity;
 
 import javax.inject.Inject;

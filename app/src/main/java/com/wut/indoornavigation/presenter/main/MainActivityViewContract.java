@@ -1,4 +1,4 @@
-package com.wut.indoornavigation.view.main;
+package com.wut.indoornavigation.presenter.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
