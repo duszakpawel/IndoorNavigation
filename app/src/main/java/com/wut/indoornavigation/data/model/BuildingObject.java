@@ -5,6 +5,7 @@ package com.wut.indoornavigation.data.model;
  */
 
 public abstract class BuildingObject {
-    int x, y;
-    int id;
+    public Point Start;
+    public Point End;
+    public Integer Id;
 }

@@ -25,6 +25,6 @@ public class ApplicationModule {
     @Singleton
     @Provides
     MapEngine provideMapEngine() {
-        return new MapEngineImpl();
+        return new MapEngineImpl(context);
     }
 }

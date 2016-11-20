@@ -5,4 +5,5 @@ package com.wut.indoornavigation.data.model;
  */
 
 public final class Door extends BuildingObject {
+    public boolean isDestinationPoint;
 }
