@@ -2,10 +2,10 @@ package com.wut.indoornavigation.data.model;
 
 
 public class Point {
-    public double X;
-    public double Y;
+    public float X;
+    public float Y;
 
-    public Point(double x, double y) {
+    public Point(float x, float y) {
         this.X = x;
         this.Y = y;
     }

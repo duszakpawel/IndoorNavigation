@@ -33,6 +33,6 @@ public class CentroidLocationProviderImpl implements CentroidLocationProvider {
         double x = x_nominator / denominator;
         double y = y_nominator / denominator;
 
-        return new Point(x, y);
+        return new Point((float)x, (float)y);
     }
 }
