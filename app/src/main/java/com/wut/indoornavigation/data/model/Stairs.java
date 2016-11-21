@@ -1,8 +1,7 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
-
 public final class Stairs extends BuildingObject {
+    public Stairs(Point start, Point end, int id) {
+        super(start, end, id);
+    }
 }

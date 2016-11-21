@@ -1,7 +1,12 @@
 package com.wut.indoornavigation.di.module;
 
 import android.content.Context;
+import android.graphics.Canvas;
 
+import com.wut.indoornavigation.extensions.CanvasExtender;
+import com.wut.indoornavigation.extensions.impl.CanvasExtenderImpl;
+import com.wut.indoornavigation.logic.location.CentroidLocationProvider;
+import com.wut.indoornavigation.logic.location.impl.CentroidLocationProviderImpl;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.impl.MapEngineImpl;
 
@@ -27,4 +32,11 @@ public class ApplicationModule {
     MapEngine provideMapEngine() {
         return new MapEngineImpl(context);
     }
+
+    @Singleton
+    @Provides
+    CanvasExtender provideCanvasExtender(){ return new CanvasExtenderImpl();}
+
+    @Provides
+    CentroidLocationProvider provideCentroidLocationProvider(){ return new CentroidLocationProviderImpl(); }
 }

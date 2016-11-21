@@ -25,14 +25,14 @@ public class CentroidLocationProviderImpl implements CentroidLocationProvider {
 
         for (int i = 0; i < positions.size(); i++) {
             double divider = Math.pow(weights.get(i), -k);
-            x_nominator += divider * positions.get(i).X;
-            y_nominator += divider * positions.get(i).Y;
+            x_nominator += divider * positions.get(i).getX();
+            y_nominator += divider * positions.get(i).getY();
             denominator += divider;
         }
 
         double x = x_nominator / denominator;
         double y = y_nominator / denominator;
 
-        return new Point(x, y);
+        return new Point((int)x, (int)y);
     }
 }

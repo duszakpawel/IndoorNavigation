@@ -1,8 +1,13 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
+public final class Beacon  {
+    private Point position;
 
-public final class Beacon extends BuildingObject {
+    public Beacon(Point position){
+        this.position = position;
+    }
+
+    public Point getPosition(){
+        return position;
+    }
 }
