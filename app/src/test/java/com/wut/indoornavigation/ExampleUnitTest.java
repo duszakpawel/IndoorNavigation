@@ -3,8 +3,10 @@ package com.wut.indoornavigation;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
-import com.wut.indoornavigation.logic.graph.impl.HeuristicFuctionImpl;
+import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -25,7 +27,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void algTest() throws Exception {
+    public void graphConstructionTest() throws Exception {
         List<Vertex> vertices = new ArrayList<>();
         Vertex A = new Vertex(0, new Point(0,0));
         Vertex B = new Vertex(1, new Point(1, 0));
@@ -36,11 +38,14 @@ public class ExampleUnitTest {
         vertices.add(C);
 
         Graph g = new GraphImpl(vertices);
-        g.AddEdge(A, B, 1);
-        g.AddEdge(B, C, 1);
+        g.addEdge(A, B, 1);
+        g.addEdge(B, C, 1);
 
-        List<Integer> result = g.AStar(0, 2, new HeuristicFuctionImpl());
+        List<Edge> outEdges = g.outEdges(0);
+        List<Vertex> outVertices =g.outVertices(0);
 
-        List<Integer> a = new ArrayList<>();
+        Assert.assertEquals(g.verticesCount(), 3);
+        Assert.assertEquals(outEdges.get(0).getTo(), B);
+        Assert.assertEquals(outVertices.get(0), B);
     }
 }

@@ -7,9 +7,12 @@ import com.wut.indoornavigation.logic.graph.models.Vertex;
 import java.util.List;
 
 public interface Graph {
-    void AddEdge(Edge edge);
-    void AddEdge(Vertex start, Vertex end, double weight);
+    boolean addEdge(Edge edge);
+    boolean addEdge(Vertex start, Vertex end, double weight);
 
-    List<Integer> OutVertex(Integer vertex);
-    List<Integer> AStar(Integer s, Integer t, HeuristicFuction heuristicFunction);
+    int verticesCount();
+
+    List<Edge> outEdges(int vertexId);
+    List<Vertex> outVertices(int vertexId);
+    List<Vertex> aStar(Integer sourceId, Integer targetId, HeuristicFuction heuristicFunction);
 }
