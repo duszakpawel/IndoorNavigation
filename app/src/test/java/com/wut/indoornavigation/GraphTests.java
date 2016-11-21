@@ -13,10 +13,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExampleUnitTest {
+public class GraphTests {
 
-    @Test
-    public void graphConstructionTest() throws Exception {
+    private Graph getMockGraph(){
         List<Vertex> vertices = new ArrayList<>();
         Vertex A = new Vertex(0, new Point(0,0));
         Vertex B = new Vertex(1, new Point(1, 0));
@@ -38,8 +37,22 @@ public class ExampleUnitTest {
         g.addEdge(C, E, 1);
         g.addEdge(D, E, 1);
 
-        List<Vertex> result = g.aStar(A, E, new HeuristicFuctionImpl());
-        Assert.assertEquals(result.size(), 3);
+        return g;
+    }
 
+    @Test
+    public void graphConstructionTest() throws Exception {
+        Graph g = getMockGraph();
+
+        Assert.assertEquals(g.verticesCount(), 5);
+        Assert.assertEquals(g.outEdges(2).size(), 2);
+    }
+
+    @Test
+    public void aStarTest() throws Exception {
+        Graph g = getMockGraph();
+        List<Vertex> result = g.aStar(0, 4, new HeuristicFuctionImpl());
+
+        Assert.assertEquals(result.size(), 3);
     }
 }
