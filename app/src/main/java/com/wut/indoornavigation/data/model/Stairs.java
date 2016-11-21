@@ -1,7 +1,9 @@
 package com.wut.indoornavigation.data.model;
 
-public final class Stairs extends BuildingObject {
-    public Stairs(Point start, Point end, int id) {
-        super(start, end, id);
-    }
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class Stairs extends BuildingObject {
 }

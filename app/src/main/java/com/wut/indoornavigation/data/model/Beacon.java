@@ -1,13 +1,9 @@
 package com.wut.indoornavigation.data.model;
 
-public final class Beacon  {
-    private Point position;
+import lombok.Value;
 
-    public Beacon(Point position){
-        this.position = position;
-    }
+@Value
+public class Beacon  {
 
-    public Point getPosition(){
-        return position;
-    }
+    Point position;
 }

@@ -1,7 +1,9 @@
 package com.wut.indoornavigation.data.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class Wall extends BuildingObject {
-    public Wall(Point start, Point end, int id) {
-        super(start, end, id);
-    }
 }

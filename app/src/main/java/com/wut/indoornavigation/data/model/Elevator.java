@@ -1,7 +1,9 @@
 package com.wut.indoornavigation.data.model;
 
-public final class Elevator extends BuildingObject {
-    public Elevator(Point start, Point end, int id) {
-        super(start, end, id);
-    }
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class Elevator extends BuildingObject {
 }
