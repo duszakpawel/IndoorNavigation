@@ -14,6 +14,7 @@ public interface Graph {
 
     List<Edge> outEdges(int vertexId);
     List<Vertex> outVertices(int vertexId);
+    List<Vertex> outVertices(Vertex vertex);
     List<Vertex> aStar(Vertex sourceId, Vertex targetId, HeuristicFunction heuristicFunction);
     List<Vertex> aStar(int sourceId, int targetId, HeuristicFunction heuristicFunction) throws Exception;
 
