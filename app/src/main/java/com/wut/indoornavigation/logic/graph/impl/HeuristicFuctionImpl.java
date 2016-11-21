@@ -12,7 +12,8 @@ public class HeuristicFuctionImpl implements HeuristicFuction {
     public double Execute(Vertex source, Vertex destination) {
         double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());
         double yDistance = abs(source.getPosition().getY() - destination.getPosition().getY());
+        double result = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 
-        return sqrt(pow(xDistance, 2) + pow(yDistance, 2));
+        return result;
     }
 }
