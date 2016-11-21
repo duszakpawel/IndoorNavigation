@@ -23,8 +23,8 @@ public class LocationProviderImpl implements LocationProvider {
 
         for (int i = 0; i < positions.size(); i++) {
             double divider = Math.pow(weights.get(i), -k);
-            xNominator += divider * positions.get(i).X;
-            yNominator += divider * positions.get(i).Y;
+            xNominator += divider * positions.get(i).getX();
+            yNominator += divider * positions.get(i).getY();
             denominator += divider;
         }
 
