@@ -80,6 +80,11 @@ public class GraphImpl implements Graph {
             }
         }
 
+        return outVertices(vertex);
+    }
+
+    @Override
+    public List<Vertex> outVertices(Vertex vertex) {
         if(vertex != null) {
             List<Edge> outEdges = edges.get(vertex);
             List<Vertex> outVertices=  new ArrayList<>();
@@ -139,38 +144,50 @@ public class GraphImpl implements Graph {
 
         while (!T.isEmpty()) {
             Vertex u = T.get(0);
+            int uIndex = vertices.indexOf(u);
+
             for (int i = 1; i < T.size(); i++) {
-                if (distance[vertices.indexOf(T.get(i))] + heuristicFunction.Execute(T.get(i), t) <= distance[vertices.indexOf(u)] + heuristicFunction.Execute(T.get(i), t)) {
+                Vertex iVertex = T.get(i);
+                int iIndex = vertices.indexOf(iVertex);
+
+                if (distance[iIndex] + heuristicFunction.Execute(iVertex, t) <= distance[uIndex] + heuristicFunction.Execute(iVertex, t)) {
                     u = T.get(i);
+                    uIndex = vertices.indexOf(u);
                 }
             }
-            T.remove(u);
 
+            T.remove(u);
             if (u == t) {
                 break;
             }
 
-            List<Vertex> outVertices = outVertices(u.getId());
+            List<Vertex> outVertices = outVertices(u);
             for (int w = 0; w < T.size(); ++w) {
-                if (outVertices.contains(T.get(w))) {
+                Vertex wVertex = T.get(w);
+                int wIndex = vertices.indexOf(wVertex);
+
+                if (outVertices.contains(wVertex)) {
                     double uwWeight = 0;
+
                     List<Edge> uOutEdges = edges.get(u);
                     for (Edge uOutEdge : uOutEdges) {
-                        if(uOutEdge.getTo() == T.get(w)){
+                        if(uOutEdge.getTo() == wVertex){
                             uwWeight = uOutEdge.getWeight();
                             break;
                         }
                     }
-                    if (distance[vertices.indexOf(T.get(w))] > distance[vertices.indexOf(u)] + uwWeight){
-                        distance[vertices.indexOf(T.get(w))] = distance[vertices.indexOf(u)] + uwWeight;
-                        previous[vertices.indexOf(T.get(w))] = vertices.indexOf(u);
+
+                    if (distance[wIndex] > distance[uIndex] + uwWeight){
+                        distance[wIndex] = distance[uIndex] + uwWeight;
+                        previous[wIndex] = uIndex;
                     }
                 }
             }
         }
 
-        List<Vertex> result = new ArrayList<>();
         int i = t.getId();
+
+        List<Vertex> result = new ArrayList<>();
         while(i != -1){
             result.add(0, vertices.get(i));
             i = previous[i];
