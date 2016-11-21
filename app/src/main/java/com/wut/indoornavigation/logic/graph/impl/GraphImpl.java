@@ -117,7 +117,64 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public List<Vertex> aStar(Integer s, Integer t, HeuristicFuction heuristicFunction) {
-        return null;
+    public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFuction heuristicFunction) {
+        int verticesCount = vertices.size();
+        double[] distance = new double[verticesCount];
+        int[] previous = new int[verticesCount];
+
+        for (int i = 0; i < verticesCount; i++) {
+            distance[i] = 100000;
+            previous[i] = -1;
+        }
+
+        int sIndex = vertices.indexOf(s);
+
+        distance[sIndex] = 0;
+
+        List<Vertex> T = new ArrayList<>();
+        for(int i=0; i < verticesCount; i++){
+            T.add(vertices.get(i));
+        }
+
+        while (!T.isEmpty()) {
+            Vertex u = T.get(0);
+            for (int i = 1; i < T.size(); i++) {
+                if (distance[vertices.indexOf(T.get(i))] + heuristicFunction.Execute(T.get(i), t) <= distance[vertices.indexOf(u)] + heuristicFunction.Execute(T.get(i), t)) {
+                    u = T.get(i);
+                }
+            }
+            T.remove(u);
+
+            if (u == t) {
+                break;
+            }
+
+            List<Vertex> outVertices = outVertices(u.getId());
+            for (int w = 0; w < T.size(); ++w) {
+                if (outVertices.contains(T.get(w))) {
+                    double uwWeight = 0;
+                    List<Edge> uOutEdges = edges.get(u);
+                    for (Edge uOutEdge : uOutEdges) {
+                        if(uOutEdge.getTo() == T.get(w)){
+                            uwWeight = uOutEdge.getWeight();
+                            break;
+                        }
+                    }
+                    if (distance[vertices.indexOf(T.get(w))] > distance[vertices.indexOf(u)] + uwWeight){
+                        distance[vertices.indexOf(T.get(w))] = distance[vertices.indexOf(u)] + uwWeight;
+                        previous[vertices.indexOf(T.get(w))] = vertices.indexOf(u);
+                    }
+                }
+            }
+        }
+
+        List<Vertex> result = new ArrayList<>();
+        int i = t.getId();
+        while(i != -1){
+            result.add(0, vertices.get(i));
+            i = previous[i];
+        }
+
+        return result;
     }
 }
