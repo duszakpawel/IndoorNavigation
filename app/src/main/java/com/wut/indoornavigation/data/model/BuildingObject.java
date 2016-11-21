@@ -1,11 +1,11 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
+import lombok.Data;
 
-public abstract class BuildingObject {
-    public Point Start;
-    public Point End;
-    public Integer Id;
+@Data
+public class BuildingObject {
+    Point start;
+    Point end;
+    int id;
+
 }

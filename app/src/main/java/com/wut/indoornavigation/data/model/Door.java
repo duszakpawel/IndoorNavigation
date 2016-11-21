@@ -1,9 +1,11 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-public final class Door extends BuildingObject {
-    public boolean isDestinationPoint;
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class Door extends BuildingObject {
+
+    boolean destinationPoint;
 }

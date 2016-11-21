@@ -8,19 +8,18 @@ import android.graphics.Path;
 
 import com.wut.indoornavigation.data.model.Point;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Canvas extender class
  */
+@Singleton
 public class CanvasExtender {
 
-    private Canvas canvas;
+    @Inject
+    public CanvasExtender() {
 
-    /**
-     * Constructor of class
-     * @param canvas Canvas
-     */
-    public CanvasExtender(Canvas canvas){
-        this.canvas = canvas;
     }
 
     /**
@@ -29,8 +28,8 @@ public class CanvasExtender {
      * @param end End point
      * @param paint Paint for line
      */
-    public void DrawLine(Point start, Point end, Paint paint){
-        canvas.drawLine(start.X, start.Y, end.X, end.Y, paint);
+    public void DrawLine(Canvas canvas, Point start, Point end, Paint paint){
+        canvas.drawLine(start.getX(), start.getY(), end.getX(), end.getY(), paint);
     }
 
     /**
@@ -43,13 +42,13 @@ public class CanvasExtender {
      * @param textPaint Paint for text
      * @param backgroundPaint Paint for background
      */
-    public void DrawText(String text, float textSize, Point start, Point end, float padding, Paint textPaint, Paint backgroundPaint) {
-        Paint.FontMetrics fm = new Paint.FontMetrics();
+    public void DrawText(Canvas canvas, String text, float textSize, Point start, Point end, float padding, Paint textPaint, Paint backgroundPaint) {
+        final Paint.FontMetrics fm = new Paint.FontMetrics();
         textPaint.setTextSize(textSize);
         textPaint.getFontMetrics(fm);
 
-        float xAverage = (start.X + end.X)/2;
-        float yAverage = (start.Y + end.Y)/2;
+        float xAverage = (start.getX() + end.getX())/2;
+        float yAverage = (start.getY() + end.getY())/2;
 
         float left = xAverage - padding;
         float top = yAverage + fm.top - padding;
@@ -65,7 +64,7 @@ public class CanvasExtender {
      * @param path Path element
      * @param paint Path paint
      */
-    public void DrawPath(Path path, Paint paint){
+    public void DrawPath(Canvas canvas, Path path, Paint paint){
         canvas.drawPath(path, paint);
     }
 }

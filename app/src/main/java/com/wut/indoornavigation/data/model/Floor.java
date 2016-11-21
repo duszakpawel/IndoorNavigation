@@ -2,15 +2,15 @@ package com.wut.indoornavigation.data.model;
 
 import java.util.List;
 
-/**
- * Created by sa on 06.11.2016.
- */
+import lombok.Value;
 
+@Value
 public class Floor {
+
     FloorObject[][] enumMap;
-    public Integer Number;
-    public List<Wall> Walls;
-    public List<Door> Doors;
-    public List<Stairs> Stairs;
-    public List<Elevator> Elevators;
+    Integer number;
+    List<Wall> walls;
+    List<Door> doors;
+    List<Stairs> stairs;
+    List<Elevator> elevators;
 }

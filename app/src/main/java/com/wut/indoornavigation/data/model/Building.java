@@ -1,11 +1,11 @@
 package com.wut.indoornavigation.data.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by sa on 07.11.2016.
- */
+import lombok.Value;
 
+@Value
 public class Building {
-    ArrayList<Floor> floors;
+
+    List<Floor> floors;
 }

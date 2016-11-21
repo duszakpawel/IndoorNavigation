@@ -6,22 +6,18 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Created by sa on 06.11.2016.
- */
-
 public class Parser {
 
-    private String filename;
+    private final String filename;
     private Building building;
 
-    public Parser(String _filename) {
-        filename = _filename;
+    public Parser(String filename) {
+        this.filename = filename;
     }
 
-    public void Parse() throws IOException {
+    public void parse() throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+        final BufferedReader br = new BufferedReader(new FileReader(filename));
         try {
             String line = br.readLine();
 

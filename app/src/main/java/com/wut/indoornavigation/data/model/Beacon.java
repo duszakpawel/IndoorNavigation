@@ -1,8 +1,9 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
+import lombok.Value;
 
-public final class Beacon extends BuildingObject {
+@Value
+public class Beacon  {
+
+    Point position;
 }
