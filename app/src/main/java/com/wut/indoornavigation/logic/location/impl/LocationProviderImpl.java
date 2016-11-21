@@ -3,36 +3,31 @@ package com.wut.indoornavigation.logic.location.impl;
 import android.support.annotation.NonNull;
 
 import com.wut.indoornavigation.data.model.Point;
-import com.wut.indoornavigation.logic.location.CentroidLocationProvider;
+import com.wut.indoornavigation.logic.location.LocationProvider;
 
 import java.util.List;
 
-public class CentroidLocationProviderImpl implements CentroidLocationProvider {
+public class LocationProviderImpl implements LocationProvider {
     private static final int k = 1;
 
     @Override
     public Point ComputeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) throws Exception {
-        int positionsSize = positions.size();
-        int weightsSize = weights.size();
-
-        if (positionsSize != weightsSize) {
+        if (positions.size() != weights.size()) {
+            // TODO: custom exception to be handled
             throw new Exception("Collections must have equal length.");
         }
 
-        double x_nominator = 0;
-        double y_nominator = 0;
+        double xNominator = 0;
+        double yNominator = 0;
         double denominator = 0;
 
         for (int i = 0; i < positions.size(); i++) {
             double divider = Math.pow(weights.get(i), -k);
-            x_nominator += divider * positions.get(i).X;
-            y_nominator += divider * positions.get(i).Y;
+            xNominator += divider * positions.get(i).X;
+            yNominator += divider * positions.get(i).Y;
             denominator += divider;
         }
 
-        double x = x_nominator / denominator;
-        double y = y_nominator / denominator;
-
-        return new Point((float)x, (float)y);
+        return new Point((float)(xNominator / denominator), (float)(yNominator / denominator));
     }
 }

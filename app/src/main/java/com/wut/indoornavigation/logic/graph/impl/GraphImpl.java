@@ -179,23 +179,22 @@ public class GraphImpl implements Graph {
         return result;
     }
 
-    @Override
-    public List<Vertex> aStar(int s, int t, HeuristicFuction heuristicFunction) throws Exception {
-        Vertex sVertex = null;
-        Vertex tVertex = null;
+    private Vertex findVertex(int id){
+        Vertex v = null;
         for (Vertex vertex : vertices) {
-            if(vertex.getId() == s){
-                sVertex = vertex;
+            if(vertex.getId() == id){
+                v = vertex;
                 break;
             }
         }
 
-        for (Vertex vertex : vertices) {
-            if(vertex.getId() == t){
-                tVertex = vertex;
-                break;
-            }
-        }
+        return v;
+    }
+
+    @Override
+    public List<Vertex> aStar(int s, int t, HeuristicFuction heuristicFunction) throws Exception {
+        Vertex sVertex = findVertex(s);
+        Vertex tVertex = findVertex(t);
 
         if(sVertex == null || tVertex == null){
             throw new Exception("One ore more vertices does not exist in graph.");

@@ -1,9 +1,8 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by Pawel on 20.11.2016.
- */
+import lombok.Value;
 
+@Value
 public class Signal {
-    public float Strength;
+    private float strength;
 }
