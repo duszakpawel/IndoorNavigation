@@ -3,7 +3,7 @@ package com.wut.indoornavigation;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
-import com.wut.indoornavigation.logic.graph.impl.HeuristicFuctionImpl;
+import com.wut.indoornavigation.logic.graph.impl.HeuristicFunctionImpl;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
 import junit.framework.Assert;
@@ -127,7 +127,7 @@ public class GraphTests {
     @Test
     public void aStarTestForSmallDirectedGraph() throws Exception {
         Graph g = getMockGraph();
-        List<Vertex> result = g.aStar(0, 4, new HeuristicFuctionImpl());
+        List<Vertex> result = g.aStar(0, 4, new HeuristicFunctionImpl());
 
         Assert.assertEquals(result.size(), 3);
     }
@@ -135,7 +135,7 @@ public class GraphTests {
     @Test
     public void aStarTestForBigDirectedGraph() throws Exception {
         Graph g = getBigMockGraph();
-        List<Vertex> result = g.aStar(8, 3, new HeuristicFuctionImpl());
+        List<Vertex> result = g.aStar(8, 3, new HeuristicFunctionImpl());
 
         Assert.assertEquals(result.size(), 6);
     }
@@ -143,7 +143,7 @@ public class GraphTests {
     @Test
     public void aStarTestForNotConsistentGraph() throws Exception {
         Graph g = getMocNotConsistentGraph();
-        List<Vertex> result = g.aStar(0, 1, new HeuristicFuctionImpl());
+        List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
 
         Assert.assertEquals(result.size(), 1);
     }
@@ -151,7 +151,7 @@ public class GraphTests {
     @Test
     public void aStarTestForSourceEqualToTarget() throws Exception {
         Graph g = getMocNotConsistentGraph();
-        List<Vertex> result = g.aStar(0, 1, new HeuristicFuctionImpl());
+        List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
 
         Assert.assertEquals(result.size(), 1);
     }
