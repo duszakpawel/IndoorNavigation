@@ -1,13 +1,13 @@
 package com.wut.indoornavigation.logic.graph.impl;
 
-import com.wut.indoornavigation.logic.graph.HeuristicFuction;
+import com.wut.indoornavigation.logic.graph.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
-public class HeuristicFuctionImpl implements HeuristicFuction {
+public class HeuristicFunctionImpl implements HeuristicFunction {
     @Override
     public double Execute(Vertex source, Vertex destination) {
         double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());

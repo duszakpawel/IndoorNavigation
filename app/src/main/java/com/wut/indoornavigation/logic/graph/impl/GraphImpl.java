@@ -4,7 +4,7 @@ package com.wut.indoornavigation.logic.graph.impl;
 import android.support.annotation.NonNull;
 
 import com.wut.indoornavigation.logic.graph.Graph;
-import com.wut.indoornavigation.logic.graph.HeuristicFuction;
+import com.wut.indoornavigation.logic.graph.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
@@ -117,14 +117,14 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFuction heuristicFunction) {
+    public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFunction heuristicFunction) {
         int verticesCount = verticesCount();
         double[] distance = new double[verticesCount];
         int[] previous = new int[verticesCount];
 
         for (int i = 0; i < verticesCount; i++) {
-            final int ifninity = 100000;
-            distance[i] = ifninity;
+            final int infinity = 100000;
+            distance[i] = infinity;
             previous[i] = -1;
         }
 
@@ -192,7 +192,7 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public List<Vertex> aStar(int s, int t, HeuristicFuction heuristicFunction) throws Exception {
+    public List<Vertex> aStar(int s, int t, HeuristicFunction heuristicFunction) throws Exception {
         Vertex sVertex = findVertex(s);
         Vertex tVertex = findVertex(t);
 
