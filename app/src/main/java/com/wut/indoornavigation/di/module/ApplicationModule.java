@@ -2,6 +2,7 @@ package com.wut.indoornavigation.di.module;
 
 import android.content.Context;
 
+import com.wut.indoornavigation.extensions.CanvasExtender;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.impl.MapEngineImpl;
 
@@ -24,7 +25,7 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    MapEngine provideMapEngine() {
-        return new MapEngineImpl();
+    MapEngine provideMapEngine(CanvasExtender canvasExtender) {
+        return new MapEngineImpl(context, canvasExtender);
     }
 }

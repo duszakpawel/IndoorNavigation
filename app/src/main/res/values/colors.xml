@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="wallColor">#000000</color>
+    <color name="doorColor">#FFB31A</color>
+    <color name="elevatorColor">#66ff33</color>
+    <color name="stairsColor">#33ccff</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="textBackgroundColor">#000000</color>
 </resources>
