@@ -11,8 +11,8 @@ public class Parser {
     private final String filename;
     private Building building;
 
-    public Parser(String _filename) {
-        filename = _filename;
+    public Parser(String filename) {
+        this.filename = filename;
     }
 
     public void parse() throws IOException {

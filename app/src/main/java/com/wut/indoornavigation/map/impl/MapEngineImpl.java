@@ -39,21 +39,19 @@ public final class MapEngineImpl implements MapEngine {
     private final Paint textBackgroundPaint = new Paint();
 
     private final Context context;
+    private final CanvasExtender canvasExtender;
     private final Map<Integer, Bitmap> mapBitmaps;
 
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
     @Inject
-    public CanvasExtender canvasExtender;
-
-
-    @Inject
-    public MapEngineImpl(Context context) {
+    public MapEngineImpl(Context context, CanvasExtender canvasExtender) {
         this.context = context;
+        this.canvasExtender = canvasExtender;
         mapBitmaps = new HashMap<>();
         init();
 
-        Resources resources = context.getResources();
+        final Resources resources = context.getResources();
         textSize = resources.getDimension(R.dimen.map_text_size);
         textPadding = resources.getDimension(R.dimen.max_text_padding);
 
@@ -72,7 +70,7 @@ public final class MapEngineImpl implements MapEngine {
     public void renderMap(@NonNull BuildingData buildingData) {
         for (Floor floor : buildingData.getFloors()) {
             Bitmap bitmap = Bitmap.createBitmap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, Bitmap.Config.ARGB_8888);
-            mapBitmaps.put(floor.Number, bitmap);
+            mapBitmaps.put(floor.getNumber(), bitmap);
 
             Canvas canvas = new Canvas(bitmap);
             renderFloor(canvas, floor);
@@ -82,24 +80,24 @@ public final class MapEngineImpl implements MapEngine {
     }
 
     private void renderFloor(Canvas canvas, Floor floor) {
-        for(Wall wall : floor.Walls){
+        for(Wall wall : floor.getWalls()){
             canvasExtender.DrawLine(canvas, wall.getStart(), wall.getEnd(), wallPaint);
         }
 
-        for(Door door : floor.Doors){
+        for(Door door : floor.getDoors()){
             canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);
 
-            if(door.getIsDestinationPoint()){
+            if(door.isDestinationPoint()){
                 String text = Integer.toString(door.getId());
                 canvasExtender.DrawText(canvas, text, textSize, door.getStart(), door.getEnd(), textPadding, textPaint, textBackgroundPaint);
             }
         }
 
-        for(Stairs stairs : floor.Stairs){
+        for(Stairs stairs : floor.getStairs()){
             canvasExtender.DrawLine(canvas, stairs.getStart(), stairs.getEnd(), stairsPaint);
         }
 
-        for(Elevator elevator : floor.Elevators){
+        for(Elevator elevator : floor.getElevators()){
             canvasExtender.DrawLine(canvas, elevator.getStart(), elevator.getEnd(), elevatorPaint);
         }
     }
