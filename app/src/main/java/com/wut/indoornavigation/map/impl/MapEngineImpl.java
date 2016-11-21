@@ -16,7 +16,6 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.Wall;
 import com.wut.indoornavigation.extensions.CanvasExtender;
-import com.wut.indoornavigation.extensions.impl.CanvasExtenderImpl;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 
@@ -25,10 +24,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.Provides;
-
 public final class MapEngineImpl implements MapEngine {
-
     private static final int DEFAULT_MAP_WIDTH = 100;
     private static final int DEFAULT_MAP_HEIGHT = 100;
 
