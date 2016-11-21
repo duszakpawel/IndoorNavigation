@@ -1,8 +1,7 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by Pawel on 20.11.2016.
- */
-
 public class Wall extends BuildingObject {
+    public Wall(Point start, Point end, int id) {
+        super(start, end, id);
+    }
 }

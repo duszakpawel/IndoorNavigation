@@ -1,7 +1,19 @@
 package com.wut.indoornavigation.data.model;
 
-
 public class Point {
-    public int X;
-    public int Y;
+    private int X;
+    private int Y;
+
+    public Point(int x, int y){
+        X = x;
+        Y=  y;
+    }
+
+    public int getX(){
+        return X;
+    }
+
+    public int getY(){
+        return Y;
+    }
 }

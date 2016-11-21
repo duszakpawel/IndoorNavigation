@@ -1,9 +1,14 @@
 package com.wut.indoornavigation.data.model;
 
-/**
- * Created by sa on 06.11.2016.
- */
-
 public final class Door extends BuildingObject {
-    public boolean isDestinationPoint;
+    private boolean isDestinationPoint;
+
+    public Door(Point start, Point end, int id, boolean isDestinationPoint){
+        super(start, end, id);
+        this.isDestinationPoint = isDestinationPoint;
+    }
+
+    public boolean getIsDestinationPoint(){
+        return isDestinationPoint;
+    }
 }
