@@ -5,4 +5,6 @@
     <dimen name="map_text_size">10sp</dimen>
     <dimen name="max_text_padding">5dp</dimen>
 
+    <dimen name="map_fragment_header_height">100dp</dimen>
+    <dimen name="map_fragment_header_margin">16dp</dimen>
 </resources>
