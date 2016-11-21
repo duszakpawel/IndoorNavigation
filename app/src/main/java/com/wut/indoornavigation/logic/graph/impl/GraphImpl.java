@@ -118,12 +118,13 @@ public class GraphImpl implements Graph {
 
     @Override
     public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFuction heuristicFunction) {
-        int verticesCount = vertices.size();
+        int verticesCount = verticesCount();
         double[] distance = new double[verticesCount];
         int[] previous = new int[verticesCount];
 
         for (int i = 0; i < verticesCount; i++) {
-            distance[i] = 100000;
+            final int ifninity = 100000;
+            distance[i] = ifninity;
             previous[i] = -1;
         }
 
@@ -176,5 +177,30 @@ public class GraphImpl implements Graph {
         }
 
         return result;
+    }
+
+    @Override
+    public List<Vertex> aStar(int s, int t, HeuristicFuction heuristicFunction) throws Exception {
+        Vertex sVertex = null;
+        Vertex tVertex = null;
+        for (Vertex vertex : vertices) {
+            if(vertex.getId() == s){
+                sVertex = vertex;
+                break;
+            }
+        }
+
+        for (Vertex vertex : vertices) {
+            if(vertex.getId() == t){
+                tVertex = vertex;
+                break;
+            }
+        }
+
+        if(sVertex == null || tVertex == null){
+            throw new Exception("One ore more vertices does not exist in graph.");
+        }
+
+        return aStar(sVertex, tVertex, heuristicFunction);
     }
 }
