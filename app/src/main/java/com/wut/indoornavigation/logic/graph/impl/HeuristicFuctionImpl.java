@@ -10,8 +10,8 @@ import static java.lang.Math.pow;
 public class HeuristicFuctionImpl implements HeuristicFuction {
     @Override
     public double Execute(Vertex source, Vertex destination) {
-        double xDistance = abs(source.position.X - destination.position.X);
-        double yDistance = abs(source.position.Y - destination.position.Y);
+        double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());
+        double yDistance = abs(source.getPosition().getY() - destination.getPosition().getY());
 
         return sqrt(pow(xDistance, 2) + pow(yDistance, 2));
     }
