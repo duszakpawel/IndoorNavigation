@@ -202,6 +202,7 @@ public class GraphTests {
 
         Assert.assertEquals(result.size(), 6);
     }
+
     @Test
     public void aStarTestForBigDirectedGraphModified() throws Exception {
         Graph g = getBigMockGraphModified();
