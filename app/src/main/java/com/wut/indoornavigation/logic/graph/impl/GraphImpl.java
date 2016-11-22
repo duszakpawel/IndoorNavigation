@@ -187,10 +187,14 @@ public class GraphImpl implements Graph {
 
         int i = t.getId();
 
+        return reproducePath(previous, i);
+    }
+
+    private List<Vertex> reproducePath(int[] previous, int targetIndex) {
         List<Vertex> result = new ArrayList<>();
-        while(i != -1){
-            result.add(0, vertices.get(i));
-            i = previous[i];
+        while(targetIndex != -1){
+            result.add(0, vertices.get(targetIndex));
+            targetIndex = previous[targetIndex];
         }
 
         return result;
