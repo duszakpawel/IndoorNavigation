@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.wut.indoornavigation.R;
-import com.wut.indoornavigation.data.model.BuildingData;
+import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
@@ -67,8 +67,8 @@ public final class MapEngineImpl implements MapEngine {
     }
 
     @Override
-    public void renderMap(@NonNull BuildingData buildingData) {
-        for (Floor floor : buildingData.getFloors()) {
+    public void renderMap(@NonNull Building building) {
+        for (Floor floor : building.getFloors()) {
             Bitmap bitmap = Bitmap.createBitmap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, Bitmap.Config.ARGB_8888);
             mapBitmaps.put(floor.getNumber(), bitmap);
 
@@ -79,27 +79,28 @@ public final class MapEngineImpl implements MapEngine {
         onMapReadyListener.onMapReady();
     }
 
+    // TODO: 28.11.2016 Need to be changed
     private void renderFloor(Canvas canvas, Floor floor) {
-        for(Wall wall : floor.getWalls()){
-            canvasExtender.DrawLine(canvas, wall.getStart(), wall.getEnd(), wallPaint);
-        }
-
-        for(Door door : floor.getDoors()){
-            canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);
-
-            if(door.isDestinationPoint()){
-                String text = Integer.toString(door.getId());
-                canvasExtender.DrawText(canvas, text, textSize, door.getStart(), door.getEnd(), textPadding, textPaint, textBackgroundPaint);
-            }
-        }
-
-        for(Stairs stairs : floor.getStairs()){
-            canvasExtender.DrawLine(canvas, stairs.getStart(), stairs.getEnd(), stairsPaint);
-        }
-
-        for(Elevator elevator : floor.getElevators()){
-            canvasExtender.DrawLine(canvas, elevator.getStart(), elevator.getEnd(), elevatorPaint);
-        }
+//        for(Wall wall : floor.getWalls()){
+//            canvasExtender.DrawLine(canvas, wall.getStart(), wall.getEnd(), wallPaint);
+//        }
+//
+//        for(Door door : floor.getDoors()){
+//            canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);
+//
+//            if(door.isDestinationPoint()){
+//                String text = Integer.toString(door.getId());
+//                canvasExtender.DrawText(canvas, text, textSize, door.getStart(), door.getEnd(), textPadding, textPaint, textBackgroundPaint);
+//            }
+//        }
+//
+//        for(Stairs stairs : floor.getStairs()){
+//            canvasExtender.DrawLine(canvas, stairs.getStart(), stairs.getEnd(), stairsPaint);
+//        }
+//
+//        for(Elevator elevator : floor.getElevators()){
+//            canvasExtender.DrawLine(canvas, elevator.getStart(), elevator.getEnd(), elevatorPaint);
+//        }
     }
 
     @Override

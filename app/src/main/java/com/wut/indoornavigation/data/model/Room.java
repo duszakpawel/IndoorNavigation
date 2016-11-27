@@ -6,10 +6,12 @@ import lombok.Value;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class Wall extends BuildingObject {
+public class Room extends BuildingObject {
+    int number;
 
     @Builder
-    private Wall(int id) {
+    private Room(int number, int id) {
         super(id);
+        this.number = number;
     }
 }
