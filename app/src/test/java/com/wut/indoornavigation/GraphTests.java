@@ -180,7 +180,7 @@ public class GraphTests {
     }
 
     @Test
-    public void graphConstructionTest() throws Exception {
+    public void graphConstructionTest() {
         Graph g = getMockGraph();
 
         Assert.assertEquals(g.verticesCount(), 5);
@@ -188,7 +188,7 @@ public class GraphTests {
     }
 
     @Test
-    public void aStarTestForSmallDirectedGraph() throws Exception {
+    public void aStarTestForSmallDirectedGraph() {
         Graph g = getMockGraph();
         List<Vertex> result = g.aStar(0, 4, new HeuristicFunctionImpl());
 
@@ -196,7 +196,7 @@ public class GraphTests {
     }
 
     @Test
-    public void aStarTestForBigDirectedGraph() throws Exception {
+    public void aStarTestForBigDirectedGraph() {
         Graph g = getBigMockGraph();
         List<Vertex> result = g.aStar(8, 3, new HeuristicFunctionImpl());
 
@@ -204,7 +204,7 @@ public class GraphTests {
     }
 
     @Test
-    public void aStarTestForBigDirectedGraphModified() throws Exception {
+    public void aStarTestForBigDirectedGraphModified() {
         Graph g = getBigMockGraphModified();
         List<Vertex> result = g.aStar(8, 3, new HeuristicFunctionImpl());
 
@@ -212,7 +212,7 @@ public class GraphTests {
     }
 
     @Test
-    public void aStarTestForNotConsistentGraph() throws Exception {
+    public void aStarTestForNotConsistentGraph() {
         Graph g = getMocNotConsistentGraph();
         List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
 
@@ -220,7 +220,7 @@ public class GraphTests {
     }
 
     @Test
-    public void aStarTestForSourceEqualToTarget() throws Exception {
+    public void aStarTestForSourceEqualToTarget() {
         Graph g = getMocNotConsistentGraph();
         List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
 

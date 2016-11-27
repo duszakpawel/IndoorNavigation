@@ -1,17 +1,22 @@
 package com.wut.indoornavigation.logic.graph.impl;
 
 
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.HeuristicFunction;
+import com.wut.indoornavigation.logic.graph.UnionFind;
 import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 
 public class GraphImpl implements Graph {
@@ -69,21 +74,6 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public List<Vertex> outVertices(int vertexId) {
-        Vertex vertex = null;
-        int verticesCount = vertices.size();
-        for(int i=0; i < verticesCount; i++){
-            Vertex v = vertices.get(i);
-            if(v.getId() == vertexId){
-                vertex = v;
-                break;
-            }
-        }
-
-        return outVertices(vertex);
-    }
-
-    @Override
     public List<Vertex> outVertices(Vertex vertex) {
         if(vertex != null) {
             List<Edge> outEdges = edges.get(vertex);
@@ -121,6 +111,7 @@ public class GraphImpl implements Graph {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFunction heuristicFunction) {
         int verticesCount = verticesCount();
@@ -137,46 +128,46 @@ public class GraphImpl implements Graph {
 
         distance[sIndex] = 0;
 
-        List<Vertex> T = new ArrayList<>();
-        for(int i=0; i < verticesCount; i++){
-            T.add(vertices.get(i));
-        }
+        UnionFind Close = new UnionFindImpl(verticesCount);
+        Comparator<Vertex> comparator = new VertexComparator(heuristicFunction,vertices,distance,t);
+        PriorityQueue<Vertex> Open = new PriorityQueue<>(comparator);
+        Open.add(s);
 
-        while (!T.isEmpty()) {
-            Vertex u = T.get(0);
-            int uIndex = vertices.indexOf(u);
+        while (!Open.isEmpty()) {
+            Vertex u = Open.peek();
+            Integer uIndex = vertices.indexOf(u);
+            for (Vertex iVertex : Open) {
+                Integer iIndex = vertices.indexOf(iVertex);
 
-            for (int i = 1; i < T.size(); i++) {
-                Vertex iVertex = T.get(i);
-                int iIndex = vertices.indexOf(iVertex);
-
-                if (distance[iIndex] + heuristicFunction.Execute(iVertex, t) <= distance[uIndex] + heuristicFunction.Execute(iVertex, t)) {
-                    u = T.get(i);
+                if (distance[iIndex] + heuristicFunction.Execute(vertices.get(iIndex), t) <= distance[uIndex] + heuristicFunction.Execute(vertices.get(uIndex), t)) {
+                    u = iVertex;
                     uIndex = vertices.indexOf(u);
                 }
             }
 
-            T.remove(u);
-            if (u == t) {
+            Open.remove(u);
+            Close.union(uIndex);
+            if (vertices.get(uIndex).equals(t)) {
                 break;
             }
 
             List<Vertex> outVertices = outVertices(u);
-            for (int w = 0; w < T.size(); ++w) {
-                Vertex wVertex = T.get(w);
+            for (Vertex wVertex : outVertices) {
                 int wIndex = vertices.indexOf(wVertex);
+                double uwWeight = 0;
 
-                if (outVertices.contains(wVertex)) {
-                    double uwWeight = 0;
-
-                    List<Edge> uOutEdges = edges.get(u);
-                    for (Edge uOutEdge : uOutEdges) {
-                        if(uOutEdge.getTo() == wVertex){
-                            uwWeight = uOutEdge.getWeight();
-                            break;
-                        }
+                List<Edge> uOutEdges = edges.get(vertices.get(uIndex));
+                for (Edge uOutEdge : uOutEdges) {
+                    if(uOutEdge.getTo() == wVertex){
+                        uwWeight = uOutEdge.getWeight();
+                        break;
                     }
-
+                }
+                if(!Close.connected(wIndex)){
+                    if(!Open.contains(wVertex)){
+                        Open.add(wVertex);
+                        distance[wIndex] = 100000;
+                    }
                     if (distance[wIndex] > distance[uIndex] + uwWeight){
                         distance[wIndex] = distance[uIndex] + uwWeight;
                         previous[wIndex] = uIndex;
@@ -212,15 +203,39 @@ public class GraphImpl implements Graph {
         return v;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public List<Vertex> aStar(int s, int t, HeuristicFunction heuristicFunction) throws Exception {
+    public List<Vertex> aStar(int s, int t, HeuristicFunction heuristicFunction) {
         Vertex sVertex = findVertex(s);
         Vertex tVertex = findVertex(t);
 
         if(sVertex == null || tVertex == null){
-            throw new Exception("One ore more vertices does not exist in graph.");
+            throw new RuntimeException("One ore more vertices does not exist in graph.");
         }
 
         return aStar(sVertex, tVertex, heuristicFunction);
+    }
+
+    private class VertexComparator implements Comparator<Vertex> {
+        private HeuristicFunction heuristicFunction;
+        private List<Vertex> vertices;
+        private double[] distance;
+        private Vertex target;
+
+        VertexComparator(HeuristicFunction heuristicFunction, List<Vertex> vertices, double[] distance, Vertex target)
+        {
+            this.heuristicFunction = heuristicFunction;
+            this.vertices = vertices;
+            this.distance = distance;
+            this.target = target;
+        }
+        
+        @Override
+        public int compare(Vertex x, Vertex y)
+        {
+            double xSum = heuristicFunction.Execute(x, target) + distance[vertices.indexOf(x)];
+            double ySum = heuristicFunction.Execute(y, target) + distance[vertices.indexOf(y)];
+            return (int)(xSum - ySum);
+        }
     }
 }
