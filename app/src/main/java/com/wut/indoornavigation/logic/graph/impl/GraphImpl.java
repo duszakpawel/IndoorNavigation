@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
+import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.UnionFind;
@@ -23,6 +24,10 @@ public class GraphImpl implements Graph {
     private List<Vertex> vertices;
     private Map<Vertex, List<Edge>> edges;
 
+    public GraphImpl() {
+        this.vertices = new ArrayList<>();
+        this.edges = new HashMap<>();
+    }
 
     public GraphImpl(@NonNull List<Vertex> vertices) {
         this.vertices = new ArrayList<>();
@@ -32,6 +37,31 @@ public class GraphImpl implements Graph {
         for(int i=0; i < verticesCount; i++){
             this.vertices.add(vertices.get(i));
         }
+    }
+
+    @Override
+    public boolean addVertex(Vertex vertex) {
+        for (Vertex v : vertices) {
+            if(v.getId() == vertex.getId()){
+                return false;
+            }
+        }
+        vertices.add(vertex);
+
+        return true;
+    }
+
+    @Override
+    public boolean addVertex(Integer id, Point coordinates) {
+        for (Vertex vertex : vertices) {
+            if(vertex.getId() == id){
+                return false;
+            }
+        }
+        Vertex v = new Vertex(id, coordinates);
+        vertices.add(v);
+
+        return true;
     }
 
     @Override
@@ -214,6 +244,18 @@ public class GraphImpl implements Graph {
         }
 
         return aStar(sVertex, tVertex, heuristicFunction);
+    }
+
+    @Override
+    public Vertex getVertexByCoordinates(float x, float y) {
+        for (Vertex vertex : vertices) {
+            Point coordinates = vertex.getPosition();
+            if(coordinates.getX() == x && coordinates.getY() == y){
+                return vertex;
+            }
+        }
+
+        return null;
     }
 
     private class VertexComparator implements Comparator<Vertex> {
