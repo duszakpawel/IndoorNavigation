@@ -65,6 +65,7 @@ def compile_libs = [
         'org.parceler:parceler-api:1.1.6',
         'com.f2prateek.rx.preferences:rx-preferences:1.0.2',
         'com.jakewharton.threetenabp:threetenabp:1.0.4',
+        'com.estimote:sdk:0.13.0@aar',
 ]
 
 def debug_compile_libs = [
