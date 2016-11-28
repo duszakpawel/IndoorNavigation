@@ -9,7 +9,7 @@ public interface MapActivityViewContract {
 
     }
 
-    interface Presenter extends MvpPresenter<MapActivityViewContract.View> {
+    interface Presenter extends MvpPresenter<View> {
 
     }
 }
