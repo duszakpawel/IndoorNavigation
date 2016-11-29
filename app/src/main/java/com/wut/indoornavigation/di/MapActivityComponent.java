@@ -3,6 +3,7 @@ package com.wut.indoornavigation.di;
 import com.wut.indoornavigation.di.module.MapActivityModule;
 import com.wut.indoornavigation.di.scope.PerActivity;
 import com.wut.indoornavigation.view.map.MapActivity;
+import com.wut.indoornavigation.view.map.fragment.MapFragment;
 
 import dagger.Subcomponent;
 
@@ -14,4 +15,6 @@ import dagger.Subcomponent;
 public interface MapActivityComponent {
 
     void inject(MapActivity activity);
+
+    void inject(MapFragment fragment);
 }

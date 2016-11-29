@@ -15,7 +15,7 @@ import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.Wall;
-import com.wut.indoornavigation.extensions.CanvasExtender;
+import com.wut.indoornavigation.utils.CanvasExtender;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 

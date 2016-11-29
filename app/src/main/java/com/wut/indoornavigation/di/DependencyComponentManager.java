@@ -2,7 +2,6 @@ package com.wut.indoornavigation.di;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.di.module.ApplicationModule;
-import com.wut.indoornavigation.di.module.MainActivityModule;
 import com.wut.indoornavigation.di.module.MapActivityModule;
 
 /**
@@ -11,7 +10,6 @@ import com.wut.indoornavigation.di.module.MapActivityModule;
 public final class DependencyComponentManager {
 
     private ApplicationComponent applicationComponent;
-    private MainActivityComponent mainActivityComponent;
     private MapActivityComponent mapActivityComponent;
 
     public DependencyComponentManager(IndoorNavigationApp application) {
@@ -22,17 +20,6 @@ public final class DependencyComponentManager {
 
     public ApplicationComponent getApplicationComponent() {
         return applicationComponent;
-    }
-
-    public MainActivityComponent getMainActivityComponent() {
-        if (mainActivityComponent == null) {
-            mainActivityComponent = applicationComponent.plus(new MainActivityModule());
-        }
-        return mainActivityComponent;
-    }
-
-    public void releaseMainActivityComponent() {
-        mainActivityComponent = null;
     }
 
     public MapActivityComponent getMapActivityComponent() {

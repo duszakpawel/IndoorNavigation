@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/map_fragment_header_height"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/map_fragment_header_floor"
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"
+                android:layout_marginTop="@dimen/map_fragment_header_margin"/>
+
+            <Spinner
+                android:id="@+id/fragment_map_floor_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/map_fragment_header_room"
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"
+                android:layout_marginTop="@dimen/map_fragment_header_margin"/>
+
+            <Spinner
+                android:id="@+id/fragment_map_room_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.wut.indoornavigation.map.MapView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/events_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:tint="@color/white" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
