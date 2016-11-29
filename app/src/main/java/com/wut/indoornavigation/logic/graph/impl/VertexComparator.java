@@ -6,10 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 
 class VertexComparator implements Comparator<Vertex> {
-    private HeuristicFunction heuristicFunction;
-    private List<Vertex> vertices;
-    private double[] distance;
-    private Vertex target;
+    private final HeuristicFunction heuristicFunction;
+    private final List<Vertex> vertices;
+    private final double[] distance;
+    private final Vertex target;
 
     VertexComparator(HeuristicFunction heuristicFunction, List<Vertex> vertices, double[] distance, Vertex target)
     {

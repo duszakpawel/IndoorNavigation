@@ -9,9 +9,4 @@ import lombok.Value;
 public class Vertex {
     private int id;
     private Point position;
-
-    public Vertex(int id, Point position){
-        this.id = id;
-        this.position = position;
-    }
 }
