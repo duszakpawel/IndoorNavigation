@@ -3,7 +3,7 @@ package com.wut.indoornavigation;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
-import com.wut.indoornavigation.logic.graph.impl.HeuristicFunctionImpl;
+import com.wut.indoornavigation.logic.graph.impl.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
 import junit.framework.Assert;
@@ -190,7 +190,7 @@ public class GraphTests {
     @Test
     public void aStarTestForSmallDirectedGraph() {
         Graph g = getMockGraph();
-        List<Vertex> result = g.aStar(0, 4, new HeuristicFunctionImpl());
+        List<Vertex> result = g.aStar(0, 4, new HeuristicFunction());
 
         Assert.assertEquals(result.size(), 3);
     }
@@ -198,7 +198,7 @@ public class GraphTests {
     @Test
     public void aStarTestForBigDirectedGraph() {
         Graph g = getBigMockGraph();
-        List<Vertex> result = g.aStar(8, 3, new HeuristicFunctionImpl());
+        List<Vertex> result = g.aStar(8, 3, new HeuristicFunction());
 
         Assert.assertEquals(result.size(), 6);
     }
@@ -206,7 +206,7 @@ public class GraphTests {
     @Test
     public void aStarTestForBigDirectedGraphModified() {
         Graph g = getBigMockGraphModified();
-        List<Vertex> result = g.aStar(8, 3, new HeuristicFunctionImpl());
+        List<Vertex> result = g.aStar(8, 3, new HeuristicFunction());
 
         Assert.assertEquals(result.size(), 4);
     }
@@ -214,7 +214,7 @@ public class GraphTests {
     @Test
     public void aStarTestForNotConsistentGraph() {
         Graph g = getMocNotConsistentGraph();
-        List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
+        List<Vertex> result = g.aStar(0, 1, new HeuristicFunction());
 
         Assert.assertEquals(result.size(), 1);
     }
@@ -222,7 +222,7 @@ public class GraphTests {
     @Test
     public void aStarTestForSourceEqualToTarget() {
         Graph g = getMocNotConsistentGraph();
-        List<Vertex> result = g.aStar(0, 1, new HeuristicFunctionImpl());
+        List<Vertex> result = g.aStar(0, 1, new HeuristicFunction());
 
         Assert.assertEquals(result.size(), 1);
     }
