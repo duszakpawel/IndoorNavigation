@@ -1,7 +1,6 @@
 package com.wut.indoornavigation.logic.graph;
 
 
-import com.wut.indoornavigation.logic.graph.impl.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
@@ -16,8 +15,9 @@ public interface Graph {
 
     List<Edge> outEdges(int vertexId);
     List<Vertex> outVertices(Vertex vertex);
-    List<Vertex> aStar(Vertex sourceId, Vertex targetId, HeuristicFunction heuristicFunction);
-    List<Vertex> aStar(int sourceId, int targetId, HeuristicFunction heuristicFunction);
+    List<Vertex> aStar(Vertex sourceId, Vertex targetId);
+    @Deprecated
+    List<Vertex> aStar(int sourceId, int targetId);
 
     Vertex getVertexByCoordinates(float x, float y);
 }

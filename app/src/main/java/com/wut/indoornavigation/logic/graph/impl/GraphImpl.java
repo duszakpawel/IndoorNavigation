@@ -16,8 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import javax.inject.Inject;
+
 
 public class GraphImpl implements Graph {
+    private static final int NO_PREVIOUS = -1;
+    private static final double DIST_DEFAULT_VALUE = 0;
+    private static final int INFINITY = 10000;
+
+    @Inject
+    HeuristicFunction heuristicFunction;
+
     private final List<Vertex> vertices;
     private final Map<Vertex, List<Edge>> edges;
 
@@ -49,18 +58,18 @@ public class GraphImpl implements Graph {
         Vertex from = edge.getFrom();
         Vertex to = edge.getTo();
 
-        if(vertices.contains(from) && vertices.contains(to)){
-            if(!edges.containsKey(from)){
+        if (vertices.contains(from) && vertices.contains(to)) {
+            if (!edges.containsKey(from)) {
                 List<Edge> outEdges = new ArrayList<>();
                 outEdges.add(edge);
                 edges.put(from, outEdges);
 
                 return true;
-            } else{
+            } else {
                 List<Edge> fromOutEdges = edges.get(from);
-                if(fromOutEdges.contains(edge)){
+                if (fromOutEdges.contains(edge)) {
                     return false;
-                }else{
+                } else {
                     fromOutEdges.add(edge);
 
                     return true;
@@ -84,12 +93,10 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public List<Vertex> outVertices(Vertex vertex) {
-        if(vertex != null) {
+    public List<Vertex> outVertices(@NonNull Vertex vertex) {
             List<Edge> outEdges = edges.get(vertex);
-            List<Vertex> outVertices=  new ArrayList<>();
-            if(outEdges == null || outEdges.size() == 0)
-            {
+            List<Vertex> outVertices = new ArrayList<>();
+            if (outEdges == null || outEdges.isEmpty()) {
                 return outVertices;
             }
 
@@ -97,56 +104,48 @@ public class GraphImpl implements Graph {
                 outVertices.add(outEdge.getTo());
             }
             return outVertices;
-        } else{
-            return new ArrayList<>();
-        }
     }
 
     @Override
     public List<Edge> outEdges(int vertexId) {
-        Vertex vertex = null;
+        Vertex vertex;
         int verticesCount = vertices.size();
-        for(int i=0; i < verticesCount; i++){
+        for (int i = 0; i < verticesCount; i++) {
             Vertex v = vertices.get(i);
-            if(v.getId() == vertexId){
+            if (v.getId() == vertexId) {
                 vertex = v;
-                break;
+                return edges.get(vertex);
             }
         }
 
-        if(vertex != null) {
-            return edges.get(vertex);
-        } else{
-            return new ArrayList<>();
-        }
+            throw new IllegalStateException("Vertex does not belong to graph.");
     }
 
     @Override
-    public List<Vertex> aStar(Vertex s, Vertex t, HeuristicFunction heuristicFunction) {
+    public List<Vertex> aStar(Vertex s, Vertex t) {
         int verticesCount = verticesCount();
         double[] distance = new double[verticesCount];
         int[] previous = new int[verticesCount];
 
         for (int i = 0; i < verticesCount; i++) {
-            final int infinity = 100000;
-            distance[i] = infinity;
-            previous[i] = -1;
+            distance[i] = INFINITY;
+            previous[i] = NO_PREVIOUS;
         }
 
         int sIndex = vertices.indexOf(s);
 
-        distance[sIndex] = 0;
+        distance[sIndex] = DIST_DEFAULT_VALUE;
 
         UnionFind Close = new UnionFindImpl(verticesCount);
-        Comparator<Vertex> comparator = new VertexComparator(heuristicFunction,vertices,distance,t);
+        Comparator<Vertex> comparator = new VertexComparator(heuristicFunction, vertices, distance, t);
         PriorityQueue<Vertex> Open = new PriorityQueue<>(verticesCount, comparator);
         Open.add(s);
 
         while (!Open.isEmpty()) {
             Vertex u = Open.peek();
-            Integer uIndex = vertices.indexOf(u);
+            int uIndex = vertices.indexOf(u);
             for (Vertex iVertex : Open) {
-                Integer iIndex = vertices.indexOf(iVertex);
+                int iIndex = vertices.indexOf(iVertex);
 
                 if (distance[iIndex] + heuristicFunction.execute(vertices.get(iIndex), t) <= distance[uIndex] + heuristicFunction.execute(vertices.get(uIndex), t)) {
                     u = iVertex;
@@ -167,17 +166,17 @@ public class GraphImpl implements Graph {
 
                 List<Edge> uOutEdges = edges.get(vertices.get(uIndex));
                 for (Edge uOutEdge : uOutEdges) {
-                    if(uOutEdge.getTo() == wVertex){
+                    if (uOutEdge.getTo() == wVertex) {
                         uwWeight = uOutEdge.getWeight();
                         break;
                     }
                 }
-                if(!Close.connected(wIndex)){
-                    if(!Open.contains(wVertex)){
+                if (!Close.connected(wIndex)) {
+                    if (!Open.contains(wVertex)) {
                         Open.add(wVertex);
-                        distance[wIndex] = 100000;
+                        distance[wIndex] = INFINITY;
                     }
-                    if (distance[wIndex] > distance[uIndex] + uwWeight){
+                    if (distance[wIndex] > distance[uIndex] + uwWeight) {
                         distance[wIndex] = distance[uIndex] + uwWeight;
                         previous[wIndex] = uIndex;
                     }
@@ -185,14 +184,12 @@ public class GraphImpl implements Graph {
             }
         }
 
-        int i = t.getId();
-
-        return reproducePath(previous, i);
+        return reproducePath(previous, t.getId());
     }
 
     private List<Vertex> reproducePath(int[] previous, int targetIndex) {
-        List<Vertex> result = new ArrayList<>();
-        while(targetIndex != -1){
+        final List<Vertex> result = new ArrayList<>();
+        while (targetIndex != NO_PREVIOUS) {
             result.add(0, vertices.get(targetIndex));
             targetIndex = previous[targetIndex];
         }
@@ -200,28 +197,28 @@ public class GraphImpl implements Graph {
         return result;
     }
 
-    private Vertex findVertex(int id){
-        Vertex v = null;
+    private Vertex findVertex(int id) {
+        Vertex v;
         for (Vertex vertex : vertices) {
-            if(vertex.getId() == id){
+            if (vertex.getId() == id) {
                 v = vertex;
-                break;
+                return v;
             }
         }
 
-        return v;
+        throw new IllegalStateException("There is no vertex with id" + id);
     }
 
     @Override
-    public List<Vertex> aStar(int s, int t, HeuristicFunction heuristicFunction) {
+    public List<Vertex> aStar(int s, int t) {
         Vertex sVertex = findVertex(s);
         Vertex tVertex = findVertex(t);
 
-        if(sVertex == null || tVertex == null){
+        if (sVertex == null || tVertex == null) {
             throw new RuntimeException("One ore more vertices does not exist in graph.");
         }
 
-        return aStar(sVertex, tVertex, heuristicFunction);
+        return aStar(sVertex, tVertex);
     }
 
     @Override

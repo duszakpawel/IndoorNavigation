@@ -26,7 +26,7 @@ public class LocationTests {
         weights.add(1f);
         weights.add(1f);
 
-        Point approximatedLocation = locationProvider.ComputeLocation(points, weights);
+        Point approximatedLocation = locationProvider.computeLocation(points, weights);
 
         Assert.assertEquals(approximatedLocation.getX(), 2f);
         Assert.assertEquals(approximatedLocation.getY(), 1f);
