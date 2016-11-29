@@ -1,7 +1,7 @@
 package com.wut.indoornavigation.logic.graph;
 
 
-import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.logic.graph.impl.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 
@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface Graph {
     boolean addVertex(Vertex vertex);
-    boolean addVertex(Integer id, Point coordinates);
     boolean addEdge(Edge edge);
     boolean addEdge(Vertex start, Vertex end, double weight);
 
