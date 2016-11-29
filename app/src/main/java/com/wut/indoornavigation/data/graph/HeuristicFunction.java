@@ -1,12 +1,22 @@
-package com.wut.indoornavigation.logic.graph.impl;
+package com.wut.indoornavigation.data.graph;
 
-import com.wut.indoornavigation.logic.graph.models.Vertex;
+import com.wut.indoornavigation.data.model.graph.Vertex;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
-public final class HeuristicFunction {
+@Singleton
+public class HeuristicFunction {
+
+    @Inject
+    public HeuristicFunction() {
+
+    }
+
     public double execute(Vertex source, Vertex destination) {
         double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());
         double yDistance = abs(source.getPosition().getY() - destination.getPosition().getY());

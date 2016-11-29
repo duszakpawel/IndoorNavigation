@@ -1,8 +1,7 @@
-package com.wut.indoornavigation;
+package com.wut.indoornavigation.data.graph.location;
+
 
 import com.wut.indoornavigation.data.model.Point;
-import com.wut.indoornavigation.logic.location.LocationProvider;
-import com.wut.indoornavigation.logic.location.impl.LocationProviderImpl;
 
 import junit.framework.Assert;
 
@@ -11,10 +10,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationTests {
+public class LocationProviderTest {
+
     @Test
     public void locationProviderTestForIsoscelesTriangleInSignalCenter() throws Exception {
-        LocationProvider locationProvider = new LocationProviderImpl();
+        LocationProvider locationProvider = new LocationProvider();
 
         List<Point> points = new ArrayList<>();
         points.add(new Point(0, 0));

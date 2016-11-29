@@ -1,16 +1,24 @@
-package com.wut.indoornavigation.logic.location.impl;
+package com.wut.indoornavigation.data.graph.location;
 
 import android.support.annotation.NonNull;
 
 import com.wut.indoornavigation.data.model.Point;
-import com.wut.indoornavigation.logic.location.LocationProvider;
 
 import java.util.List;
 
-public class LocationProviderImpl implements LocationProvider {
-    private static final int k = 1;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    @Override
+@Singleton
+public class LocationProvider {
+
+    private static final int K = 1;
+
+    @Inject
+    public LocationProvider() {
+
+    }
+
     public Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
         if (positions.size() != weights.size()) {
             // TODO: custom exception to be handled
@@ -22,7 +30,7 @@ public class LocationProviderImpl implements LocationProvider {
         double denominator = 0;
 
         for (int i = 0; i < positions.size(); i++) {
-            double divider = Math.pow(weights.get(i), -k);
+            double divider = Math.pow(weights.get(i), -K);
             xNominator += divider * positions.get(i).getX();
             yNominator += divider * positions.get(i).getY();
             denominator += divider;

@@ -1,13 +1,19 @@
-package com.wut.indoornavigation.logic.graph;
+package com.wut.indoornavigation.data.graph;
 
 
-import com.wut.indoornavigation.logic.graph.models.Edge;
-import com.wut.indoornavigation.logic.graph.models.Vertex;
+import android.support.annotation.NonNull;
+
+import com.wut.indoornavigation.data.model.graph.Edge;
+import com.wut.indoornavigation.data.model.graph.Vertex;
 
 import java.util.List;
 
 public interface Graph {
+
+    void setVertices(@NonNull List<Vertex> vertices);
+
     boolean addEdge(Edge edge);
+    @Deprecated
     boolean addEdge(Vertex start, Vertex end, double weight);
 
     int verticesCount();
