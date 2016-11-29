@@ -6,12 +6,12 @@ import com.wut.indoornavigation.logic.graph.UnionFind;
  * Union - Find structure
  */
 public class UnionFindImpl implements UnionFind {
-    private Integer[] id;
-    private Integer[] sz;
+    private int[] id;
+    private int[] sz;
 
-    public UnionFindImpl(Integer N) {
-        id = new Integer[N+1];
-        sz = new Integer[N+1];
+    public UnionFindImpl(int N) {
+        id = new int[N+1];
+        sz = new int[N+1];
         for (int i = 0; i < N+1; ++i)
         {
             id[i] = i;
@@ -19,39 +19,39 @@ public class UnionFindImpl implements UnionFind {
         }
     }
 
-    private Integer root(Integer i) {
-        while (!i.equals(id[i])) {
+    private int root(int i) {
+        while (i!=id[i]) {
             id[i] = id[id[i]];
             i = id[i];
         }
         return i;
     }
 
-    public boolean connected(Integer p, Integer q) {
-        return root(p).equals(root(q));
+    public boolean connected(int p, int q) {
+        return root(p)==root(q);
     }
 
-    public boolean connected(Integer p) {
-        return root(p).equals(root(id.length-1));
+    public boolean connected(int p) {
+        return root(p)==root(id.length-1);
     }
 
-    public void union(Integer p) {
-        Integer q = id.length - 1;
+    public void union(int p) {
+        int q = id.length - 1;
         union(p,q);
     }
 
-    public void union(Integer p, Integer q) {
-        Integer i = root(p);
-        Integer j = root(q);
-        if (i.equals(j)) {
+    public void union(int p, int q) {
+        int i = root(p);
+        int j = root(q);
+        if (i==j) {
             return;
         }
         if (sz[i] < sz[j]) { id[i] = j; sz[j] += sz[i]; }
         else               { id[j] = i; sz[i] += sz[j]; }
 
-        Integer k = root(p);
-        Integer l = root(id.length-1);
-        if (k.equals(l)) {
+        int k = root(p);
+        int l = root(id.length-1);
+        if (k==l) {
             return;
         }
         if (sz[k] < sz[l]) { id[k] = l; sz[l] += sz[k]; }

@@ -1,6 +1,7 @@
 package com.wut.indoornavigation.logic.graph;
 
 
+import com.wut.indoornavigation.logic.graph.impl.HeuristicFunction;
 import com.wut.indoornavigation.logic.graph.models.Edge;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 

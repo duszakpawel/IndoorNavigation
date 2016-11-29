@@ -6,9 +6,4 @@ import lombok.Value;
 public class Point {
     float X;
     float Y;
-
-    public Point(float x, float y) {
-        this.X = x;
-        this.Y = y;
-    }
 }

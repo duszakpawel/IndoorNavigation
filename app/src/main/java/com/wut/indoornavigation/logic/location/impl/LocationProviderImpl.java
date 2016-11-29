@@ -11,10 +11,10 @@ public class LocationProviderImpl implements LocationProvider {
     private static final int k = 1;
 
     @Override
-    public Point ComputeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) throws Exception {
+    public Point ComputeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
         if (positions.size() != weights.size()) {
             // TODO: custom exception to be handled
-            throw new Exception("Collections must have equal length.");
+            throw new RuntimeException("Collections must have equal length.");
         }
 
         double xNominator = 0;
