@@ -52,6 +52,18 @@ public class MeshImpl implements Mesh{
         }
 
         // TODO: link together floors (stairs, elevators)
+        for (Vertex stairsVertice : stairsVertices) {
+            // znajdz schody o tym id, sprawdz czy mozna w nie wejść
+            // jesli mozna w nie wejsc
+            //      znajdz wierzcholek ktory odpowiada koncowi
+            //      dodaj krawedz do grafu z waga odpowiadajaca tym schodom
+        }
+
+        for (Vertex elevatorsVertice : elevatorsVertices) {
+            // znajdz winde o tym id
+            // znajdz windy o tym id na pietrze wyzej i pietrze nizej (o ile istnieją)
+            // dodaj krawedz(ie) do grafu z waga odpowiadajaca tym schodom
+        }
 
         return graph;
     }
