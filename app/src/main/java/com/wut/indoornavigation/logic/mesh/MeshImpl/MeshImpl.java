@@ -26,27 +26,29 @@ public class MeshImpl implements Mesh{
             int floorNumber=  floor.getNumber();
             FloorObject[][] enumMap = floor.getEnumMap();
             boolean[][] visited = new boolean[enumMap[0].length][enumMap[1].length];
+            int x = 0;
+            int y = 0;
             for(int i=0; i<enumMap[0].length; i++){
                 for(int j=0; j<enumMap[1].length; j++){
                     visited[i][j] = true;
                     // until the CORNER is reached
                     if(enumMap[i][j] == FloorObject.CORNER){
                         // the cell on the right and bottom from current cell should belong to mesh
-                        int x = i+1;
-                        int y = j+1;
+                        x = i+1;
+                        y = j+1;
 
                         // exception handling
                         if(x == enumMap[0].length || y == enumMap[1].length){
                             return graph;
                         }
-
-                        // processing the vertex
-                        Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
-                        // and his neighbours
-                        ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
                     }
                 }
             }
+
+            // processing the vertex
+            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
+            // and his neighbours
+            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
         }
 
         // TODO: link together floors (stairs, elevators)
