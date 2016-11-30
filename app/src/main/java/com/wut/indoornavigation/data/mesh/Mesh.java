@@ -77,7 +77,7 @@ public final class Mesh {
 
             List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
             for (int i = 0; i < floorDestinationVertices.size(); i++) {
-                floorDestinationVertices.get(i).toBuilder().setId(floor.getDoors().get(i).getId()).build();
+                floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
             }
         }
 

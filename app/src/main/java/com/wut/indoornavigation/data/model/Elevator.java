@@ -6,5 +6,4 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Elevator extends BuildingObject {
-    //int endfloor;
 }
