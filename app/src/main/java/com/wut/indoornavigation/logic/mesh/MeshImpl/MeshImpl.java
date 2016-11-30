@@ -64,29 +64,33 @@ public class MeshImpl implements Mesh{
         for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
             Elevator elevator = floor.getElevators().get(i);
             if (elevator.getStart() != elevator.getEnd()) { // loops in graph not needed
-                List<Elevator> endFloorElevators = building.getFloors().get(elevator.getEndfloor()).getElevators();
-                List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(elevator.getEndfloor());
+                for (int k = floorNumber - 1; k < floorNumber + 2; k += 2) {
+                    if(building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1){
+                        continue;
+                    }
+                    List<Elevator> endFloorElevators = building.getFloors().get(k).getElevators();
+                    List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
 
-                Comparator<Vertex> by2dPosition = (v1, v2) -> {
-                    if(v1.getPosition().getX()- v2.getPosition().getX() == 0){
-                        return Math.round(v1.getPosition().getY()- v2.getPosition().getY());
+                    Comparator<Vertex> by2dPosition = (v1, v2) -> {
+                        if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
+                            return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+                        } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+                    };
+                    Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
+                    int endVertexIndex = -1;
+                    for (int j = 0; j < endFloorElevators.size(); j++) {
+                        if (endFloorElevators.get(j).getId() == elevator.getId()) {
+                            endVertexIndex = j;
+                            break;
+                        }
                     }
-                    else return Math.round(v1.getPosition().getX()- v2.getPosition().getX());
-                };
-                Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
-                int endVertexIndex = -1;
-                for (int j = 0; j < endFloorElevators.size(); j++) {
-                    if(endFloorElevators.get(j).getId() == elevator.getId()){
-                        endVertexIndex = j;
-                        break;
+                    if (endVertexIndex == -1) {
+                        throw new IllegalStateException();
                     }
+                    Vertex startVertex = endFloorElevatorsGraphVertices.get(i);
+                    Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
+                    graph.addEdge(startVertex, endVertex, 5000);
                 }
-                if(endVertexIndex == -1){
-                    throw new IllegalStateException();
-                }
-                Vertex startVertex = endFloorElevatorsGraphVertices.get(i);
-                Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
-                graph.addEdge(startVertex, endVertex, 5000);
             }
         }
     }
@@ -167,7 +171,13 @@ public class MeshImpl implements Mesh{
                 Vertex v = ProcessCell(rowNum, colNum, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
 
                 if (v != null) {
-                    final double weight = 0.5;
+                    double weight;
+                    if((rowNum < x && colNum < y) || (rowNum > x && colNum < y) || (rowNum < x && colNum > y) || (rowNum > x && colNum > y)){
+                        weight = 0.7;
+                    }
+                    else{
+                        weight = 0.5;
+                    }
                     graph.addEdge(v, vertex, weight);
                     graph.addEdge(vertex, v, weight);
                     ProcessNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
