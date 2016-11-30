@@ -77,6 +77,7 @@ public final class Mesh {
 
             List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
             for (int i = 0; i < floorDestinationVertices.size(); i++) {
+                // TODO: posortować najpierw trzeba
                 floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
             }
         }
