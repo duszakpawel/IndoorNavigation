@@ -1,27 +1,32 @@
 package com.wut.indoornavigation.logic.mesh.MeshImpl;
 
 import com.wut.indoornavigation.data.model.Building;
+import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.logic.graph.Graph;
 import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
 import com.wut.indoornavigation.logic.graph.models.Vertex;
 import com.wut.indoornavigation.logic.mesh.Mesh;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-// TODO: no tests for this class so far
 public class MeshImpl implements Mesh{
     private static Integer idSeed;
     @Override
     public Graph create(Building building) {
         idSeed = -1;
         Graph graph = new GraphImpl();
-        List<Vertex> destinationVertices = new ArrayList<>();
-        List<Vertex> elevatorsVertices = new ArrayList<>();
-        List<Vertex> stairsVertices = new ArrayList<>();
+        Map<Integer, List<Vertex>> destinationVerticesDict = new HashMap<>();
+        Map<Integer, List<Vertex>> elevatorsVerticesDict = new HashMap<>();
+        Map<Integer, List<Vertex>> stairsVerticesDict = new HashMap<>();
         for (Floor floor : building.getFloors()) {
             int floorNumber=  floor.getNumber();
             FloorObject[][] enumMap = floor.getEnumMap();
@@ -31,13 +36,10 @@ public class MeshImpl implements Mesh{
             for(int i=0; i<enumMap[0].length; i++){
                 for(int j=0; j<enumMap[1].length; j++){
                     visited[i][j] = true;
-                    // until the CORNER is reached
                     if(enumMap[i][j] == FloorObject.CORNER){
-                        // the cell on the right and bottom from current cell should belong to mesh
                         x = i+1;
                         y = j+1;
 
-                        // exception handling
                         if(x == enumMap[0].length || y == enumMap[1].length){
                             return graph;
                         }
@@ -45,30 +47,75 @@ public class MeshImpl implements Mesh{
                 }
             }
 
-            // processing the vertex
-            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
-            // and his neighbours
-            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
+            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph, destinationVerticesDict, elevatorsVerticesDict, stairsVerticesDict);
+            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph, destinationVerticesDict, elevatorsVerticesDict, stairsVerticesDict);
         }
 
-        // TODO: link together floors (stairs, elevators)
-        for (Vertex stairsVertice : stairsVertices) {
-            // znajdz schody o tym id, sprawdz czy mozna w nie wejść
-            // jesli mozna w nie wejsc
-            //      znajdz wierzcholek ktory odpowiada koncowi
-            //      dodaj krawedz do grafu z waga odpowiadajaca tym schodom
-        }
-
-        for (Vertex elevatorsVertice : elevatorsVertices) {
-            // znajdz winde o tym id
-            // znajdz windy o tym id na pietrze wyzej i pietrze nizej (o ile istnieją)
-            // dodaj krawedz(ie) do grafu z waga odpowiadajaca tym schodom
+        for (Floor floor : building.getFloors()) {
+            int floorNumber = floor.getNumber();
+            LinkStairsOnFloor(building, graph, stairsVerticesDict, floor, floorNumber);
+            LinkElevatorsOnFloor(building, graph, elevatorsVerticesDict, floor, floorNumber);
         }
 
         return graph;
     }
 
-    private Vertex ProcessCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, List<Vertex> destinationVertices, List<Vertex> elevatorsVertices, List<Vertex> stairsVertices) {
+    private void LinkElevatorsOnFloor(Building building, Graph graph, Map<Integer, List<Vertex>> elevatorsVerticesDict, Floor floor, int floorNumber) {
+        for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
+            Elevator elevator = floor.getElevators().get(i);
+            if (elevator.getStart() != elevator.getEnd()) { // loops in graph not needed
+                List<Elevator> endFloorElevators = building.getFloors().get(elevator.getEndfloor()).getElevators();
+                List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(elevator.getEndfloor());
+
+                Comparator<Vertex> by2dPosition = (v1, v2) -> {
+                    if(v1.getPosition().getX()- v2.getPosition().getX() == 0){
+                        return Math.round(v1.getPosition().getY()- v2.getPosition().getY());
+                    }
+                    else return Math.round(v1.getPosition().getX()- v2.getPosition().getX());
+                };
+                Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
+                int endVertexIndex = -1;
+                for (int j = 0; j < endFloorElevators.size(); j++) {
+                    if(endFloorElevators.get(j).getId() == elevator.getId()){
+                        endVertexIndex = j;
+                        break;
+                    }
+                }
+                if(endVertexIndex == -1){
+                    throw new IllegalStateException();
+                }
+                Vertex startVertex = endFloorElevatorsGraphVertices.get(i);
+                Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
+                graph.addEdge(startVertex, endVertex, 5000);
+            }
+        }
+    }
+
+    private void LinkStairsOnFloor(Building building, Graph graph, Map<Integer, List<Vertex>> stairsVerticesDict, Floor floor, int floorNumber) {
+        for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
+            Stairs stairs = floor.getStairs().get(i);
+            if (stairs.getStart() != stairs.getEnd()) { // loops in graph not needed
+                List<Stairs> endFloorStairs = building.getFloors().get(stairs.getEndfloor()).getStairs();
+                List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(stairs.getEndfloor());
+
+                int endVertexIndex = -1;
+                for (int j = 0; j < endFloorStairs.size(); j++) {
+                    if(endFloorStairs.get(j).getId() == stairs.getEndid()){
+                        endVertexIndex = j;
+                        break;
+                    }
+                }
+                if(endVertexIndex == -1){
+                    throw new IllegalStateException();
+                }
+                Vertex startVertex = endFloorStairsGraphVertices.get(i);
+                Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
+                graph.addEdge(startVertex, endVertex, 5000);
+            }
+        }
+    }
+
+    private Vertex ProcessCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, Map<Integer, List<Vertex>> destinationVertices, Map<Integer, List<Vertex>> elevatorsVertices, Map<Integer, List<Vertex>> stairsVertices) {
         if(visited[x][y]){
             return graph.getVertexByCoordinates(x/2, y/2);
         }
@@ -80,13 +127,25 @@ public class MeshImpl implements Mesh{
             vertex = new Vertex(idSeed--, coordinates);
             graph.addVertex(vertex);
             if(enumMap[x][y] == FloorObject.DOOR){
-                destinationVertices.add(vertex);
+                List<Vertex> vertices = destinationVertices.get(floorNumber);
+                if(vertices == null){
+                    vertices = new ArrayList<>();
+                }
+                vertices.add(vertex);
             }
             if(enumMap[x][y] == FloorObject.ELEVATOR){
-                elevatorsVertices.add(vertex);
+                List<Vertex> vertices = elevatorsVertices.get(floorNumber);
+                if(vertices == null){
+                    vertices = new ArrayList<>();
+                }
+                vertices.add(vertex);
             }
             if(enumMap[x][y] == FloorObject.STAIRS){
-                stairsVertices.add(vertex);
+                List<Vertex> vertices = stairsVertices.get(floorNumber);
+                if(vertices == null){
+                    vertices = new ArrayList<>();
+                }
+                vertices.add(vertex);
             }
             return vertex;
         }
@@ -94,7 +153,7 @@ public class MeshImpl implements Mesh{
         return null;
     }
 
-    private void ProcessNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, List<Vertex> destinationVertices, List<Vertex> elevatorsVertices, List<Vertex> stairsVertices) {
+    private void ProcessNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, Map<Integer, List<Vertex>> destinationVertices, Map<Integer, List<Vertex>> elevatorsVertices, Map<Integer, List<Vertex>> stairsVertices) {
         final int width = enumMap[0].length;
         final int height = enumMap[1].length;
 
