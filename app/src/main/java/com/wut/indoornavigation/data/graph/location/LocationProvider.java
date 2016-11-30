@@ -27,15 +27,17 @@ public class LocationProvider {
 
         double xNominator = 0;
         double yNominator = 0;
+        double zNominator = 0;
         double denominator = 0;
 
         for (int i = 0; i < positions.size(); i++) {
             double divider = Math.pow(weights.get(i), -K);
             xNominator += divider * positions.get(i).getX();
             yNominator += divider * positions.get(i).getY();
+            zNominator += divider * positions.get(i).getZ();
             denominator += divider;
         }
 
-        return new Point((float)(xNominator / denominator), (float)(yNominator / denominator));
+        return new Point((float)(xNominator / denominator), (float)(yNominator / denominator), (float)(zNominator / denominator));
     }
 }

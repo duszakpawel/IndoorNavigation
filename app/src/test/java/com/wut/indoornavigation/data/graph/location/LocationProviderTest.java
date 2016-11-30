@@ -17,9 +17,9 @@ public class LocationProviderTest {
         LocationProvider locationProvider = new LocationProvider();
 
         List<Point> points = new ArrayList<>();
-        points.add(new Point(0, 0));
-        points.add(new Point(4, 0));
-        points.add(new Point(2, 3));
+        points.add(new Point(0, 0, 0));
+        points.add(new Point(4, 0, 0));
+        points.add(new Point(2, 3, 0));
 
         List<Float> weights = new ArrayList<>();
         weights.add(1f);
