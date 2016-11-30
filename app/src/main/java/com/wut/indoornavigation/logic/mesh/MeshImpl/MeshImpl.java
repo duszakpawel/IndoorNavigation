@@ -18,56 +18,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MeshImpl implements Mesh{
+public class MeshImpl implements Mesh {
+    private static final int ID_SEED_INIT = -1;
+    private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+    private static final int EDGE_ELEVATOR_WEIGHT = 5000;
+
     private static Integer idSeed;
+
+    private Map<Integer, List<Vertex>> destinationVerticesDict;
+    private Map<Integer, List<Vertex>> elevatorsVerticesDict;
+    private Map<Integer, List<Vertex>> stairsVerticesDict;
+
     @Override
     public Graph create(Building building) {
-        idSeed = -1;
+        idSeed = ID_SEED_INIT;
+        destinationVerticesDict = new HashMap<>();
+        elevatorsVerticesDict = new HashMap<>();
+        stairsVerticesDict = new HashMap<>();
+
         Graph graph = new GraphImpl();
-        Map<Integer, List<Vertex>> destinationVerticesDict = new HashMap<>();
-        Map<Integer, List<Vertex>> elevatorsVerticesDict = new HashMap<>();
-        Map<Integer, List<Vertex>> stairsVerticesDict = new HashMap<>();
+
         for (Floor floor : building.getFloors()) {
-            int floorNumber=  floor.getNumber();
+            int floorNumber = floor.getNumber();
             FloorObject[][] enumMap = floor.getEnumMap();
-            boolean[][] visited = new boolean[enumMap[0].length][enumMap[1].length];
+
             int x = 0;
             int y = 0;
-            for(int i=0; i<enumMap[0].length; i++){
-                for(int j=0; j<enumMap[1].length; j++){
+            int width = enumMap[0].length;
+            int height = enumMap[1].length;
+            boolean[][] visited = new boolean[width][height];
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
                     visited[i][j] = true;
-                    if(enumMap[i][j] == FloorObject.CORNER){
-                        x = i+1;
-                        y = j+1;
-
-                        if(x == enumMap[0].length || y == enumMap[1].length){
+                    if (enumMap[i][j] == FloorObject.CORNER) {
+                        x = i + 1;
+                        y = j + 1;
+                        if (x == enumMap[0].length || y == enumMap[1].length) {
                             return graph;
                         }
                     }
                 }
             }
 
-            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph, destinationVerticesDict, elevatorsVerticesDict, stairsVerticesDict);
-            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph, destinationVerticesDict, elevatorsVerticesDict, stairsVerticesDict);
+            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph);
+            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph);
         }
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
-            LinkStairsOnFloor(building, graph, stairsVerticesDict, floor, floorNumber);
-            LinkElevatorsOnFloor(building, graph, elevatorsVerticesDict, floor, floorNumber);
+            LinkStairsOnFloor(building, graph, floor, floorNumber);
+            LinkElevatorsOnFloor(building, graph, floor, floorNumber);
         }
 
         return graph;
     }
 
-    private void LinkElevatorsOnFloor(Building building, Graph graph, Map<Integer, List<Vertex>> elevatorsVerticesDict, Floor floor, int floorNumber) {
+    private void LinkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
         for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
             Elevator elevator = floor.getElevators().get(i);
-            if (elevator.getStart() != elevator.getEnd()) { // loops in graph not needed
+
+            if (elevator.getStart() != elevator.getEnd()) {
                 for (int k = floorNumber - 1; k < floorNumber + 2; k += 2) {
-                    if(building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1){
+                    if (building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1) {
                         continue;
                     }
+
                     List<Elevator> endFloorElevators = building.getFloors().get(k).getElevators();
                     List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
 
@@ -76,7 +92,9 @@ public class MeshImpl implements Mesh{
                             return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
                         } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
                     };
+
                     Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
+
                     int endVertexIndex = -1;
                     for (int j = 0; j < endFloorElevators.size(); j++) {
                         if (endFloorElevators.get(j).getId() == elevator.getId()) {
@@ -84,103 +102,121 @@ public class MeshImpl implements Mesh{
                             break;
                         }
                     }
+
                     if (endVertexIndex == -1) {
-                        throw new IllegalStateException();
+                        throw new IllegalStateException("This algorithm is bugged as f*ck.");
                     }
+
                     Vertex startVertex = endFloorElevatorsGraphVertices.get(i);
                     Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
-                    graph.addEdge(startVertex, endVertex, 5000);
+
+                    graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
                 }
             }
         }
     }
 
-    private void LinkStairsOnFloor(Building building, Graph graph, Map<Integer, List<Vertex>> stairsVerticesDict, Floor floor, int floorNumber) {
+    private void LinkStairsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
         for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
             Stairs stairs = floor.getStairs().get(i);
-            if (stairs.getStart() != stairs.getEnd()) { // loops in graph not needed
-                List<Stairs> endFloorStairs = building.getFloors().get(stairs.getEndfloor()).getStairs();
-                List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(stairs.getEndfloor());
+            if (stairs.getStart() != stairs.getEnd()) {
+                int endFloor=  stairs.getEndfloor();
+                List<Stairs> endFloorStairs = building.getFloors().get(endFloor).getStairs();
+                List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(endFloor);
 
                 int endVertexIndex = -1;
                 for (int j = 0; j < endFloorStairs.size(); j++) {
-                    if(endFloorStairs.get(j).getId() == stairs.getEndid()){
+                    if (endFloorStairs.get(j).getId() == stairs.getEndid()) {
                         endVertexIndex = j;
                         break;
                     }
                 }
-                if(endVertexIndex == -1){
-                    throw new IllegalStateException();
+
+                if (endVertexIndex == -1) {
+                    throw new IllegalStateException("This algorithm is bugged as f*ck.");
                 }
+
                 Vertex startVertex = endFloorStairsGraphVertices.get(i);
                 Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
-                graph.addEdge(startVertex, endVertex, 5000);
+
+                graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
             }
         }
     }
 
-    private Vertex ProcessCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, Map<Integer, List<Vertex>> destinationVertices, Map<Integer, List<Vertex>> elevatorsVertices, Map<Integer, List<Vertex>> stairsVertices) {
-        if(visited[x][y]){
-            return graph.getVertexByCoordinates(x/2, y/2);
+    private Vertex ProcessCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
+        if (visited[x][y]) {
+            return graph.getVertexByCoordinates(x / 2, y / 2);
         }
 
-        visited[x][y]= true;
-        Vertex vertex;
-        if(enumMap[x][y] == FloorObject.SPACE || enumMap[x][y] == FloorObject.DOOR || enumMap[x][y] == FloorObject.STAIRS || enumMap[x][y] == FloorObject.ELEVATOR){
-            Point coordinates = new Point(x/2, y/2, floorNumber);
-            vertex = new Vertex(idSeed--, coordinates);
+        visited[x][y] = true;
+        if (enumMap[x][y] == FloorObject.SPACE || enumMap[x][y] == FloorObject.DOOR || enumMap[x][y] == FloorObject.STAIRS || enumMap[x][y] == FloorObject.ELEVATOR) {
+            Point coordinates = new Point(x / 2, y / 2, floorNumber);
+            Vertex vertex = new Vertex(idSeed--, coordinates);
             graph.addVertex(vertex);
-            if(enumMap[x][y] == FloorObject.DOOR){
-                List<Vertex> vertices = destinationVertices.get(floorNumber);
-                if(vertices == null){
-                    vertices = new ArrayList<>();
+
+            List<Vertex> vertices = null;
+            if (enumMap[x][y] == FloorObject.DOOR) {
+                if(destinationVerticesDict.containsKey(floorNumber)){
+                    vertices = destinationVerticesDict.get(floorNumber);
                 }
+                else {
+                    vertices = new ArrayList<>();
+                    destinationVerticesDict.put(floorNumber, vertices);
+                }
+            }
+            if (enumMap[x][y] == FloorObject.ELEVATOR) {
+                if(elevatorsVerticesDict.containsKey(floorNumber)){
+                    vertices = elevatorsVerticesDict.get(floorNumber);
+                }
+                else {
+                    vertices = new ArrayList<>();
+                    elevatorsVerticesDict.put(floorNumber, vertices);
+                }
+            }
+            if (enumMap[x][y] == FloorObject.STAIRS) {
+                if(stairsVerticesDict.containsKey(floorNumber)){
+                    vertices = stairsVerticesDict.get(floorNumber);
+                }
+                else {
+                    vertices = new ArrayList<>();
+                    stairsVerticesDict.put(floorNumber, vertices);
+                }
+            }
+
+            if(vertices != null){
                 vertices.add(vertex);
             }
-            if(enumMap[x][y] == FloorObject.ELEVATOR){
-                List<Vertex> vertices = elevatorsVertices.get(floorNumber);
-                if(vertices == null){
-                    vertices = new ArrayList<>();
-                }
-                vertices.add(vertex);
-            }
-            if(enumMap[x][y] == FloorObject.STAIRS){
-                List<Vertex> vertices = stairsVertices.get(floorNumber);
-                if(vertices == null){
-                    vertices = new ArrayList<>();
-                }
-                vertices.add(vertex);
-            }
+
             return vertex;
         }
 
         return null;
     }
 
-    private void ProcessNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph, Map<Integer, List<Vertex>> destinationVertices, Map<Integer, List<Vertex>> elevatorsVertices, Map<Integer, List<Vertex>> stairsVertices) {
+    private void ProcessNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         final int width = enumMap[0].length;
         final int height = enumMap[1].length;
 
-        int startPosX = (x - 1 < 0) ? x : x-1;
-        int startPosY = (y - 1 < 0) ? y : y-1;
-        int endPosX =   (x + 1 > width-1) ? x : x+1;
-        int endPosY =   (y + 1 > height-1) ? y : y+1;
+        int startPosX = (x - 1 < 0) ? x : x - 1;
+        int startPosY = (y - 1 < 0) ? y : y - 1;
+        int endPosX = (x + 1 > width - 1) ? x : x + 1;
+        int endPosY = (y + 1 > height - 1) ? y : y + 1;
 
-        for (int rowNum=startPosX; rowNum<=endPosX; rowNum++) {
-            for (int colNum=startPosY; colNum<=endPosY; colNum++) {
-                Vertex v = ProcessCell(rowNum, colNum, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
+        for (int rowNum = startPosX; rowNum <= endPosX; rowNum++) {
+            for (int colNum = startPosY; colNum <= endPosY; colNum++) {
+                Vertex v = ProcessCell(rowNum, colNum, enumMap, floorNumber, visited, graph);
 
                 if (v != null) {
                     double weight;
-                    if((rowNum < x && colNum < y) || (rowNum > x && colNum < y) || (rowNum < x && colNum > y) || (rowNum > x && colNum > y)){
-                        weight = 0.7;
-                    }
-                    else{
-                        weight = 0.5;
+                    if ((rowNum < x && colNum < y) || (rowNum > x && colNum < y) || (rowNum < x && colNum > y) || (rowNum > x && colNum > y)) {
+                        weight = DIAGONAL_EDGE_WEIGHT;
+                    } else {
+                        weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
                     graph.addEdge(v, vertex, weight);
                     graph.addEdge(vertex, v, weight);
-                    ProcessNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph, destinationVertices, elevatorsVertices, stairsVertices);
+                    ProcessNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph);
                 }
             }
         }

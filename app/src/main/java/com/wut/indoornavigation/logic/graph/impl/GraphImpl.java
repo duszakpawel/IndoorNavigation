@@ -44,7 +44,7 @@ public class GraphImpl implements Graph {
     @Override
     public boolean addVertex(Vertex vertex) {
         for (Vertex v : vertices) {
-            if(v.getId() == vertex.getId()){
+            if(v.getId() == vertex.getId() || v.getPosition().equals(vertex.getPosition())){
                 return false;
             }
         }
