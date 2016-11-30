@@ -1,10 +1,9 @@
 package com.wut.indoornavigation;
 
+import com.wut.indoornavigation.data.graph.Graph;
+import com.wut.indoornavigation.data.graph.impl.GraphImpl;
 import com.wut.indoornavigation.data.model.Point;
-import com.wut.indoornavigation.logic.graph.Graph;
-import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
-import com.wut.indoornavigation.logic.graph.impl.HeuristicFunction;
-import com.wut.indoornavigation.logic.graph.models.Vertex;
+import com.wut.indoornavigation.data.model.graph.Vertex;
 
 import junit.framework.Assert;
 

@@ -1,15 +1,17 @@
-package com.wut.indoornavigation.logic.mesh.MeshImpl;
+package com.wut.indoornavigation.data.mesh;
 
+import com.wut.indoornavigation.data.graph.Graph;
+import com.wut.indoornavigation.data.graph.HeuristicFunction;
+import com.wut.indoornavigation.data.graph.UnionFind;
+import com.wut.indoornavigation.data.graph.VertexComparator;
+import com.wut.indoornavigation.data.graph.impl.GraphImpl;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
-import com.wut.indoornavigation.logic.graph.Graph;
-import com.wut.indoornavigation.logic.graph.impl.GraphImpl;
-import com.wut.indoornavigation.logic.graph.models.Vertex;
-import com.wut.indoornavigation.logic.mesh.Mesh;
+import com.wut.indoornavigation.data.model.graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MeshImpl implements Mesh {
+public final class MeshImpl {
     private static final int ID_SEED_INIT = -1;
     private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
     private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
@@ -30,14 +32,16 @@ public class MeshImpl implements Mesh {
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
     private Map<Integer, List<Vertex>> stairsVerticesDict;
 
-    @Override
     public Graph create(Building building) {
         idSeed = ID_SEED_INIT;
         destinationVerticesDict = new HashMap<>();
         elevatorsVerticesDict = new HashMap<>();
         stairsVerticesDict = new HashMap<>();
 
-        Graph graph = new GraphImpl();
+        HeuristicFunction heuristicFunction = new HeuristicFunction();
+        UnionFind unionFind = new UnionFind();
+
+        Graph graph = new GraphImpl(heuristicFunction, unionFind, new VertexComparator(heuristicFunction));
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
@@ -70,6 +74,8 @@ public class MeshImpl implements Mesh {
             LinkStairsOnFloor(building, graph, floor, floorNumber);
             LinkElevatorsOnFloor(building, graph, floor, floorNumber);
         }
+
+        unionFind.initialize(graph.verticesCount());
 
         return graph;
     }
@@ -120,7 +126,7 @@ public class MeshImpl implements Mesh {
         for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
             Stairs stairs = floor.getStairs().get(i);
             if (stairs.getStart() != stairs.getEnd()) {
-                int endFloor=  stairs.getEndfloor();
+                int endFloor = stairs.getEndfloor();
                 List<Stairs> endFloorStairs = building.getFloors().get(endFloor).getStairs();
                 List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(endFloor);
 
@@ -157,34 +163,31 @@ public class MeshImpl implements Mesh {
 
             List<Vertex> vertices = null;
             if (enumMap[x][y] == FloorObject.DOOR) {
-                if(destinationVerticesDict.containsKey(floorNumber)){
+                if (destinationVerticesDict.containsKey(floorNumber)) {
                     vertices = destinationVerticesDict.get(floorNumber);
-                }
-                else {
+                } else {
                     vertices = new ArrayList<>();
                     destinationVerticesDict.put(floorNumber, vertices);
                 }
             }
             if (enumMap[x][y] == FloorObject.ELEVATOR) {
-                if(elevatorsVerticesDict.containsKey(floorNumber)){
+                if (elevatorsVerticesDict.containsKey(floorNumber)) {
                     vertices = elevatorsVerticesDict.get(floorNumber);
-                }
-                else {
+                } else {
                     vertices = new ArrayList<>();
                     elevatorsVerticesDict.put(floorNumber, vertices);
                 }
             }
             if (enumMap[x][y] == FloorObject.STAIRS) {
-                if(stairsVerticesDict.containsKey(floorNumber)){
+                if (stairsVerticesDict.containsKey(floorNumber)) {
                     vertices = stairsVerticesDict.get(floorNumber);
-                }
-                else {
+                } else {
                     vertices = new ArrayList<>();
                     stairsVerticesDict.put(floorNumber, vertices);
                 }
             }
 
-            if(vertices != null){
+            if (vertices != null) {
                 vertices.add(vertex);
             }
 

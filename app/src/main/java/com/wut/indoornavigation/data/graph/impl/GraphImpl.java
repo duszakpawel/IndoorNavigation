@@ -6,6 +6,7 @@ import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.graph.VertexComparator;
+import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
@@ -34,10 +35,21 @@ public class GraphImpl implements Graph {
         this.edges = new HashMap<>();
     }
 
+    public GraphImpl(List<Vertex> vertices) {
+        this.heuristicFunction = new HeuristicFunction();
+        this.close = new UnionFind();
+        this.comparator = new VertexComparator(this.heuristicFunction);
+        this.vertices = new ArrayList<>();
+        this.edges = new HashMap<>();
+        setVertices(vertices);
+    }
+
     @Override
     public void setVertices(@NonNull List<Vertex> vertices) {
         this.vertices.clear();
-        this.vertices.addAll(vertices);
+        for (Vertex vertex : vertices) {
+            addVertex(vertex);
+        }
     }
 
     @Override
@@ -81,16 +93,16 @@ public class GraphImpl implements Graph {
 
     @Override
     public List<Vertex> outVertices(@NonNull Vertex vertex) {
-            List<Edge> outEdges = edges.get(vertex);
-            List<Vertex> outVertices = new ArrayList<>();
-            if (outEdges == null || outEdges.isEmpty()) {
-                return outVertices;
-            }
-
-            for (Edge outEdge : outEdges) {
-                outVertices.add(outEdge.getTo());
-            }
+        List<Edge> outEdges = edges.get(vertex);
+        List<Vertex> outVertices = new ArrayList<>();
+        if (outEdges == null || outEdges.isEmpty()) {
             return outVertices;
+        }
+
+        for (Edge outEdge : outEdges) {
+            outVertices.add(outEdge.getTo());
+        }
+        return outVertices;
     }
 
     @Override
@@ -105,7 +117,7 @@ public class GraphImpl implements Graph {
             }
         }
 
-            throw new IllegalStateException("Vertex does not belong to graph.");
+        throw new IllegalStateException("Vertex does not belong to graph.");
     }
 
     @Override
@@ -205,5 +217,29 @@ public class GraphImpl implements Graph {
         }
 
         return aStar(sVertex, tVertex);
+    }
+
+    @Override
+    public Vertex getVertexByCoordinates(float x, float y) {
+        for (Vertex vertex : vertices) {
+            Point coordinates = vertex.getPosition();
+            if (coordinates.getX() == x && coordinates.getY() == y) {
+                return vertex;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean addVertex(Vertex vertex) {
+        for (Vertex v : vertices) {
+            if (v.getId() == vertex.getId() || v.getPosition().equals(vertex.getPosition())) {
+                return false;
+            }
+        }
+        vertices.add(vertex);
+
+        return true;
     }
 }
