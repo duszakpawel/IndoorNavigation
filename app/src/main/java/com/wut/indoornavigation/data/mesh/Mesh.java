@@ -12,6 +12,7 @@ import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.graph.Vertex;
+import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public final class Mesh {
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
     private Map<Integer, List<Vertex>> stairsVerticesDict;
 
-    public Graph create(Building building) {
+    public MeshResult create(Building building) {
         idSeed = ID_SEED_INIT;
         destinationVerticesDict = new HashMap<>();
         elevatorsVerticesDict = new HashMap<>();
@@ -59,7 +60,7 @@ public final class Mesh {
                         x = i + 1;
                         y = j + 1;
                         if (x == enumMap[0].length || y == enumMap[1].length) {
-                            return graph;
+                            return new MeshResult(graph, destinationVerticesDict);
                         }
                     }
                 }
@@ -73,12 +74,16 @@ public final class Mesh {
             int floorNumber = floor.getNumber();
             linkStairsOnFloor(building, graph, floor, floorNumber);
             linkElevatorsOnFloor(building, graph, floor, floorNumber);
+
+            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
+            for (int i = 0; i < floorDestinationVertices.size(); i++) {
+                floorDestinationVertices.get(i).toBuilder().setId(floor.getDoors().get(i).getId()).build();
+            }
         }
-        // TODO:  ustawienie id destination na jakies normalne
 
         unionFind.initialize(graph.verticesCount());
 
-        return graph;
+        return new MeshResult(graph, destinationVerticesDict);
     }
 
     private void linkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
