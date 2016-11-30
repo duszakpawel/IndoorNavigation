@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class MeshImpl {
+public final class Mesh {
     private static final int ID_SEED_INIT = -1;
     private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
     private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
     private static final int EDGE_ELEVATOR_WEIGHT = 5000;
 
-    private static Integer idSeed;
+    private static int idSeed;
 
     private Map<Integer, List<Vertex>> destinationVerticesDict;
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
@@ -65,22 +65,23 @@ public final class MeshImpl {
                 }
             }
 
-            Vertex vertex = ProcessCell(x, y, enumMap, floorNumber, visited, graph);
-            ProcessNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph);
+            Vertex vertex = processCell(x, y, enumMap, floorNumber, visited, graph);
+            processNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph);
         }
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
-            LinkStairsOnFloor(building, graph, floor, floorNumber);
-            LinkElevatorsOnFloor(building, graph, floor, floorNumber);
+            linkStairsOnFloor(building, graph, floor, floorNumber);
+            linkElevatorsOnFloor(building, graph, floor, floorNumber);
         }
+        // TODO:  ustawienie id destination na jakies normalne
 
         unionFind.initialize(graph.verticesCount());
 
         return graph;
     }
 
-    private void LinkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
+    private void linkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
         for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
             Elevator elevator = floor.getElevators().get(i);
 
@@ -122,7 +123,7 @@ public final class MeshImpl {
         }
     }
 
-    private void LinkStairsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
+    private void linkStairsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
         for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
             Stairs stairs = floor.getStairs().get(i);
             if (stairs.getStart() != stairs.getEnd()) {
@@ -150,7 +151,7 @@ public final class MeshImpl {
         }
     }
 
-    private Vertex ProcessCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
+    private Vertex processCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         if (visited[x][y]) {
             return graph.getVertexByCoordinates(x / 2, y / 2);
         }
@@ -197,7 +198,7 @@ public final class MeshImpl {
         return null;
     }
 
-    private void ProcessNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
+    private void processNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         final int width = enumMap[0].length;
         final int height = enumMap[1].length;
 
@@ -208,7 +209,7 @@ public final class MeshImpl {
 
         for (int rowNum = startPosX; rowNum <= endPosX; rowNum++) {
             for (int colNum = startPosY; colNum <= endPosY; colNum++) {
-                Vertex v = ProcessCell(rowNum, colNum, enumMap, floorNumber, visited, graph);
+                Vertex v = processCell(rowNum, colNum, enumMap, floorNumber, visited, graph);
 
                 if (v != null) {
                     double weight;
@@ -219,7 +220,7 @@ public final class MeshImpl {
                     }
                     graph.addEdge(v, vertex, weight);
                     graph.addEdge(vertex, v, weight);
-                    ProcessNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph);
+                    processNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph);
                 }
             }
         }
