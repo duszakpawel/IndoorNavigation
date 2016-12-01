@@ -176,7 +176,7 @@ public final class Parser {
 
     private void addMap(List<Floor> floors, Document document) {
         NodeList mapNodes = document.getElementsByTagName(MAP_TAG);
-
+        
         for (int i = 0; i < mapNodes.getLength(); i++) {
             final Element mapNode = (Element) (mapNodes.item(i));
             final String mapString = mapNode.getTextContent();
@@ -237,6 +237,7 @@ public final class Parser {
                     }
                 }
             }
+            currentFloor.toBuilder().enumMap(newMap);
         }
     }
 
