@@ -35,14 +35,6 @@ public class GraphImpl implements Graph {
         this.edges = new HashMap<>();
     }
 
-    public GraphImpl() {
-        this.heuristicFunction = new HeuristicFunction();
-        this.close = new UnionFind();
-        this.comparator = new VertexComparator(this.heuristicFunction);
-        this.vertices = new ArrayList<>();
-        this.edges = new HashMap<>();
-    }
-
     @Override
     public void setVertices(@NonNull List<Vertex> vertices) {
         this.vertices.clear();
