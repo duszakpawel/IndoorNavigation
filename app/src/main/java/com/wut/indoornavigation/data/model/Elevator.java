@@ -8,8 +8,8 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = true)
 public class Elevator extends BuildingObject {
 
-    @Builder
-    private Elevator(int id) {
-        super(id);
+    @Builder(toBuilder = true)
+    private Elevator(int id, int x, int y) {
+        super(id, x, y);
     }
 }

@@ -9,9 +9,9 @@ import lombok.Value;
 public class Door extends BuildingObject {
     boolean destinationPoint;
 
-    @Builder
-    private Door(boolean destinationPoint, int id) {
-        super(id);
+    @Builder(toBuilder = true)
+    private Door(boolean destinationPoint, int id, int x, int y) {
+        super(id, x, y);
         this.destinationPoint = destinationPoint;
     }
 }

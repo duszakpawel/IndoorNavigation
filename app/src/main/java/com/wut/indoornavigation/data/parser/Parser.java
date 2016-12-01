@@ -9,7 +9,6 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
-import com.wut.indoornavigation.data.model.Wall;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -86,7 +85,6 @@ public final class Parser {
 
             addStairs(floorsList, document);
             addElevators(floorsList, document);
-            ////TODO: beacony i dodac je do pliku
             addBeacons(floorsList, document);
             addMap(floorsList, document);
 
@@ -197,7 +195,7 @@ public final class Parser {
             final Floor currentFloor = floors.get(findFloorIndex(floors, floorNumber));
             // TODO: 28.11.2016 dokonczyc na podstawie zmian
 
-            int roomIndex = 0, beaconIndex = 0, stairIndex = 0, elevatorIndex = 0, wallIndex = 0;
+            int roomIndex = 0, beaconIndex = 0, stairIndex = 0, elevatorIndex = 0;
 
             for (int r = 1; r < mapStrings.length - 1; r++) {
                 for (int c = 0; c < mapStrings[r].length(); c += 2) {
@@ -211,21 +209,31 @@ public final class Parser {
                             break;
 
                         case 'D':
-                            newMap[r - 1][c / 2] = FloorObject.DOOR;
-
+                            newMap[r - 1][c / 2] = FloorObject.ROOM;
+                            Room room =currentFloor.getRooms().get(findBuildingObjectIndex(currentFloor.getRooms(), roomIndex++));
+                            room.toBuilder().x(r-1).y(c/2).build();
                             break;
 
                         case 'B':
-                            //newMap[r - 1][c / 2] = currentFloor.beacons.get(beaconIndex++);
+                            newMap[r - 1][c / 2] = FloorObject.BEACON;
+                            Beacon beacon = currentFloor.getBeacons().get(findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++));
+                            beacon.toBuilder().x(r-1).y(c/2).build();
                             break;
 
                         case 'S':
-                            //newMap[r - 1][c / 2] = currentFloor.stairs.get(stairIndex++);
+                            newMap[r - 1][c / 2] = FloorObject.STAIRS;
+                            Stairs stair = currentFloor.getStairs().get(findBuildingObjectIndex(currentFloor.getStairs(), stairIndex++));
+                            stair.toBuilder().x(r-1).y(c/2).build();
                             break;
 
                         case 'E':
-                            //newMap[r - 1][c / 2] = currentFloor.elevators.get(elevatorIndex++);
+                            newMap[r - 1][c / 2] = FloorObject.ELEVATOR;
+                            Elevator elevator = currentFloor.getElevators().get(findBuildingObjectIndex(currentFloor.getElevators(), elevatorIndex++));
+                            elevator.toBuilder().x(r-1).y(c/2).build();
                             break;
+
+                        case ' ':
+                            newMap[r-1][c/2] = FloorObject.SPACE;
                     }
                 }
             }
@@ -241,12 +249,12 @@ public final class Parser {
         throw new IllegalArgumentException("There is no floor with number " + number);
     }
 
-    private int findBuildingObjectIndex(List<BuildingObject> buildingObjects, int number) {
+    private int findBuildingObjectIndex(List<? extends BuildingObject> buildingObjects, int number) {
         for (int i = 0; i < buildingObjects.size(); i++) {
             if (buildingObjects.get(i).getId() == number) {
                 return i;
             }
         }
-        throw new IllegalArgumentException("There is no floor with number " + number);
+        throw new IllegalArgumentException("There is no object with id " + number);
     }
 }

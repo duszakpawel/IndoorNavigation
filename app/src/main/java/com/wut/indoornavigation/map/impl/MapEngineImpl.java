@@ -10,14 +10,10 @@ import android.support.v4.content.ContextCompat;
 
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
-import com.wut.indoornavigation.data.model.Door;
-import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
-import com.wut.indoornavigation.data.model.Stairs;
-import com.wut.indoornavigation.data.model.Wall;
-import com.wut.indoornavigation.utils.CanvasExtender;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
+import com.wut.indoornavigation.utils.CanvasExtender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,9 +77,7 @@ public final class MapEngineImpl implements MapEngine {
 
     // TODO: 28.11.2016 Need to be changed
     private void renderFloor(Canvas canvas, Floor floor) {
-//        for(Wall wall : floor.getWalls()){
-//            canvasExtender.DrawLine(canvas, wall.getStart(), wall.getEnd(), wallPaint);
-//        }
+
 //
 //        for(Door door : floor.getDoors()){
 //            canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);

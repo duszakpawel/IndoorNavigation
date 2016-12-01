@@ -8,9 +8,9 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = true)
 public class Beacon extends BuildingObject {
 
-    @Builder
-    private Beacon(int id) {
-        super(id);
+    @Builder(toBuilder = true)
+    private Beacon(int id, int x, int y) {
+        super(id, x, y);
     }
 }
 

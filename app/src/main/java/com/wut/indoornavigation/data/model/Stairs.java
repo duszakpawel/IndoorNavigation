@@ -11,9 +11,9 @@ public class Stairs extends BuildingObject {
     int endfloor;
     int endid;
 
-    @Builder
-    private Stairs(int endfloor, int endid, int id) {
-        super(id);
+    @Builder(toBuilder = true)
+    private Stairs(int endfloor, int endid, int id, int x, int y) {
+        super(id, x, y);
         this.endfloor = endfloor;
         this.endid = endid;
     }

@@ -9,9 +9,9 @@ import lombok.Value;
 public class Room extends BuildingObject {
     int number;
 
-    @Builder
-    private Room(int number, int id) {
-        super(id);
+    @Builder(toBuilder = true)
+    private Room(int number, int id, int x, int y) {
+        super(id, x, y);
         this.number = number;
     }
 }

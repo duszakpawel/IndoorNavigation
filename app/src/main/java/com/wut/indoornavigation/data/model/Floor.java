@@ -12,7 +12,6 @@ public class Floor {
     int number;
     FloorObject[][] enumMap;
     List<Room> rooms;
-    List<Wall> walls;
     List<Door> doors;
     List<Stairs> stairs;
     List<Elevator> elevators;

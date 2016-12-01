@@ -11,4 +11,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public abstract class BuildingObject {
     int id;
+    int x;
+    int y;
 }
