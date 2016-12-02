@@ -62,7 +62,7 @@ public final class Parser {
 
             for (int i = 0; i < roomsNodes.getLength(); i++) {
                 final Node roomsNode = roomsNodes.item(i);
-
+                int roomId =0;
                 if (roomsNode.getNodeType() == Node.ELEMENT_NODE) {
                     final Element roomsElement = (Element) roomsNode;
                     final List<Room> roomList = new LinkedList<>();
@@ -71,7 +71,7 @@ public final class Parser {
                     for (int j = 0; j < roomNodes.getLength(); j++) {
                         final int roomNumber = Integer.parseInt(roomNodes.item(j).getTextContent());
                         roomList.add(Room.builder()
-                                .id(roomNumber)
+                                .id(roomId++)
                                 .number(roomNumber)
                                 .build());
                     }
@@ -176,7 +176,7 @@ public final class Parser {
 
     private void addMap(List<Floor> floors, Document document) {
         NodeList mapNodes = document.getElementsByTagName(MAP_TAG);
-        
+
         for (int i = 0; i < mapNodes.getLength(); i++) {
             final Element mapNode = (Element) (mapNodes.item(i));
             final String mapString = mapNode.getTextContent();
