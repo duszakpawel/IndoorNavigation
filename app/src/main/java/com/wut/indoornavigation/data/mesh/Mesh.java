@@ -273,7 +273,7 @@ public final class Mesh {
                 Vertex neighbour = graph.getVertexByCoordinates((float)rowNum/2, (float)colNum/2);
                 if(sign == FloorObject.SPACE || sign == FloorObject.DOOR || sign ==FloorObject.ELEVATOR || sign == FloorObject.STAIRS){
                     if(neighbour == null){
-                        continue;
+                        return true;//continue;
                     }
                     if(!graph.containsEdge(v.getId(), neighbour.getId()) && v.getId()!=neighbour.getId()){
                         return true;
