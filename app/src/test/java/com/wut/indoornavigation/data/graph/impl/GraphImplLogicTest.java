@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphImplTest2 {
+public class GraphImplLogicTest {
 
     private HeuristicFunction heuristicFunction = new HeuristicFunction();
     private UnionFind unionFind = new UnionFind();

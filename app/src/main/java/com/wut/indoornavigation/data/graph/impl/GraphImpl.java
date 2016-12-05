@@ -233,4 +233,20 @@ public class GraphImpl implements Graph {
 
         return true;
     }
+
+    @Override
+    public boolean containsEdge(int vId, int wId) {
+        List<Edge> vOutEdges = outEdges(vId);
+        if(vOutEdges == null){
+            return false;
+        }
+
+        for (Edge vOutEdge : vOutEdges) {
+            if(vOutEdge.getTo().getId() == wId){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

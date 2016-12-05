@@ -25,4 +25,6 @@ public interface Graph {
     List<Vertex> aStar(int sourceId, int targetId);
     Vertex getVertexByCoordinates(float x, float y);
     boolean addVertex(Vertex vertex);
+
+    boolean containsEdge(int vId, int wId);
 }

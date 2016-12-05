@@ -11,6 +11,7 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
+import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
@@ -53,7 +54,11 @@ public final class Mesh {
             int width = enumMap[0].length;
             int height = enumMap[1].length;
             boolean[][] visited = new boolean[width][height];
+            boolean breakFlag = false;
             for (int i = 0; i < width; i++) {
+                if(breakFlag){
+                    break;
+                }
                 for (int j = 0; j < height; j++) {
                     visited[i][j] = true;
                     if (enumMap[i][j] == FloorObject.CORNER) {
@@ -62,6 +67,8 @@ public final class Mesh {
                         if (x == enumMap[0].length || y == enumMap[1].length) {
                             return new MeshResult(graph, destinationVerticesDict);
                         }
+                        breakFlag = true;
+                        break;
                     }
                 }
             }
@@ -70,17 +77,23 @@ public final class Mesh {
             processNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph);
         }
 
-        for (Floor floor : building.getFloors()) {
-            int floorNumber = floor.getNumber();
-            linkStairsOnFloor(building, graph, floor, floorNumber);
-            linkElevatorsOnFloor(building, graph, floor, floorNumber);
-
-            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
-            for (int i = 0; i < floorDestinationVertices.size(); i++) {
-                // TODO: posortować najpierw trzeba
-                floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
-            }
-        }
+//        for (Floor floor : building.getFloors()) {
+//            int floorNumber = floor.getNumber();
+//            linkStairsOnFloor(building, graph, floor, floorNumber);
+//            linkElevatorsOnFloor(building, graph, floor, floorNumber);
+//
+//            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
+//            for (int i = 0; i < floorDestinationVertices.size(); i++) {
+//                Comparator<Vertex> by2dPosition = (v1, v2) -> {
+//                    if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
+//                        return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+//                    } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+//                };
+//
+//                Collections.sort(floorDestinationVertices, by2dPosition);
+//                floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
+//            }
+//        }
 
         unionFind.initialize(graph.verticesCount());
 
@@ -159,12 +172,12 @@ public final class Mesh {
 
     private Vertex processCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         if (visited[x][y]) {
-            return graph.getVertexByCoordinates(x / 2, y / 2);
+            return graph.getVertexByCoordinates((float)x / 2, (float)y / 2);
         }
 
         visited[x][y] = true;
         if (enumMap[x][y] == FloorObject.SPACE || enumMap[x][y] == FloorObject.DOOR || enumMap[x][y] == FloorObject.STAIRS || enumMap[x][y] == FloorObject.ELEVATOR) {
-            Point coordinates = new Point(x / 2, y / 2, floorNumber);
+            Point coordinates = new Point((float)x / 2, (float)y / 2, floorNumber);
             Vertex vertex = new Vertex(idSeed--, coordinates);
             graph.addVertex(vertex);
 
@@ -224,11 +237,45 @@ public final class Mesh {
                     } else {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
-                    graph.addEdge(v, vertex, weight);
-                    graph.addEdge(vertex, v, weight);
+
+                    if(v.getId()!= vertex.getId()){
+                        graph.addEdge(v, vertex, weight);
+                        graph.addEdge(vertex, v, weight);
+                    }
+
+                    if(shouldNeighboursProcessingStart(v, rowNum, colNum, enumMap, floorNumber, visited, graph)){
                     processNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph);
+                    }
                 }
             }
         }
+    }
+
+    private boolean shouldNeighboursProcessingStart(Vertex v, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
+        final int width = enumMap[0].length;
+        final int height = enumMap[1].length;
+
+        int startPosX = (x - 1 < 0) ? x : x - 1;
+        int startPosY = (y - 1 < 0) ? y : y - 1;
+        int endPosX = (x + 1 > width - 1) ? x : x + 1;
+        int endPosY = (y + 1 > height - 1) ? y : y + 1;
+
+        for (int rowNum = startPosX; rowNum <= endPosX; rowNum++) {
+            for (int colNum = startPosY; colNum <= endPosY; colNum++) {
+                FloorObject sign = enumMap[rowNum][colNum];
+
+                Vertex neighbour = graph.getVertexByCoordinates((float)rowNum/2, (float)colNum/2);
+                if(!visited[rowNum][colNum] || (visited[rowNum][colNum] && neighbour != null && (sign == FloorObject.SPACE || sign == FloorObject.DOOR || sign ==FloorObject.ELEVATOR || sign == FloorObject.STAIRS))){
+                    if(neighbour == null){
+                        continue;
+                    }
+                    if(!graph.containsEdge(v.getId(), neighbour.getId()) && v.getId()!=neighbour.getId()){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

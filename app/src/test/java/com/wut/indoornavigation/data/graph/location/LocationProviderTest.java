@@ -30,5 +30,6 @@ public class LocationProviderTest {
 
         Assert.assertEquals(approximatedLocation.getX(), 2f);
         Assert.assertEquals(approximatedLocation.getY(), 1f);
+        Assert.assertEquals(approximatedLocation.getZ(), 0f);
     }
 }
