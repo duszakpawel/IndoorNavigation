@@ -11,7 +11,6 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
-import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
@@ -54,6 +53,8 @@ public final class Mesh {
             int width = enumMap.length;
             int height = enumMap[0].length;
             boolean[][] visited = new boolean[width][height];
+            boolean[][] processedNeighbours = new boolean[width][height];
+
             boolean breakFlag = false;
             for (int i = 0; i < width; i++) {
                 if(breakFlag){
@@ -74,7 +75,7 @@ public final class Mesh {
             }
 
             Vertex vertex = processCell(x, y, enumMap, floorNumber, visited, graph);
-            processNeighbours(vertex, x, y, enumMap, floorNumber, visited, graph);
+            processNeighbours(vertex, x, y, enumMap, floorNumber, visited,processedNeighbours, graph);
         }
 
 //        for (Floor floor : building.getFloors()) {
@@ -217,7 +218,7 @@ public final class Mesh {
         return null;
     }
 
-    private void processNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
+    private void processNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, boolean[][] processedNeighbours, Graph graph) {
         final int width = enumMap.length;
         final int height = enumMap[0].length;
 
@@ -242,9 +243,14 @@ public final class Mesh {
                         graph.addEdge(v, vertex, weight);
                         graph.addEdge(vertex, v, weight);
                     }
+                    if(v==vertex)
+                    {
+                        continue;
+                    }
 
-                    if(shouldNeighboursProcessingStart(v, rowNum, colNum, enumMap, floorNumber, visited, graph)){
-                    processNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, graph);
+                    if(shouldNeighboursProcessingStart(v, rowNum, colNum, enumMap, floorNumber, visited, graph) && !processedNeighbours[rowNum][colNum]){
+                        processedNeighbours[rowNum][colNum] = true;
+                        processNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, processedNeighbours, graph);
                     }
                 }
             }
