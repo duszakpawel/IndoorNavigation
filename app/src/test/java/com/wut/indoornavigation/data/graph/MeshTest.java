@@ -98,4 +98,33 @@ public class MeshTest {
         Assert.assertEquals(result.getGraph().containsEdge(-4, -4), false);
         Assert.assertEquals(result.getGraph().containsEdge(-1, -7), false);
     }
+
+    @Test
+    public void meshTestDifferentShape_Success() {
+        Mesh mesh = new Mesh();
+        List<Floor> floors=  new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
+                {FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.SPACE, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+        };
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doors = new ArrayList<>();
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building);
+        Assert.assertEquals(result.getGraph().verticesCount(), 25);
+    }
 }

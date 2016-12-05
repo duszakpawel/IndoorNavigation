@@ -51,8 +51,8 @@ public final class Mesh {
 
             int x = 0;
             int y = 0;
-            int width = enumMap[0].length;
-            int height = enumMap[1].length;
+            int width = enumMap.length;
+            int height = enumMap[0].length;
             boolean[][] visited = new boolean[width][height];
             boolean breakFlag = false;
             for (int i = 0; i < width; i++) {
@@ -64,7 +64,7 @@ public final class Mesh {
                     if (enumMap[i][j] == FloorObject.CORNER) {
                         x = i + 1;
                         y = j + 1;
-                        if (x == enumMap[0].length || y == enumMap[1].length) {
+                        if (x == enumMap.length || y == enumMap[0].length) {
                             return new MeshResult(graph, destinationVerticesDict);
                         }
                         breakFlag = true;
@@ -218,8 +218,8 @@ public final class Mesh {
     }
 
     private void processNeighbours(Vertex vertex, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
-        final int width = enumMap[0].length;
-        final int height = enumMap[1].length;
+        final int width = enumMap.length;
+        final int height = enumMap[0].length;
 
         int startPosX = (x - 1 < 0) ? x : x - 1;
         int startPosY = (y - 1 < 0) ? y : y - 1;
@@ -252,8 +252,8 @@ public final class Mesh {
     }
 
     private boolean shouldNeighboursProcessingStart(Vertex v, int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
-        final int width = enumMap[0].length;
-        final int height = enumMap[1].length;
+        final int width = enumMap.length;
+        final int height = enumMap[0].length;
 
         int startPosX = (x - 1 < 0) ? x : x - 1;
         int startPosY = (y - 1 < 0) ? y : y - 1;
@@ -265,7 +265,7 @@ public final class Mesh {
                 FloorObject sign = enumMap[rowNum][colNum];
 
                 Vertex neighbour = graph.getVertexByCoordinates((float)rowNum/2, (float)colNum/2);
-                if(!visited[rowNum][colNum] || (visited[rowNum][colNum] && neighbour != null && (sign == FloorObject.SPACE || sign == FloorObject.DOOR || sign ==FloorObject.ELEVATOR || sign == FloorObject.STAIRS))){
+                if(sign == FloorObject.SPACE || sign == FloorObject.DOOR || sign ==FloorObject.ELEVATOR || sign == FloorObject.STAIRS){
                     if(neighbour == null){
                         continue;
                     }
