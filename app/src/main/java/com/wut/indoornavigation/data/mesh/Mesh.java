@@ -154,14 +154,6 @@ public final class Mesh {
                     List<Elevator> endFloorElevators = kFloor.getElevators();
                     List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
 
-//                    Comparator<Vertex> by2dPosition = (v1, v2) -> {
-//                        if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
-//                            return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
-//                        } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
-//                    };
-//
-//                    Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
-
                     int endVertexIndex = -1;
                     for (int j = 0; j < endFloorElevators.size(); j++) {
                         if (endFloorElevators.get(j).getId() == elevator.getId()) {
@@ -179,6 +171,10 @@ public final class Mesh {
                     if(startVertex.getId()!=endVertex.getId()){
                         if(!graph.containsEdge(startVertex.getId(), endVertex.getId())){
                             graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
+                        }
+
+                        if(!graph.containsEdge(endVertex.getId(), startVertex.getId())){
+                            graph.addEdge(endVertex, startVertex, EDGE_ELEVATOR_WEIGHT);
                         }
                     }
 
@@ -288,7 +284,7 @@ public final class Mesh {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
 
-                    if(v.getId()!= vertex.getId()){
+                    if(v.getId()!= vertex.getId() && v.getPosition().getZ()==vertex.getPosition().getZ()){
                         graph.addEdge(v, vertex, weight);
                         graph.addEdge(vertex, v, weight);
                     }

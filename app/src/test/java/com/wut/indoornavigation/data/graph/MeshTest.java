@@ -377,8 +377,14 @@ public class MeshTest {
         MeshResult result = mesh.create(building);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 4);
-        Assert.assertEquals(graph.containsEdge(-1,-2), true);
+        Assert.assertEquals(graph.containsEdge(-4, -1), true);
+        Assert.assertEquals(graph.containsEdge(-1, -2), true);
+        Assert.assertEquals(graph.containsEdge(-1, -3), true);
+        Assert.assertEquals(graph.containsEdge(-1, -4), true);
         Assert.assertEquals(graph.containsEdge(-2, -1), true);
+        Assert.assertEquals(graph.containsEdge(-2, -3), true);
+        Assert.assertEquals(graph.containsEdge(-3, -1), true);
+        Assert.assertEquals(graph.containsEdge(-3, -2), true);
         Assert.assertEquals(graph.containsEdge(-2, -2), false);
         Assert.assertEquals(graph.containsEdge(-1, -1), false);
     }
