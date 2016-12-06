@@ -211,10 +211,10 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public Vertex getVertexByCoordinates(float x, float y) {
+    public Vertex getVertexByCoordinates(float x, float y, int floorNumber) {
         for (Vertex vertex : vertices) {
             Point coordinates = vertex.getPosition();
-            if (coordinates.getX() == x && coordinates.getY() == y) {
+            if (coordinates.getX() == x && coordinates.getY() == y && coordinates.getZ() == floorNumber) {
                 return vertex;
             }
         }

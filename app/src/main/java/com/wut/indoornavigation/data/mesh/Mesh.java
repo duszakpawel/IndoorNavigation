@@ -80,9 +80,9 @@ public final class Mesh {
 
         for (Floor floor : building.getFloors()) {
             Comparator<Vertex> by2dPosition = (v1, v2) -> {
-                if (v1.getPosition().getY() - v2.getPosition().getY() == 0) {
-                    return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
-                } else return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+                if (v2.getPosition().getY() - v1.getPosition().getY() == 0) {
+                    return Math.round(v2.getPosition().getX() - v1.getPosition().getX());
+                } else return Math.round(v2.getPosition().getY() - v1.getPosition().getY());
             };
             List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floor.getNumber());
             List<Vertex> floorStairsVertices = stairsVerticesDict.get(floor.getNumber());
@@ -133,7 +133,6 @@ public final class Mesh {
 
         for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
             Elevator elevator = floor.getElevators().get(i);
-
             if (elevator.getStart() != elevator.getEnd()) {
                 for (int k = floorNumber - 1; k < floorNumber + 2; k += 2) {
                     if (building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1) {
@@ -153,7 +152,6 @@ public final class Mesh {
 
                     List<Elevator> endFloorElevators = kFloor.getElevators();
                     List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
-
                     int endVertexIndex = -1;
                     for (int j = 0; j < endFloorElevators.size(); j++) {
                         if (endFloorElevators.get(j).getId() == elevator.getId()) {
@@ -218,7 +216,7 @@ public final class Mesh {
 
     private Vertex processCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         if (visited[x][y]) {
-            return graph.getVertexByCoordinates((float)x / 2, (float)y / 2);
+            return graph.getVertexByCoordinates((float)x / 2, (float)y / 2, floorNumber);
         }
 
         visited[x][y] = true;
@@ -315,7 +313,7 @@ public final class Mesh {
             for (int colNum = startPosY; colNum <= endPosY; colNum++) {
                 FloorObject sign = enumMap[rowNum][colNum];
 
-                Vertex neighbour = graph.getVertexByCoordinates((float)rowNum/2, (float)colNum/2);
+                Vertex neighbour = graph.getVertexByCoordinates((float)rowNum/2, (float)colNum/2, floorNumber);
                 if(sign == FloorObject.SPACE || sign == FloorObject.DOOR || sign ==FloorObject.ELEVATOR || sign == FloorObject.STAIRS){
                     if(neighbour == null){
                         return true;//continue;

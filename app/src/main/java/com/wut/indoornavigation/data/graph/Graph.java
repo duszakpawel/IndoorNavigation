@@ -23,7 +23,7 @@ public interface Graph {
     List<Vertex> aStar(Vertex sourceId, Vertex targetId);
     @Deprecated
     List<Vertex> aStar(int sourceId, int targetId);
-    Vertex getVertexByCoordinates(float x, float y);
+    Vertex getVertexByCoordinates(float x, float y, int floorNumber);
     boolean addVertex(Vertex vertex);
 
     boolean containsEdge(int vId, int wId);

@@ -390,7 +390,7 @@ public class MeshTest {
     }
 
     @Test
-    public void meshTestTwoFloorsWithThreeElevators_Success() {
+    public void meshTestTwoFloorsWithTwoElevatorsSeparated_Success() {
         Mesh mesh = new Mesh();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
@@ -407,9 +407,13 @@ public class MeshTest {
         Point bot2 = new Point((float)0.5, (float)2, -1);
         Point mid2 = new Point((float)0.5, (float)2, 0);
         Elevator elevatorMinusOne = new Elevator();
+        elevatorMinusOne.setId(1);
         Elevator elevatorMinusOneSecond = new Elevator();
+        elevatorMinusOneSecond.setId(2);
         Elevator elevatorZero = new Elevator();
+        elevatorZero.setId(1);
         Elevator elevatorZeroSecond = new Elevator();
+        elevatorZeroSecond.setId(2);
         elevatorMinusOne.setStart(bot);
         elevatorMinusOne.setEnd(mid);
         elevatorZero.setStart(mid);
@@ -434,16 +438,72 @@ public class MeshTest {
         MeshResult result = mesh.create(building);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 6);
-//        Assert.assertEquals(graph.containsEdge(-4, -1), true);
-//        Assert.assertEquals(graph.containsEdge(-1, -2), true);
-//        Assert.assertEquals(graph.containsEdge(-1, -3), true);
-//        Assert.assertEquals(graph.containsEdge(-1, -4), true);
-//        Assert.assertEquals(graph.containsEdge(-2, -1), true);
-//        Assert.assertEquals(graph.containsEdge(-2, -3), true);
-//        Assert.assertEquals(graph.containsEdge(-3, -1), true);
-//        Assert.assertEquals(graph.containsEdge(-3, -2), true);
-//        Assert.assertEquals(graph.containsEdge(-2, -2), false);
-//        Assert.assertEquals(graph.containsEdge(-1, -1), false);
+        Assert.assertEquals(graph.containsEdge(-4, -5), true);
+        Assert.assertEquals(graph.containsEdge(-5, -4), true);
+        Assert.assertEquals(graph.containsEdge(-5, -6), true);
+        Assert.assertEquals(graph.containsEdge(-6, -5), true);
+        Assert.assertEquals(graph.containsEdge(-3, -2), true);
+        Assert.assertEquals(graph.containsEdge(-2, -3), true);
+        Assert.assertEquals(graph.containsEdge(-2, -1), true);
+        Assert.assertEquals(graph.containsEdge(-1, -2), true);
+        Assert.assertEquals(graph.containsEdge(-6, -3), true);
+        Assert.assertEquals(graph.containsEdge(-3, -6), true);
+        Assert.assertEquals(graph.containsEdge(-4, -1), true);
+        Assert.assertEquals(graph.containsEdge(-1, -4), true);
+        Assert.assertEquals(graph.containsEdge(-2, -2), false);
+        Assert.assertEquals(graph.containsEdge(-1, -1), false);
     }
-    //TODO: sprawdzic krawedzie, dorobic schody, zwrocic destinationy, przetestowac bardziej skomplikowany przypadek
+
+    @Test
+    public void meshTestTwoFloorsWithTwoStairsSeparated_Success() {
+        Mesh mesh = new Mesh();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.STAIRS, FloorObject.SPACE, FloorObject.STAIRS, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doors = new ArrayList<>();
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        List<Stairs> stairsMinusOne = new ArrayList<>();
+        List<Stairs> stairsZero = new ArrayList<>();
+        Stairs stairMinusOne = new Stairs(1, -1);
+        stairMinusOne.setId(1);
+        Stairs stairMinusOneSecond = new Stairs(2, -1);
+        stairMinusOneSecond.setId(2);
+        Stairs stairZero = new Stairs(1, 0);
+        stairZero.setId(1);
+        Stairs stairZeroSecond = new Stairs(2, 0);
+        stairZeroSecond.setId(2);
+
+        stairsMinusOne.add(stairMinusOne);
+        stairsZero.add(stairZero);
+
+        stairsMinusOne.add(stairMinusOneSecond);
+        stairsZero.add(stairZeroSecond);
+
+
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairsMinusOne, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building);
+        Graph graph = result.getGraph();
+        Assert.assertEquals(graph.verticesCount(), 6);
+        Assert.assertEquals(graph.containsEdge(-4, -5), true);
+        Assert.assertEquals(graph.containsEdge(-5, -4), true);
+        Assert.assertEquals(graph.containsEdge(-5, -6), true);
+        Assert.assertEquals(graph.containsEdge(-6, -5), true);
+        Assert.assertEquals(graph.containsEdge(-3, -2), true);
+        Assert.assertEquals(graph.containsEdge(-2, -3), true);
+        Assert.assertEquals(graph.containsEdge(-2, -1), true);
+        Assert.assertEquals(graph.containsEdge(-1, -2), true);
+        Assert.assertEquals(graph.containsEdge(-6, -3), true);
+        Assert.assertEquals(graph.containsEdge(-3, -6), true);
+        Assert.assertEquals(graph.containsEdge(-4, -1), true);
+        Assert.assertEquals(graph.containsEdge(-1, -4), true);
+        Assert.assertEquals(graph.containsEdge(-2, -2), false);
+        Assert.assertEquals(graph.containsEdge(-1, -1), false);
+    }
 }
