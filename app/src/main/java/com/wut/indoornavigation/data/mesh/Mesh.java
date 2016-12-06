@@ -80,9 +80,9 @@ public final class Mesh {
 
         for (Floor floor : building.getFloors()) {
             Comparator<Vertex> by2dPosition = (v1, v2) -> {
-                if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
-                    return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
-                } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+                if (v1.getPosition().getY() - v2.getPosition().getY() == 0) {
+                    return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+                } else return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
             };
             List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floor.getNumber());
             List<Vertex> floorStairsVertices = stairsVerticesDict.get(floor.getNumber());

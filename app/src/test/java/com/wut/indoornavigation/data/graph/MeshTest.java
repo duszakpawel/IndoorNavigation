@@ -388,4 +388,62 @@ public class MeshTest {
         Assert.assertEquals(graph.containsEdge(-2, -2), false);
         Assert.assertEquals(graph.containsEdge(-1, -1), false);
     }
+
+    @Test
+    public void meshTestTwoFloorsWithThreeElevators_Success() {
+        Mesh mesh = new Mesh();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.ELEVATOR, FloorObject.SPACE, FloorObject.ELEVATOR, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doors = new ArrayList<>();
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevatorsMinusOne = new ArrayList<>();
+        List<Elevator> elevatorsZero = new ArrayList<>();
+        Point bot = new Point((float)0.5, (float)1.5, -1);
+        Point mid = new Point((float)0.5, (float)1.5, 0);
+        Point bot2 = new Point((float)0.5, (float)2, -1);
+        Point mid2 = new Point((float)0.5, (float)2, 0);
+        Elevator elevatorMinusOne = new Elevator();
+        Elevator elevatorMinusOneSecond = new Elevator();
+        Elevator elevatorZero = new Elevator();
+        Elevator elevatorZeroSecond = new Elevator();
+        elevatorMinusOne.setStart(bot);
+        elevatorMinusOne.setEnd(mid);
+        elevatorZero.setStart(mid);
+        elevatorZero.setEnd(bot);
+
+        elevatorMinusOneSecond.setStart(bot2);
+        elevatorMinusOneSecond.setEnd(mid2);
+        elevatorZeroSecond.setStart(mid2);
+        elevatorZeroSecond.setEnd(bot2);
+
+        elevatorsMinusOne.add(elevatorMinusOne);
+        elevatorsZero.add(elevatorZero);
+
+        elevatorsMinusOne.add(elevatorMinusOneSecond);
+        elevatorsZero.add(elevatorZeroSecond);
+
+
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building);
+        Graph graph = result.getGraph();
+        Assert.assertEquals(graph.verticesCount(), 6);
+//        Assert.assertEquals(graph.containsEdge(-4, -1), true);
+//        Assert.assertEquals(graph.containsEdge(-1, -2), true);
+//        Assert.assertEquals(graph.containsEdge(-1, -3), true);
+//        Assert.assertEquals(graph.containsEdge(-1, -4), true);
+//        Assert.assertEquals(graph.containsEdge(-2, -1), true);
+//        Assert.assertEquals(graph.containsEdge(-2, -3), true);
+//        Assert.assertEquals(graph.containsEdge(-3, -1), true);
+//        Assert.assertEquals(graph.containsEdge(-3, -2), true);
+//        Assert.assertEquals(graph.containsEdge(-2, -2), false);
+//        Assert.assertEquals(graph.containsEdge(-1, -1), false);
+    }
+    //TODO: sprawdzic krawedzie, dorobic schody, zwrocic destinationy, przetestowac bardziej skomplikowany przypadek
 }
