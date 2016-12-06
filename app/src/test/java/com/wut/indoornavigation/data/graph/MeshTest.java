@@ -464,17 +464,16 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
         List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
         List<Stairs> stairsMinusOne = new ArrayList<>();
         List<Stairs> stairsZero = new ArrayList<>();
-        Stairs stairMinusOne = new Stairs(1, -1);
+        Stairs stairMinusOne = new Stairs(1, 0);
         stairMinusOne.setId(1);
-        Stairs stairMinusOneSecond = new Stairs(2, -1);
+        Stairs stairMinusOneSecond = new Stairs(2, 0);
         stairMinusOneSecond.setId(2);
-        Stairs stairZero = new Stairs(1, 0);
+        Stairs stairZero = new Stairs(1, -1);
         stairZero.setId(1);
-        Stairs stairZeroSecond = new Stairs(2, 0);
+        Stairs stairZeroSecond = new Stairs(2, -1);
         stairZeroSecond.setId(2);
 
         stairsMinusOne.add(stairMinusOne);
@@ -506,4 +505,6 @@ public class MeshTest {
         Assert.assertEquals(graph.containsEdge(-2, -2), false);
         Assert.assertEquals(graph.containsEdge(-1, -1), false);
     }
+
+    //TODO: wiecej testów schodów, destination points (sorted), error handling (messages), deep refactoring
 }

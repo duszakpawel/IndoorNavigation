@@ -101,7 +101,7 @@ public final class Mesh {
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
-            //linkStairsOnFloor(building, graph, floor, floorNumber);
+            linkStairsOnFloor(building, graph, floor, floorNumber);
             linkElevatorsOnFloor(building, graph, floor, floorNumber);
 
 //            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
@@ -189,27 +189,44 @@ public final class Mesh {
 
         for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
             Stairs stairs = floor.getStairs().get(i);
-            if (stairs.getStart() != stairs.getEnd()) {
-                int endFloor = stairs.getEndfloor();
-                List<Stairs> endFloorStairs = building.getFloors().get(endFloor).getStairs();
-                List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(endFloor);
-
-                int endVertexIndex = -1;
-                for (int j = 0; j < endFloorStairs.size(); j++) {
-                    if (endFloorStairs.get(j).getId() == stairs.getEndid()) {
-                        endVertexIndex = j;
-                        break;
+            if (stairs.getEndfloor() != floorNumber) {
+                int k = stairs.getEndfloor();
+                    if (building.getFloors().size() < k + 1 || stairsVerticesDict.size() < k + 1) {
+                        continue;
                     }
-                }
+                    Floor kFloor = null;
+                    for (Floor f : building.getFloors()) {
+                        if(f.getNumber() == k){
+                            kFloor = f;
+                            break;
+                        }
+                    }
 
-                if (endVertexIndex == -1) {
-                    throw new IllegalStateException("This algorithm is bugged as f*ck.");
-                }
+                    if(kFloor==null){
+                        continue;
+                    }
 
-                Vertex startVertex = endFloorStairsGraphVertices.get(i);
-                Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
+                    List<Stairs> endFloorStairs = kFloor.getStairs();
+                    List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(k);
+                    int endVertexIndex = -1;
+                    for (int j = 0; j < endFloorStairs.size(); j++) {
+                        if (endFloorStairs.get(j).getId() == stairs.getId()) {
+                            endVertexIndex = j;
+                            break;
+                        }
+                    }
 
-                graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
+                    if (endVertexIndex == -1) {
+                        throw new IllegalStateException("This algorithm is bugged as f*ck.");
+                    }
+
+                    Vertex startVertex = stairsVerticesDict.get(floorNumber).get(i);
+                    Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
+                    if(startVertex.getId()!=endVertex.getId()){
+                        if(!graph.containsEdge(startVertex.getId(), endVertex.getId())){
+                            graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
+                        }
+                    }
             }
         }
     }
