@@ -78,12 +78,37 @@ public final class Mesh {
             processNeighbours(vertex, x, y, enumMap, floorNumber, visited,processedNeighbours, graph);
         }
 
-//        for (Floor floor : building.getFloors()) {
-//            int floorNumber = floor.getNumber();
-//            linkStairsOnFloor(building, graph, floor, floorNumber);
-//            linkElevatorsOnFloor(building, graph, floor, floorNumber);
-//
+        for (Floor floor : building.getFloors()) {
+            Comparator<Vertex> by2dPosition = (v1, v2) -> {
+                if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
+                    return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+                } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+            };
+            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floor.getNumber());
+            List<Vertex> floorStairsVertices = stairsVerticesDict.get(floor.getNumber());
+            List<Vertex> floorElevatorsVertices = elevatorsVerticesDict.get(floor.getNumber());
+
+            if(floorDestinationVertices!=null){
+                Collections.sort(floorDestinationVertices, by2dPosition);
+            }
+            if(floorStairsVertices!=null){
+                Collections.sort(floorStairsVertices, by2dPosition);
+            }
+            if(floorElevatorsVertices!=null){
+                Collections.sort(floorElevatorsVertices, by2dPosition);
+            }
+        }
+
+        for (Floor floor : building.getFloors()) {
+            int floorNumber = floor.getNumber();
+            //linkStairsOnFloor(building, graph, floor, floorNumber);
+            linkElevatorsOnFloor(building, graph, floor, floorNumber);
+
 //            List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floorNumber);
+//            if(floorDestinationVertices==null){
+//                continue;
+//            }
+//
 //            for (int i = 0; i < floorDestinationVertices.size(); i++) {
 //                Comparator<Vertex> by2dPosition = (v1, v2) -> {
 //                    if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
@@ -92,9 +117,9 @@ public final class Mesh {
 //                };
 //
 //                Collections.sort(floorDestinationVertices, by2dPosition);
-//                floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
+//                //floorDestinationVertices.get(i).setId(floor.getDoors().get(i).getId());
 //            }
-//        }
+        }
 
         unionFind.initialize(graph.verticesCount());
 
@@ -102,6 +127,10 @@ public final class Mesh {
     }
 
     private void linkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
+        if(elevatorsVerticesDict.size()==0){
+            return;
+        }
+
         for (int i = 0; i < elevatorsVerticesDict.get(floorNumber).size(); i++) {
             Elevator elevator = floor.getElevators().get(i);
 
@@ -110,17 +139,28 @@ public final class Mesh {
                     if (building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1) {
                         continue;
                     }
+                    Floor kFloor = null;
+                    for (Floor f : building.getFloors()) {
+                        if(f.getNumber() == k){
+                            kFloor = f;
+                            break;
+                        }
+                    }
 
-                    List<Elevator> endFloorElevators = building.getFloors().get(k).getElevators();
+                    if(kFloor==null){
+                        continue;
+                    }
+
+                    List<Elevator> endFloorElevators = kFloor.getElevators();
                     List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
 
-                    Comparator<Vertex> by2dPosition = (v1, v2) -> {
-                        if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
-                            return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
-                        } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
-                    };
-
-                    Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
+//                    Comparator<Vertex> by2dPosition = (v1, v2) -> {
+//                        if (v1.getPosition().getX() - v2.getPosition().getX() == 0) {
+//                            return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+//                        } else return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+//                    };
+//
+//                    Collections.sort(endFloorElevatorsGraphVertices, by2dPosition);
 
                     int endVertexIndex = -1;
                     for (int j = 0; j < endFloorElevators.size(); j++) {
@@ -134,16 +174,25 @@ public final class Mesh {
                         throw new IllegalStateException("This algorithm is bugged as f*ck.");
                     }
 
-                    Vertex startVertex = endFloorElevatorsGraphVertices.get(i);
+                    Vertex startVertex = elevatorsVerticesDict.get(floorNumber).get(i);
                     Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
+                    if(startVertex.getId()!=endVertex.getId()){
+                        if(!graph.containsEdge(startVertex.getId(), endVertex.getId())){
+                            graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
+                        }
+                    }
 
-                    graph.addEdge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT);
+                    break;
                 }
             }
         }
     }
 
     private void linkStairsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
+        if(stairsVerticesDict.size()==0){
+            return;
+        }
+
         for (int i = 0; i < stairsVerticesDict.get(floorNumber).size(); i++) {
             Stairs stairs = floor.getStairs().get(i);
             if (stairs.getStart() != stairs.getEnd()) {
@@ -248,7 +297,7 @@ public final class Mesh {
                         continue;
                     }
 
-                    if(shouldNeighboursProcessingStart(v, rowNum, colNum, enumMap, floorNumber, visited, graph) && !processedNeighbours[rowNum][colNum]){
+                    if(!processedNeighbours[rowNum][colNum]){//shouldNeighboursProcessingStart(v, rowNum, colNum, enumMap, floorNumber, visited, graph) &&
                         processedNeighbours[rowNum][colNum] = true;
                         processNeighbours(v, rowNum, colNum, enumMap, floorNumber, visited, processedNeighbours, graph);
                     }
