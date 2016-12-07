@@ -71,13 +71,6 @@ public class GraphImpl implements Graph {
     }
 
     @Override
-    public boolean addEdge(@NonNull Vertex start, @NonNull Vertex end, double weight) {
-        Edge e = new Edge(start, end, weight);
-
-        return addEdge(e);
-    }
-
-    @Override
     public int verticesCount() {
         return vertices.size();
     }

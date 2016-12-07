@@ -5,6 +5,7 @@ import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.graph.VertexComparator;
 import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
 import junit.framework.Assert;
@@ -84,12 +85,12 @@ public class GraphImplLogicTest {
 
         Graph g = new GraphImpl(heuristicFunction, unionFind, vertexComparator);
         g.setVertices(vertices);
-        g.addEdge(A, B, 1);
-        g.addEdge(B, C, 1);
-        g.addEdge(A, C, 1.41);
-        g.addEdge(C, D, 1.41);
-        g.addEdge(C, E, 1);
-        g.addEdge(D, E, 1);
+        g.addEdge(new Edge(A, B, 1));
+        g.addEdge(new Edge(B, C, 1));
+        g.addEdge(new Edge(A, C, 1.41));
+        g.addEdge(new Edge(C, D, 1.41));
+        g.addEdge(new Edge(C, E, 1));
+        g.addEdge(new Edge(D, E, 1));
 
         return g;
     }
@@ -122,34 +123,34 @@ public class GraphImplLogicTest {
 
         Graph g = new GraphImpl(heuristicFunction, unionFind, vertexComparator);
         g.setVertices(vertices);
-        g.addEdge(A, B, 1);
-        g.addEdge(B, A, 1);
-        g.addEdge(A, E, 1);
-        g.addEdge(E, A, 1);
-        g.addEdge(F, B, 1);
-        g.addEdge(B, F, 1);
-        g.addEdge(E, F, 1);
-        g.addEdge(F, E, 1);
-        g.addEdge(E, I, 1);
-        g.addEdge(I, E, 1);
-        g.addEdge(I, J, 1);
-        g.addEdge(J, I, 1);
-        g.addEdge(J, F, 1);
-        g.addEdge(F, J, 1);
-        g.addEdge(J, K, 1);
-        g.addEdge(K, J, 1);
-        g.addEdge(K, G, 1);
-        g.addEdge(G, K, 1);
-        g.addEdge(F, G, 1);
-        g.addEdge(G, F, 1);
-        g.addEdge(G, H, 1);
-        g.addEdge(H, G, 1);
-        g.addEdge(C, G, 1);
-        g.addEdge(G, C, 1);
-        g.addEdge(H, D, 1);
-        g.addEdge(D, H, 1);
-        g.addEdge(C, D, 1);
-        g.addEdge(D, C, 1);
+        g.addEdge(new Edge(A, B, 1));
+        g.addEdge(new Edge(B, A, 1));
+        g.addEdge(new Edge(A, E, 1));
+        g.addEdge(new Edge(E, A, 1));
+        g.addEdge(new Edge(F, B, 1));
+        g.addEdge(new Edge(B, F, 1));
+        g.addEdge(new Edge(E, F, 1));
+        g.addEdge(new Edge(F, E, 1));
+        g.addEdge(new Edge(E, I, 1));
+        g.addEdge(new Edge(I, E, 1));
+        g.addEdge(new Edge(I, J, 1));
+        g.addEdge(new Edge(J, I, 1));
+        g.addEdge(new Edge(J, F, 1));
+        g.addEdge(new Edge(F, J, 1));
+        g.addEdge(new Edge(J, K, 1));
+        g.addEdge(new Edge(K, J, 1));
+        g.addEdge(new Edge(K, G, 1));
+        g.addEdge(new Edge(G, K, 1));
+        g.addEdge(new Edge(F, G, 1));
+        g.addEdge(new Edge(G, F, 1));
+        g.addEdge(new Edge(G, H, 1));
+        g.addEdge(new Edge(H, G, 1));
+        g.addEdge(new Edge(C, G, 1));
+        g.addEdge(new Edge(G, C, 1));
+        g.addEdge(new Edge(H, D, 1));
+        g.addEdge(new Edge(D, H, 1));
+        g.addEdge(new Edge(C, D, 1));
+        g.addEdge(new Edge(D, C, 1));
 
         return g;
     }
@@ -166,8 +167,8 @@ public class GraphImplLogicTest {
 
         Graph g = new GraphImpl(heuristicFunction, unionFind, vertexComparator);
         g.setVertices(vertices);
-        g.addEdge(A, C, 1);
-        g.addEdge(B, C, 1);
+        g.addEdge(new Edge(A, C, 1));
+        g.addEdge(new Edge(B, C, 1));
 
         return g;
     }
@@ -200,38 +201,38 @@ public class GraphImplLogicTest {
 
         Graph g = new GraphImpl(heuristicFunction, unionFind, vertexComparator);
         g.setVertices(vertices);
-        g.addEdge(A, B, 1);
-        g.addEdge(B, A, 1);
-        g.addEdge(A, E, 1);
-        g.addEdge(E, A, 1);
-        g.addEdge(F, B, 1);
-        g.addEdge(B, F, 1);
-        g.addEdge(E, F, 1);
-        g.addEdge(F, E, 1);
-        g.addEdge(E, I, 1);
-        g.addEdge(I, E, 1);
-        g.addEdge(I, J, 1);
-        g.addEdge(J, I, 1);
-        g.addEdge(J, F, 1);
-        g.addEdge(F, J, 1);
-        g.addEdge(J, K, 1);
-        g.addEdge(K, J, 1);
-        g.addEdge(K, G, 1);
-        g.addEdge(G, K, 1);
-        g.addEdge(F, G, 1);
-        g.addEdge(G, F, 1);
-        g.addEdge(G, H, 1);
-        g.addEdge(H, G, 1);
-        g.addEdge(C, G, 1);
-        g.addEdge(G, C, 1);
-        g.addEdge(H, D, 1);
-        g.addEdge(D, H, 1);
-        g.addEdge(C, D, 1);
-        g.addEdge(D, C, 1);
-        g.addEdge(J, G, 1);
-        g.addEdge(G, J, 1);
-        g.addEdge(D, G, 1);
-        g.addEdge(G, D, 1);
+        g.addEdge(new Edge(A, B, 1));
+        g.addEdge(new Edge(B, A, 1));
+        g.addEdge(new Edge(A, E, 1));
+        g.addEdge(new Edge(E, A, 1));
+        g.addEdge(new Edge(F, B, 1));
+        g.addEdge(new Edge(B, F, 1));
+        g.addEdge(new Edge(E, F, 1));
+        g.addEdge(new Edge(F, E, 1));
+        g.addEdge(new Edge(E, I, 1));
+        g.addEdge(new Edge(I, E, 1));
+        g.addEdge(new Edge(I, J, 1));
+        g.addEdge(new Edge(J, I, 1));
+        g.addEdge(new Edge(J, F, 1));
+        g.addEdge(new Edge(F, J, 1));
+        g.addEdge(new Edge(J, K, 1));
+        g.addEdge(new Edge(K, J, 1));
+        g.addEdge(new Edge(K, G, 1));
+        g.addEdge(new Edge(G, K, 1));
+        g.addEdge(new Edge(F, G, 1));
+        g.addEdge(new Edge(G, F, 1));
+        g.addEdge(new Edge(G, H, 1));
+        g.addEdge(new Edge(H, G, 1));
+        g.addEdge(new Edge(C, G, 1));
+        g.addEdge(new Edge(G, C, 1));
+        g.addEdge(new Edge(H, D, 1));
+        g.addEdge(new Edge(D, H, 1));
+        g.addEdge(new Edge(C, D, 1));
+        g.addEdge(new Edge(D, C, 1));
+        g.addEdge(new Edge(J, G, 1));
+        g.addEdge(new Edge(G, J, 1));
+        g.addEdge(new Edge(D, G, 1));
+        g.addEdge(new Edge(G, D, 1));
 
         return g;
     }
