@@ -84,7 +84,7 @@ public final class Mesh {
         if (floorDestinationVertices != null) {
             for (int i = 0; i < floorDestinationVertices.size(); i++) {
                 Vertex iFloorDestinationVertex = floorDestinationVertices.get(i);
-                iFloorDestinationVertex.setId(floor.getDoors().get(i).getId());
+                iFloorDestinationVertex.toBuilder().id(floor.getDoors().get(i).getId()).build();
             }
         }
     }
@@ -242,7 +242,7 @@ public final class Mesh {
 
             List<Stairs> endFloorStairs = kFloor.getStairs();
 
-            if(stairs.getEndfloor() == floorNumber){
+            if (stairs.getEndfloor() == floorNumber) {
                 return;
             }
 
