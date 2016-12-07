@@ -1,6 +1,8 @@
-package com.wut.indoornavigation.data.graph;
+package com.wut.indoornavigation.data.mesh;
 
-import com.wut.indoornavigation.data.mesh.Mesh;
+import com.wut.indoornavigation.data.graph.Graph;
+import com.wut.indoornavigation.data.graph.HeuristicFunction;
+import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
@@ -9,15 +11,25 @@ import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.Wall;
+import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MeshTest {
+
+    @Mock
+    HeuristicFunction heuristicFunction;
+    @Mock
+    UnionFind unionFind;
 
     @Test
     public void meshTest_Success() {
@@ -35,8 +47,7 @@ public class MeshTest {
         List<Elevator> elevators = new ArrayList<>();
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
-
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
     }
 
@@ -58,7 +69,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
     }
 
@@ -78,7 +89,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 4);
         Assert.assertEquals(result.getGraph().containsEdge(-3, -4), true);
         Assert.assertEquals(result.getGraph().containsEdge(-3, -2), true);
@@ -125,7 +136,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 25);
     }
 
@@ -148,7 +159,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 36);
     }
 
@@ -170,7 +181,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 30);
     }
 
@@ -192,7 +203,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 24);
     }
 
@@ -226,7 +237,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 44);
     }
 
@@ -260,7 +271,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getDestinationPoints().get(0).size(), 2);
     }
 
@@ -282,7 +293,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 18);
     }
 
@@ -305,7 +316,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 27);
     }
 
@@ -336,7 +347,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 2);
         Assert.assertEquals(graph.containsEdge(-1,-2), true);
@@ -358,23 +369,10 @@ public class MeshTest {
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevatorsMinusOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Point bot = new Point((float)0.5, (float)1.5, -1);
-        Point mid = new Point((float)0.5, (float)1.5, 0);
-        Point bot2 = new Point((float)0.5, (float)2, -1);
-        Point mid2 = new Point((float)0.5, (float)2, 0);
         Elevator elevatorMinusOne = new Elevator();
         Elevator elevatorMinusOneSecond = new Elevator();
         Elevator elevatorZero = new Elevator();
         Elevator elevatorZeroSecond = new Elevator();
-        elevatorMinusOne.setStart(bot);
-        elevatorMinusOne.setEnd(mid);
-        elevatorZero.setStart(mid);
-        elevatorZero.setEnd(bot);
-
-        elevatorMinusOneSecond.setStart(bot2);
-        elevatorMinusOneSecond.setEnd(mid2);
-        elevatorZeroSecond.setStart(mid2);
-        elevatorZeroSecond.setEnd(bot2);
 
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
@@ -386,7 +384,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 4);
         Assert.assertEquals(graph.containsEdge(-4, -1), true);
@@ -414,10 +412,6 @@ public class MeshTest {
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevatorsMinusOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Point bot = new Point((float)0.5, (float)1.5, -1);
-        Point mid = new Point((float)0.5, (float)1.5, 0);
-        Point bot2 = new Point((float)0.5, (float)2, -1);
-        Point mid2 = new Point((float)0.5, (float)2, 0);
         Elevator elevatorMinusOne = new Elevator();
         elevatorMinusOne.setId(1);
         Elevator elevatorMinusOneSecond = new Elevator();
@@ -426,15 +420,6 @@ public class MeshTest {
         elevatorZero.setId(1);
         Elevator elevatorZeroSecond = new Elevator();
         elevatorZeroSecond.setId(2);
-        elevatorMinusOne.setStart(bot);
-        elevatorMinusOne.setEnd(mid);
-        elevatorZero.setStart(mid);
-        elevatorZero.setEnd(bot);
-
-        elevatorMinusOneSecond.setStart(bot2);
-        elevatorMinusOneSecond.setEnd(mid2);
-        elevatorZeroSecond.setStart(mid2);
-        elevatorZeroSecond.setEnd(bot2);
 
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
@@ -447,7 +432,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 6);
         Assert.assertEquals(graph.containsEdge(-4, -5), true);
@@ -499,7 +484,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building);
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 6);
         Assert.assertEquals(graph.containsEdge(-4, -5), true);
@@ -518,5 +503,106 @@ public class MeshTest {
         Assert.assertEquals(graph.containsEdge(-1, -1), false);
     }
 
-    //TODO: wiecej testów schodów, destination points (sorted), error handling (messages), deep refactoring
+    @Test
+    public void meshTestForSample2Building_Success() {
+        Mesh mesh = new Mesh();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.STAIRS, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.DOOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.DOOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.DOOR, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.STAIRS, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.ELEVATOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.DOOR, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.DOOR, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        FloorObject[][] firstFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.STAIRS, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.DOOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.DOOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.DOOR, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.STAIRS, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.DOOR, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.ELEVATOR, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doorsZero = new ArrayList<>();
+        Door doorZero1 = new Door(true);
+        doorZero1.setId(1);
+        doorsZero.add(doorZero1);
+        Door doorZero2 = new Door(true);
+        doorZero2.setId(2);
+        doorsZero.add(doorZero2);
+
+        List<Door> doorsOne = new ArrayList<>();
+        Door doorOne1 = new Door(true);
+        doorOne1.setId(1);
+        doorsOne.add(doorOne1);
+        Door doorOne2 = new Door(true);
+        doorOne2.setId(2);
+        doorsOne.add(doorOne2);
+        Door doorOne3 = new Door(true);
+        doorOne3.setId(2);
+        doorsOne.add(doorOne3);
+        List<Stairs> stairsZero = new ArrayList<>();
+        List<Stairs> stairsOne = new ArrayList<>();
+
+        Stairs stairZero1 = new Stairs(0, 1);
+        Stairs stairZero2 = new Stairs(1, 1);
+        Stairs stairOne1 = new Stairs(0, 0);
+        Stairs stairOne2 = new Stairs(1, 0);
+        stairsZero.add(stairZero1);
+        stairsZero.add(stairZero2);
+
+        stairsOne.add(stairOne1);
+        stairsOne.add(stairOne2);
+
+        List<Elevator> elevatorsOne = new ArrayList<>();
+        List<Elevator> elevatorsZero = new ArrayList<>();
+        Elevator elevatorOne = new Elevator();
+        elevatorOne.setId(1);
+        Elevator elevatorZero = new Elevator();
+        elevatorZero.setId(1);
+
+        elevatorsZero.add(elevatorZero);
+        elevatorsOne.add(elevatorOne);
+
+        floors.add(new Floor(groundFloor, 0, walls, doorsZero, stairsZero, elevatorsZero));
+        floors.add(new Floor(firstFloor, 1, walls, doorsOne, stairsOne, elevatorsOne));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        Graph graph = result.getGraph();
+        Assert.assertEquals(graph.verticesCount(), 378);
+
+        int edgesAcrossFloorsCount = 0;
+        for (List<Edge> edges : graph.getEdges().values()) {
+            for (Edge edge : edges) {
+                if(edge.getWeight() == Mesh.EDGE_ELEVATOR_WEIGHT){
+                    edgesAcrossFloorsCount++;
+                }
+            }
+        }
+        Assert.assertEquals(edgesAcrossFloorsCount, 6);
+        // TODO: policzyć wierzchołki
+        // TODO: policzyć krawędzie
+        // TODO: policzyć krawędzie o wadze 5000 (między piętrowe, powinno być ich 6)
+
+    }
 }

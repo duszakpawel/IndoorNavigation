@@ -2,11 +2,13 @@ package com.wut.indoornavigation.data.graph;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Graph {
 
@@ -23,4 +25,18 @@ public interface Graph {
     boolean addVertex(Vertex vertex);
 
     boolean containsEdge(int vId, int wId);
+
+    /**
+     * Only for testing purposes.
+     * @return vertices list
+     */
+    @VisibleForTesting
+    List<Vertex> getVertices();
+
+    /**
+     * Only for testing purposes.
+     * @return edges map
+     */
+    @VisibleForTesting
+    Map<Vertex, List<Edge>> getEdges();
 }

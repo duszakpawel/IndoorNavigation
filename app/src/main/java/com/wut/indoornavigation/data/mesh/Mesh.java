@@ -29,21 +29,18 @@ public final class Mesh {
     private static final int ID_SEED_INIT = -1;
     private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
     private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
-    private static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    public static final int EDGE_ELEVATOR_WEIGHT = 5000;
     private static final int START_POINT_X_SEED = 0;
     private static final int START_POINT_Y_SEED = 0;
 
-    private static int idSeed;
+    private int idSeed;
 
     private Map<Integer, List<Vertex>> destinationVerticesDict;
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
     private Map<Integer, List<Vertex>> stairsVerticesDict;
 
-    public MeshResult create(Building building) {
+    public MeshResult create(Building building, HeuristicFunction heuristicFunction, UnionFind unionFind) {
         init();
-        // TODO: DI ?
-        HeuristicFunction heuristicFunction = new HeuristicFunction();
-        UnionFind unionFind = new UnionFind();
 
         Graph graph = new GraphImpl(heuristicFunction, unionFind, new VertexComparator(heuristicFunction));
 
@@ -155,10 +152,6 @@ public final class Mesh {
     }
 
     private void linkElevatorOnFloor(Building building, Graph graph, int floorNumber, int i, Elevator elevator) {
-        if (elevator.getStart() == elevator.getEnd()) {
-            return;
-        }
-
         for (int k = floorNumber - 1; k < floorNumber + 2; k += 2) {
             if (building.getFloors().size() < k + 1 || elevatorsVerticesDict.size() < k + 1) {
                 continue;

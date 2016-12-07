@@ -1,6 +1,7 @@
 package com.wut.indoornavigation.data.graph.impl;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.HeuristicFunction;
@@ -81,7 +82,7 @@ public class GraphImpl implements Graph {
             return outVertices;
         }
 
-        for (Edge outEdge : outEdges) {
+        for (final Edge outEdge : outEdges) {
             outVertices.add(outEdge.getTo());
         }
         return outVertices;
@@ -114,6 +115,10 @@ public class GraphImpl implements Graph {
         }
 
         final int sIndex = vertices.indexOf(s);
+
+        if(sIndex==-1){
+            return new ArrayList<>();
+        }
 
         distance[sIndex] = DIST_DEFAULT_VALUE;
 
@@ -186,7 +191,7 @@ public class GraphImpl implements Graph {
             }
         }
 
-        throw new IllegalStateException("There is no vertex with id" + id);
+        throw new IllegalStateException("There is no vertex with id: " + id);
     }
 
     @Override
@@ -228,16 +233,28 @@ public class GraphImpl implements Graph {
     @Override
     public boolean containsEdge(int vId, int wId) {
         List<Edge> vOutEdges = outEdges(vId);
-        if(vOutEdges == null){
+        if (vOutEdges == null) {
             return false;
         }
 
         for (Edge vOutEdge : vOutEdges) {
-            if(vOutEdge.getTo().getId() == wId){
+            if (vOutEdge.getTo().getId() == wId) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    @VisibleForTesting
+    @Override
+    public List<Vertex> getVertices(){
+        return vertices;
+    }
+
+    @VisibleForTesting
+    @Override
+    public Map<Vertex, List<Edge>> getEdges(){
+        return edges;
     }
 }
