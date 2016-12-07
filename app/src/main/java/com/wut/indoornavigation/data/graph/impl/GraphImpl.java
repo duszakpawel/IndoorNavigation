@@ -38,9 +38,7 @@ public class GraphImpl implements Graph {
     @Override
     public void setVertices(@NonNull List<Vertex> vertices) {
         this.vertices.clear();
-        for (Vertex vertex : vertices) {
-            addVertex(vertex);
-        }
+        this.vertices.addAll(vertices);
     }
 
     @Override
