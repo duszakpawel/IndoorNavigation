@@ -18,6 +18,10 @@ public class UnionFind {
 
     }
 
+    /**
+     * Initializes set for union find
+     * @param n elements count
+     */
     public void initialize(int n) {
         id = new int[n + 1];
         sz = new int[n + 1];

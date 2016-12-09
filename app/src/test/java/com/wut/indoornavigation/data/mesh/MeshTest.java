@@ -3,6 +3,7 @@ package com.wut.indoornavigation.data.mesh;
 import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
+import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
@@ -45,7 +46,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
@@ -66,7 +67,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -86,7 +87,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -133,7 +134,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -156,7 +157,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -178,7 +179,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -200,7 +201,7 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -234,7 +235,7 @@ public class MeshTest {
         doors.add(secondRoom);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -268,7 +269,7 @@ public class MeshTest {
         doors.add(secondRoom);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -289,8 +290,8 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
-        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
+        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -311,9 +312,9 @@ public class MeshTest {
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevators));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators));
-        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators));
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevators, null));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
+        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -343,8 +344,8 @@ public class MeshTest {
         elevatorZero.setEnd(bot);
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -380,8 +381,8 @@ public class MeshTest {
         elevatorsMinusOne.add(elevatorMinusOneSecond);
         elevatorsZero.add(elevatorZeroSecond);
 
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -428,8 +429,8 @@ public class MeshTest {
         elevatorsZero.add(elevatorZeroSecond);
 
 
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero));
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -480,8 +481,8 @@ public class MeshTest {
         stairsZero.add(stairZeroSecond);
 
 
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairsMinusOne, elevators));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators));
+        floors.add(new Floor(groundFloor, -1, walls, doors, stairsMinusOne, elevators, null));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -583,8 +584,8 @@ public class MeshTest {
         elevatorsZero.add(elevatorZero);
         elevatorsOne.add(elevatorOne);
 
-        floors.add(new Floor(groundFloor, 0, walls, doorsZero, stairsZero, elevatorsZero));
-        floors.add(new Floor(firstFloor, 1, walls, doorsOne, stairsOne, elevatorsOne));
+        floors.add(new Floor(groundFloor, 0, walls, doorsZero, stairsZero, elevatorsZero, null));
+        floors.add(new Floor(firstFloor, 1, walls, doorsOne, stairsOne, elevatorsOne, null));
         Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, heuristicFunction, unionFind);
@@ -600,9 +601,36 @@ public class MeshTest {
             }
         }
         Assert.assertEquals(edgesAcrossFloorsCount, 6);
-        // TODO: policzyć wierzchołki
-        // TODO: policzyć krawędzie
-        // TODO: policzyć krawędzie o wadze 5000 (między piętrowe, powinno być ich 6)
+    }
 
+    @Test
+    public void meshTestTwoRoomsWithHallwayTestDestinationPoints_Success() {
+        Mesh mesh = new Mesh();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.BEACON, FloorObject.ROOM, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.BEACON, FloorObject.SPACE, FloorObject.ROOM, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doors = new ArrayList<>();
+        Door door1 = new Door(true);
+        Door door2 = new Door(true);
+        door1.setId(1);
+        door2.setId(2);
+        doors.add(door1);
+        doors.add(door2);
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        List<Beacon> beacons = new ArrayList<>();
+        beacons.add(new Beacon(0));
+        beacons.add(new Beacon(1));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, beacons));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
     }
 }

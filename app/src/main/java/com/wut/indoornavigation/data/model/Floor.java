@@ -13,4 +13,5 @@ public class Floor {
     List<Door> doors;
     List<Stairs> stairs;
     List<Elevator> elevators;
+    List<Beacon> beacons;
 }

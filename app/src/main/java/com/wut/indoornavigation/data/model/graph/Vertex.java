@@ -6,6 +6,9 @@ import com.wut.indoornavigation.data.model.Point;
 import lombok.Builder;
 import lombok.Value;
 
+/**
+ * Vertex class
+ */
 @Value
 @Builder(toBuilder = true)
 public class Vertex {

@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+/**
+ * Implementation of graph interface
+ */
 public class GraphImpl implements Graph {
     private static final int NO_PREVIOUS = -1;
     private static final double DIST_DEFAULT_VALUE = 0;
@@ -28,6 +31,12 @@ public class GraphImpl implements Graph {
     private final List<Vertex> vertices;
     private final Map<Vertex, List<Edge>> edges;
 
+    /**
+     * Constructor of class
+     * @param heuristicFunction heuristic function handler
+     * @param close close union-find set
+     * @param comparator vertex comparator for aStar purposes
+     */
     public GraphImpl(HeuristicFunction heuristicFunction, UnionFind close, VertexComparator comparator) {
         this.heuristicFunction = heuristicFunction;
         this.close = close;
@@ -36,12 +45,21 @@ public class GraphImpl implements Graph {
         this.edges = new HashMap<>();
     }
 
+    /**
+     * Sets vertices in graph
+     * @param vertices vertices list
+     */
     @Override
     public void setVertices(@NonNull List<Vertex> vertices) {
         this.vertices.clear();
         this.vertices.addAll(vertices);
     }
 
+    /**
+     * Adds edge to graph
+     * @param edge edge object
+     * @return true if operation succeeded, otherwise false
+     */
     @Override
     public boolean addEdge(@NonNull Edge edge) {
         Vertex from = edge.getFrom();
@@ -69,6 +87,10 @@ public class GraphImpl implements Graph {
         return false;
     }
 
+    /**
+     * Counts vertices in graph
+     * @return vertices count
+     */
     @Override
     public int verticesCount() {
         return vertices.size();
@@ -88,6 +110,11 @@ public class GraphImpl implements Graph {
         return outVertices;
     }
 
+    /**
+     * Returns out edges for vertex with specified id
+     * @param vertexId id of vertex
+     * @return list of edges
+     */
     @Override
     public List<Edge> outEdges(int vertexId) {
         Vertex vertex;
@@ -103,6 +130,13 @@ public class GraphImpl implements Graph {
         throw new IllegalStateException("Vertex does not belong to graph.");
     }
 
+    /**
+     * Only for testing purposes.
+     * Computes shortest path between two vertices in graph
+     * @param s source vertex
+     * @param t  target vertex
+     * @return (ordered list of vertices)
+     */
     @Override
     public List<Vertex> aStar(Vertex s, Vertex t) {
         final int verticesCount = verticesCount();
@@ -194,6 +228,13 @@ public class GraphImpl implements Graph {
         throw new IllegalStateException("There is no vertex with id: " + id);
     }
 
+    /**
+     * Only for testing purposes.
+     * Computes shortest path between two vertices in graph
+     * @param s source vertex
+     * @param t  target vertex
+     * @return (ordered list of vertices)
+     */
     @Override
     public List<Vertex> aStar(int s, int t) {
         final Vertex sVertex = findVertex(s);
@@ -206,6 +247,13 @@ public class GraphImpl implements Graph {
         return aStar(sVertex, tVertex);
     }
 
+    /**
+     * Returns vertex with specified coordinates
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param floorNumber floor number
+     * @return desired vertex
+     */
     @Override
     public Vertex getVertexByCoordinates(float x, float y, int floorNumber) {
         for (Vertex vertex : vertices) {
@@ -218,6 +266,11 @@ public class GraphImpl implements Graph {
         return null;
     }
 
+    /**
+     * Adds vertex to graph
+     * @param vertex vertex object
+     * @return true if vertex was added, otherwise false
+     */
     @Override
     public boolean addVertex(Vertex vertex) {
         for (Vertex v : vertices) {
@@ -230,6 +283,12 @@ public class GraphImpl implements Graph {
         return true;
     }
 
+    /**
+     * Returns information whether graph contains edge between two vertices
+     * @param vId id of first vertex
+     * @param wId id of second vertex
+     * @return true if yes, otherwise false
+     */
     @Override
     public boolean containsEdge(int vId, int wId) {
         List<Edge> vOutEdges = outEdges(vId);
@@ -246,12 +305,20 @@ public class GraphImpl implements Graph {
         return false;
     }
 
+    /**
+     * Only for testing purposes.
+     * @return vertices list
+     */
     @VisibleForTesting
     @Override
     public List<Vertex> getVertices(){
         return vertices;
     }
 
+    /**
+     * Only for testing purposes.
+     * @return edges map
+     */
     @VisibleForTesting
     @Override
     public Map<Vertex, List<Edge>> getEdges(){

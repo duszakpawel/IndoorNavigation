@@ -25,11 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Mesh creator for building
+ */
 public final class Mesh {
     private static final int ID_SEED_INIT = -1;
-    private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
-    private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+    public static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    public static final double DIAGONAL_EDGE_WEIGHT = 0.7;
     public static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    public static final int EDGE_STAIRS_WEIGHT = 5000;
     private static final int START_POINT_X_SEED = 0;
     private static final int START_POINT_Y_SEED = 0;
 
@@ -38,7 +42,15 @@ public final class Mesh {
     private Map<Integer, List<Vertex>> destinationVerticesDict;
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
     private Map<Integer, List<Vertex>> stairsVerticesDict;
+    private Map<Integer, List<Point>> beaconsDict;
 
+    /**
+     * Creates mesh (graph) for building
+     * @param building Building object
+     * @param heuristicFunction heuristic function handler (to inject into graph)
+     * @param unionFind union find structure (to inject into graph)
+     * @return
+     */
     public MeshResult create(Building building, HeuristicFunction heuristicFunction, UnionFind unionFind) {
         init();
 
@@ -46,7 +58,7 @@ public final class Mesh {
 
         for (Floor floor : building.getFloors()) {
             processFloor(graph, floor);
-            prepareVerticesSets(floor);
+            prepareVerticesAndBeaconsSets(floor);
         }
 
         for (Floor floor : building.getFloors()) {
@@ -57,13 +69,14 @@ public final class Mesh {
 
         unionFind.initialize(graph.verticesCount());
 
-        return new MeshResult(graph, destinationVerticesDict);
+        return new MeshResult(graph, destinationVerticesDict, beaconsDict);
     }
 
-    private void prepareVerticesSets(Floor floor) {
+    private void prepareVerticesAndBeaconsSets(Floor floor) {
         List<Vertex> floorDestinationVertices = destinationVerticesDict.get(floor.getNumber());
         List<Vertex> floorStairsVertices = stairsVerticesDict.get(floor.getNumber());
         List<Vertex> floorElevatorsVertices = elevatorsVerticesDict.get(floor.getNumber());
+        List<Point> floorBeacons = beaconsDict.get(floor.getNumber());
 
         Comparator<Vertex> by2dPosition = (v1, v2) -> {
             if (v2.getPosition().getY() - v1.getPosition().getY() == 0) {
@@ -73,19 +86,19 @@ public final class Mesh {
             }
         };
 
+
         sortVerticesSetOnFloor(floorDestinationVertices, by2dPosition);
         sortVerticesSetOnFloor(floorStairsVertices, by2dPosition);
         sortVerticesSetOnFloor(floorElevatorsVertices, by2dPosition);
 
-        updateDestinationVerticesIdsOnFloor(floor, floorDestinationVertices);
-    }
-
-    private void updateDestinationVerticesIdsOnFloor(Floor floor, List<Vertex> floorDestinationVertices) {
-        if (floorDestinationVertices != null) {
-            for (int i = 0; i < floorDestinationVertices.size(); i++) {
-                Vertex iFloorDestinationVertex = floorDestinationVertices.get(i);
-                iFloorDestinationVertex.toBuilder().id(floor.getDoors().get(i).getId()).build();
-            }
+        if (floorBeacons != null) {
+            Collections.sort(floorBeacons, (v1, v2) -> {
+                if (v2.getY() - v1.getY() == 0) {
+                    return Math.round(v2.getX() - v1.getX());
+                } else {
+                    return Math.round(v2.getY() - v1.getY());
+                }
+            });
         }
     }
 
@@ -138,6 +151,7 @@ public final class Mesh {
         destinationVerticesDict = new HashMap<>();
         elevatorsVerticesDict = new HashMap<>();
         stairsVerticesDict = new HashMap<>();
+        beaconsDict = new HashMap<>();
     }
 
     private void linkElevatorsOnFloor(Building building, Graph graph, Floor floor, int floorNumber) {
@@ -259,7 +273,7 @@ public final class Mesh {
     private void listStairOnFloor(Graph graph, Vertex startVertex, Vertex endVertex) {
         if (startVertex.getId() != endVertex.getId()) {
             if (!graph.containsEdge(startVertex.getId(), endVertex.getId())) {
-                graph.addEdge(new Edge(startVertex, endVertex, EDGE_ELEVATOR_WEIGHT));
+                graph.addEdge(new Edge(startVertex, endVertex, EDGE_STAIRS_WEIGHT));
             }
         }
     }
@@ -298,6 +312,16 @@ public final class Mesh {
             }
 
             return vertex;
+        }
+
+        if (enumMap[x][y] == FloorObject.BEACON) {
+            Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
+            List<Point> floorBeacons = beaconsDict.get(floorNumber);
+            if (floorBeacons == null) {
+                floorBeacons = new ArrayList<>();
+                beaconsDict.put(floorNumber, floorBeacons);
+            }
+            floorBeacons.add(coordinates);
         }
 
         return null;
