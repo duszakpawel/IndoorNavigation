@@ -33,9 +33,10 @@ public class GraphImpl implements Graph {
 
     /**
      * Constructor of class
+     *
      * @param heuristicFunction heuristic function handler
-     * @param close close union-find set
-     * @param comparator vertex comparator for aStar purposes
+     * @param close             close union-find set
+     * @param comparator        vertex comparator for aStar purposes
      */
     public GraphImpl(HeuristicFunction heuristicFunction, UnionFind close, VertexComparator comparator) {
         this.heuristicFunction = heuristicFunction;
@@ -47,6 +48,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Sets vertices in graph
+     *
      * @param vertices vertices list
      */
     @Override
@@ -57,6 +59,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Adds edge to graph
+     *
      * @param edge edge object
      * @return true if operation succeeded, otherwise false
      */
@@ -89,6 +92,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Counts vertices in graph
+     *
      * @return vertices count
      */
     @Override
@@ -112,6 +116,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Returns out edges for vertex with specified id
+     *
      * @param vertexId id of vertex
      * @return list of edges
      */
@@ -133,8 +138,9 @@ public class GraphImpl implements Graph {
     /**
      * Only for testing purposes.
      * Computes shortest path between two vertices in graph
+     *
      * @param s source vertex
-     * @param t  target vertex
+     * @param t target vertex
      * @return (ordered list of vertices)
      */
     @Override
@@ -150,7 +156,7 @@ public class GraphImpl implements Graph {
 
         final int sIndex = vertices.indexOf(s);
 
-        if(sIndex==-1){
+        if (sIndex == -1) {
             return new ArrayList<>();
         }
 
@@ -231,8 +237,9 @@ public class GraphImpl implements Graph {
     /**
      * Only for testing purposes.
      * Computes shortest path between two vertices in graph
+     *
      * @param s source vertex
-     * @param t  target vertex
+     * @param t target vertex
      * @return (ordered list of vertices)
      */
     @Override
@@ -249,8 +256,9 @@ public class GraphImpl implements Graph {
 
     /**
      * Returns vertex with specified coordinates
-     * @param x x-coordinate
-     * @param y y-coordinate
+     *
+     * @param x           x-coordinate
+     * @param y           y-coordinate
      * @param floorNumber floor number
      * @return desired vertex
      */
@@ -268,6 +276,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Adds vertex to graph
+     *
      * @param vertex vertex object
      * @return true if vertex was added, otherwise false
      */
@@ -285,6 +294,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Returns information whether graph contains edge between two vertices
+     *
      * @param vId id of first vertex
      * @param wId id of second vertex
      * @return true if yes, otherwise false
@@ -307,21 +317,23 @@ public class GraphImpl implements Graph {
 
     /**
      * Only for testing purposes.
+     *
      * @return vertices list
      */
     @VisibleForTesting
     @Override
-    public List<Vertex> getVertices(){
+    public List<Vertex> getVertices() {
         return vertices;
     }
 
     /**
      * Only for testing purposes.
+     *
      * @return edges map
      */
     @VisibleForTesting
     @Override
-    public Map<Vertex, List<Edge>> getEdges(){
+    public Map<Vertex, List<Edge>> getEdges() {
         return edges;
     }
 }

@@ -9,6 +9,7 @@ import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.graph.VertexComparator;
 import com.wut.indoornavigation.data.graph.impl.GraphImpl;
 import com.wut.indoornavigation.data.model.Building;
+import com.wut.indoornavigation.data.model.BuildingObject;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -29,13 +30,27 @@ import java.util.Map;
  * Mesh creator for building
  */
 public final class Mesh {
-    private static final int ID_SEED_INIT = -1;
+    /**
+     * Edge weight for horizontal or vertical segment in mesh
+     */
     public static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    /**
+     * Edge weight for diagonal segment in mesh
+     */
     public static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+    /**
+     * Edge weight for elevator-elevator edge weight
+     */
     public static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    /**
+     * Edge weight for stairs-stairs edge weight
+     */
     public static final int EDGE_STAIRS_WEIGHT = 5000;
+
+    private static final int ID_SEED_INIT = -1;
     private static final int START_POINT_X_SEED = 0;
     private static final int START_POINT_Y_SEED = 0;
+    private static final int VERTEX_NOT_FOUND = -1;
 
     private int idSeed;
 
@@ -46,10 +61,11 @@ public final class Mesh {
 
     /**
      * Creates mesh (graph) for building
-     * @param building Building object
+     *
+     * @param building          Building object
      * @param heuristicFunction heuristic function handler (to inject into graph)
-     * @param unionFind union find structure (to inject into graph)
-     * @return
+     * @param unionFind         union find structure (to inject into graph)
+     * @return Mesh result object
      */
     public MeshResult create(Building building, HeuristicFunction heuristicFunction, UnionFind unionFind) {
         init();
@@ -179,7 +195,7 @@ public final class Mesh {
 
             List<Elevator> endFloorElevators = kFloor.getElevators();
             List<Vertex> endFloorElevatorsGraphVertices = elevatorsVerticesDict.get(k);
-            int endVertexIndex = findMatchingElevator(elevator, endFloorElevators);
+            int endVertexIndex = findMatchingObjectOnFloor(elevator, endFloorElevators);
 
             Vertex startVertex = elevatorsVerticesDict.get(floorNumber).get(i);
             Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
@@ -199,21 +215,6 @@ public final class Mesh {
                 graph.addEdge(new Edge(endVertex, startVertex, EDGE_ELEVATOR_WEIGHT));
             }
         }
-    }
-
-    private int findMatchingElevator(Elevator elevator, List<Elevator> endFloorElevators) {
-        int endVertexIndex = -1;
-        for (int j = 0; j < endFloorElevators.size(); j++) {
-            if (endFloorElevators.get(j).getId() == elevator.getId()) {
-                endVertexIndex = j;
-                break;
-            }
-        }
-
-        if (endVertexIndex == -1) {
-            throw new IllegalStateException("There were no elevator matching current elevator. Description is incorrect.");
-        }
-        return endVertexIndex;
     }
 
     @Nullable
@@ -261,7 +262,7 @@ public final class Mesh {
             }
 
             List<Vertex> endFloorStairsGraphVertices = stairsVerticesDict.get(k);
-            int endVertexIndex = findMatchingStairsOnFloor(stairs, endFloorStairs);
+            int endVertexIndex = findMatchingObjectOnFloor(stairs, endFloorStairs);
 
             Vertex startVertex = stairsVerticesDict.get(floorNumber).get(i);
             Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
@@ -278,18 +279,19 @@ public final class Mesh {
         }
     }
 
-    private int findMatchingStairsOnFloor(Stairs stairs, List<Stairs> endFloorStairs) {
-        int endVertexIndex = -1;
-        for (int j = 0; j < endFloorStairs.size(); j++) {
-            if (endFloorStairs.get(j).getId() == stairs.getId()) {
+    private <T extends BuildingObject> int findMatchingObjectOnFloor(T object, List<T> endFloorObjects) {
+        int endVertexIndex = VERTEX_NOT_FOUND;
+        for (int j = 0; j < endFloorObjects.size(); j++) {
+            if (endFloorObjects.get(j).getId() == object.getId()) {
                 endVertexIndex = j;
                 break;
             }
         }
 
-        if (endVertexIndex == -1) {
-            throw new IllegalStateException("This algorithm is bugged as f*ck.");
+        if (endVertexIndex == VERTEX_NOT_FOUND) {
+            throw new IllegalStateException("There were no elevator matching current elevator. Description is incorrect.");
         }
+
         return endVertexIndex;
     }
 
@@ -298,9 +300,9 @@ public final class Mesh {
         if (visited[x][y]) {
             return graph.getVertexByCoordinates((float) x / 2, (float) y / 2, floorNumber);
         }
-
         visited[x][y] = true;
-        if (enumMap[x][y] == FloorObject.SPACE || enumMap[x][y] == FloorObject.DOOR || enumMap[x][y] == FloorObject.ROOM || enumMap[x][y] == FloorObject.STAIRS || enumMap[x][y] == FloorObject.ELEVATOR) {
+
+        if (shouldCurrentCellBelongToMesh(enumMap[x][y])) {
             Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
             Vertex vertex = new Vertex(idSeed--, coordinates);
             graph.addVertex(vertex);
@@ -325,6 +327,10 @@ public final class Mesh {
         }
 
         return null;
+    }
+
+    private boolean shouldCurrentCellBelongToMesh(FloorObject floorObject) {
+        return floorObject != FloorObject.CORNER && floorObject != FloorObject.WALL && floorObject != FloorObject.BEACON;
     }
 
     @Nullable
@@ -373,7 +379,7 @@ public final class Mesh {
 
                 if (v != null) {
                     double weight;
-                    if ((rowNum < x && colNum < y) || (rowNum > x && colNum < y) || (rowNum < x && colNum > y) || (rowNum > x && colNum > y)) {
+                    if (isSegmentDiagonal(x, y, rowNum, colNum)) {
                         weight = DIAGONAL_EDGE_WEIGHT;
                     } else {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
@@ -394,5 +400,9 @@ public final class Mesh {
                 }
             }
         }
+    }
+
+    private boolean isSegmentDiagonal(int x, int y, int xRelative, int yRelative) {
+        return (xRelative < x && yRelative < y) || (xRelative > x && yRelative < y) || (xRelative < x && yRelative > y) || (xRelative > x && yRelative > y);
     }
 }

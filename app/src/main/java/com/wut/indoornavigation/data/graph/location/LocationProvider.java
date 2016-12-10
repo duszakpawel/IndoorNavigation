@@ -20,9 +20,6 @@ public class LocationProvider {
      */
     private static final int K = 1;
 
-    /**
-     * Constructor of class
-     */
     @Inject
     public LocationProvider() {
 

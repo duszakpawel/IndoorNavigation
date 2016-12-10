@@ -64,8 +64,8 @@ public class GraphImplTest {
         //when
         graph.aStar(new Vertex(0, new Point(1, 2, 0)), new Vertex(1, new Point(3, 4, 0)));
         //then
-        verify(unionFind, times(0)).initialize(anyInt());
-        verify(vertexComparator, times(0)).initialize(any(), any(), any());
+        verify(unionFind, times(1)).initialize(anyInt());
+        verify(vertexComparator, times(1)).initialize(any(), any(), any());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class GraphImplTest {
         //when
         graph.aStar(new Vertex(0, new Point(1, 2, 0)), new Vertex(1, new Point(2, 3, 0)));
         //then
-        verify(heuristicFunction, times(0)).execute(any(), any());
+        verify(heuristicFunction, times(2)).execute(any(), any());
     }
 
     @Test
@@ -85,6 +85,6 @@ public class GraphImplTest {
         //when
         graph.aStar(new Vertex(0, new Point(1, 2, 0)), new Vertex(1, new Point(2, 3, 0)));
         //then
-        verify(unionFind, times(0)).union(anyInt());
+        verify(unionFind, times(1)).union(anyInt());
     }
 }

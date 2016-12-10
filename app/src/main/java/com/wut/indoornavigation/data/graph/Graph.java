@@ -50,6 +50,7 @@ public interface Graph extends PathFinder {
      * @param targetId target vertex id
      * @return (ordered list of vertices)
      */
+    @VisibleForTesting
     List<Vertex> aStar(int sourceId, int targetId);
 
     /**
