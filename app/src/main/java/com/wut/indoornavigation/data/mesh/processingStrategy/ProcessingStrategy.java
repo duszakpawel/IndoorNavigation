@@ -30,7 +30,7 @@ public abstract class ProcessingStrategy {
 
     @NonNull
     protected Vertex addVertexToGraph(Point position, Graph graph, int id) {
-        Vertex vertex = new Vertex(id, position);
+        Vertex vertex = Vertex.builder().id(id).position(position).build();
         graph.addVertex(vertex);
         return vertex;
     }

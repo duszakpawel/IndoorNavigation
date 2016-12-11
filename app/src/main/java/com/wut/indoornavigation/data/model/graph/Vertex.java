@@ -14,10 +14,4 @@ import lombok.Value;
 public class Vertex {
     int id;
     Point position;
-
-    // TODO: remove it if possible
-    public Vertex(int id, Point coordinates) {
-        this.id = id;
-        this.position = coordinates;
-    }
 }

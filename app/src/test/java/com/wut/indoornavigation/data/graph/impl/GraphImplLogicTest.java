@@ -71,11 +71,11 @@ public class GraphImplLogicTest {
 
     private Graph getMockGraph() {
         List<Vertex> vertices = new ArrayList<>();
-        Vertex A = new Vertex(0, new Point(0,0,0));
-        Vertex B = new Vertex(1, new Point(1, 0,0));
-        Vertex C = new Vertex(2, new Point(1, 1,0));
-        Vertex D = new Vertex(3, new Point(0, 2,0));
-        Vertex E = new Vertex(4, new Point(1, 2,0));
+        Vertex A = Vertex.builder().id(0).position(new Point(0,0,0)).build();
+        Vertex B = Vertex.builder().id(1).position(new Point(1,0,0)).build();
+        Vertex C = Vertex.builder().id(2).position(new Point(1,1,0)).build();
+        Vertex D = Vertex.builder().id(3).position(new Point(0,2,0)).build();
+        Vertex E = Vertex.builder().id(4).position(new Point(1,2,0)).build();
 
         vertices.add(A);
         vertices.add(B);
@@ -97,17 +97,17 @@ public class GraphImplLogicTest {
 
     private Graph getBigMockGraph(){
         List<Vertex> vertices = new ArrayList<>();
-        Vertex A = new Vertex(0, new Point(0,0,0));
-        Vertex B = new Vertex(1, new Point(1, 0,0));
-        Vertex C = new Vertex(2, new Point(2, 0,0));
-        Vertex D = new Vertex(3, new Point(3, 0,0));
-        Vertex E = new Vertex(4, new Point(0, 1,0));
-        Vertex F = new Vertex(5, new Point(1, 1,0));
-        Vertex G = new Vertex(6, new Point(2, 1,0));
-        Vertex H = new Vertex(7, new Point(3, 1,0));
-        Vertex I = new Vertex(8, new Point(0, 2,0));
-        Vertex J = new Vertex(9, new Point(1, 2,0));
-        Vertex K = new Vertex(10, new Point(2, 2,0));
+        Vertex A = Vertex.builder().id(0).position(new Point(0,0,0)).build();
+        Vertex B = Vertex.builder().id(1).position(new Point(1,0,0)).build();
+        Vertex C = Vertex.builder().id(2).position(new Point(2,0,0)).build();
+        Vertex D = Vertex.builder().id(3).position(new Point(3,0,0)).build();
+        Vertex E = Vertex.builder().id(4).position(new Point(0,1,0)).build();
+        Vertex F = Vertex.builder().id(5).position(new Point(1,1,0)).build();
+        Vertex G = Vertex.builder().id(6).position(new Point(2,1,0)).build();
+        Vertex H = Vertex.builder().id(7).position(new Point(3,1,0)).build();
+        Vertex I = Vertex.builder().id(8).position(new Point(0,2,0)).build();
+        Vertex J = Vertex.builder().id(9).position(new Point(1,2,0)).build();
+        Vertex K = Vertex.builder().id(10).position(new Point(2,2,0)).build();
 
         vertices.add(A);
         vertices.add(B);
@@ -157,9 +157,9 @@ public class GraphImplLogicTest {
 
     private Graph getMocNotConsistentGraph(){
         List<Vertex> vertices = new ArrayList<>();
-        Vertex A = new Vertex(0, new Point(0, 0,0));
-        Vertex B = new Vertex(1, new Point(0, 1,0));
-        Vertex C = new Vertex(2, new Point(1, 1,0));
+        Vertex A = Vertex.builder().id(0).position(new Point(0,0,0)).build();
+        Vertex B = Vertex.builder().id(1).position(new Point(0,1,0)).build();
+        Vertex C = Vertex.builder().id(2).position(new Point(1,1,0)).build();
 
         vertices.add(A);
         vertices.add(B);
@@ -175,17 +175,17 @@ public class GraphImplLogicTest {
 
     private Graph getBigMockGraphModified(){
         List<Vertex> vertices = new ArrayList<>();
-        Vertex A = new Vertex(0, new Point(0,0,0));
-        Vertex B = new Vertex(1, new Point(1, 0,0));
-        Vertex C = new Vertex(2, new Point(2, 0,0));
-        Vertex D = new Vertex(3, new Point(3, 0,0));
-        Vertex E = new Vertex(4, new Point(0, 1,0));
-        Vertex F = new Vertex(5, new Point(1, 1,0));
-        Vertex G = new Vertex(6, new Point(2, 1,0));
-        Vertex H = new Vertex(7, new Point(3, 1,0));
-        Vertex I = new Vertex(8, new Point(0, 2,0));
-        Vertex J = new Vertex(9, new Point(1, 2,0));
-        Vertex K = new Vertex(10, new Point(2, 2,0));
+        Vertex A = Vertex.builder().id(0).position(new Point(0,0,0)).build();
+        Vertex B = Vertex.builder().id(1).position(new Point(1,0,0)).build();
+        Vertex C = Vertex.builder().id(2).position(new Point(2,0,0)).build();
+        Vertex D = Vertex.builder().id(3).position(new Point(3,0,0)).build();
+        Vertex E = Vertex.builder().id(4).position(new Point(0,1,0)).build();
+        Vertex F = Vertex.builder().id(5).position(new Point(1,1,0)).build();
+        Vertex G = Vertex.builder().id(6).position(new Point(2,1,0)).build();
+        Vertex H = Vertex.builder().id(7).position(new Point(3,1,0)).build();
+        Vertex I = Vertex.builder().id(8).position(new Point(0,2,0)).build();
+        Vertex J = Vertex.builder().id(9).position(new Point(1,2,0)).build();
+        Vertex K = Vertex.builder().id(10).position(new Point(2,2,0)).build();
 
         vertices.add(A);
         vertices.add(B);
