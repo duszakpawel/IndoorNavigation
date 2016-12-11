@@ -328,10 +328,11 @@ public final class Mesh {
                 elements = null;
         }
 
-        Vertex resultVertex = null;
-        // it needs to stay for now (testing purposes)
-        if (shouldCurrentCellBelongToMesh(enumMap[x][y])) {
-            resultVertex = strategy.process(coordinates, elements, floorNumber, graph, idSeed--);
+        Vertex resultVertex = strategy.process(coordinates, elements, floorNumber, graph, idSeed);
+
+        if(resultVertex !=null)
+        {
+            idSeed--;
         }
 
         if (enumMap[x][y] == FloorObject.BEACON) {
@@ -344,10 +345,6 @@ public final class Mesh {
         }
 
         return resultVertex;
-    }
-
-    private boolean shouldCurrentCellBelongToMesh(FloorObject floorObject) {
-        return floorObject != FloorObject.CORNER && floorObject != FloorObject.WALL && floorObject != FloorObject.BEACON;
     }
 
     @SuppressWarnings("ConstantConditions")
