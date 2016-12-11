@@ -6,4 +6,6 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Stairs extends BuildingObject {
+    int endid;
+    int endfloor;
 }

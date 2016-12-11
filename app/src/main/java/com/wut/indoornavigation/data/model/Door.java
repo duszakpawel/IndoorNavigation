@@ -6,6 +6,5 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Door extends BuildingObject {
-
     boolean destinationPoint;
 }

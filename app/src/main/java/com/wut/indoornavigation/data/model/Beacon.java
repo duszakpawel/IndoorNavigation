@@ -5,5 +5,6 @@ import lombok.Value;
 @Value
 public class Beacon  {
 
-    Point position;
+    int id;
+    //Point position;
 }

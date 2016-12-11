@@ -9,6 +9,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Vertex comparator class for aStar implementation
+ */
 @Singleton
 public class VertexComparator implements Comparator<Vertex> {
 
@@ -17,12 +20,22 @@ public class VertexComparator implements Comparator<Vertex> {
     private double[] distance;
     private Vertex target;
 
+    /**
+     * Vertex comparator constructor
+     * @param heuristicFunction heuristic function object
+     */
     @Inject
     public VertexComparator(HeuristicFunction heuristicFunction) {
         this.heuristicFunction = heuristicFunction;
         vertices = new ArrayList<>();
     }
 
+    /**
+     * Initializes vertex comparator components
+     * @param vertices vertices list
+     * @param distance distance array
+     * @param target target vertex (for heuristic purposes)
+     */
     public void initialize(List<Vertex> vertices, double[] distance, Vertex target) {
         this.target = target;
         this.distance = distance;
@@ -30,6 +43,12 @@ public class VertexComparator implements Comparator<Vertex> {
         this.vertices.addAll(vertices);
     }
 
+    /**
+     * Compares two vertices
+     * @param x first vertex
+     * @param y second vertex
+     * @return number less than 0 if x < y, 0 if x == y, otherwise number greater than 0
+     */
     @Override
     public int compare(Vertex x, Vertex y) {
         final double xSum = heuristicFunction.execute(x, target) + distance[vertices.indexOf(x)];

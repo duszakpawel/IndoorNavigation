@@ -6,4 +6,5 @@ import lombok.Value;
 public class Point {
     float x;
     float y;
+    float z;
 }

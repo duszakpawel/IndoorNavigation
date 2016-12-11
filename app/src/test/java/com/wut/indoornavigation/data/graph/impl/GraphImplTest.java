@@ -31,14 +31,14 @@ public class GraphImplTest {
 
     static {
         VERTICES = new LinkedList<>();
-        VERTICES.add(new Vertex(0, new Point(1, 2)));
-        VERTICES.add(new Vertex(1, new Point(2, 3)));
-        VERTICES.add(new Vertex(2, new Point(3, 4)));
-        VERTICES.add(new Vertex(3, new Point(4, 1)));
+        VERTICES.add(Vertex.builder().id(0).position(new Point(1, 2, 0)).build());
+        VERTICES.add(Vertex.builder().id(1).position(new Point(2, 3, 0)).build());
+        VERTICES.add(Vertex.builder().id(2).position(new Point(3, 4, 0)).build());
+        VERTICES.add(Vertex.builder().id(3).position(new Point(4, 1, 0)).build());
 
         TWO_ITEMS_LIST = new LinkedList<>();
-        TWO_ITEMS_LIST.add(new Vertex(0, new Point(1, 2)));
-        TWO_ITEMS_LIST.add(new Vertex(1, new Point(2, 3)));
+        TWO_ITEMS_LIST.add(Vertex.builder().id(0).position(new Point(1, 2, 0)).build());
+        TWO_ITEMS_LIST.add(Vertex.builder().id(1).position(new Point(2, 3, 0)).build());
     }
 
     @Mock
@@ -62,7 +62,7 @@ public class GraphImplTest {
         //given
         graph.setVertices(VERTICES);
         //when
-        graph.aStar(new Vertex(0, new Point(1, 2)), new Vertex(1, new Point(3, 4)));
+        graph.aStar(Vertex.builder().id(0).position(new Point(1, 2, 0)).build(), Vertex.builder().id(1).position(new Point(3, 4, 0)).build());
         //then
         verify(unionFind, times(1)).initialize(anyInt());
         verify(vertexComparator, times(1)).initialize(any(), any(), any());
@@ -73,7 +73,7 @@ public class GraphImplTest {
         //given
         graph.setVertices(TWO_ITEMS_LIST);
         //when
-        graph.aStar(new Vertex(0, new Point(1, 2)), new Vertex(1, new Point(2, 3)));
+        graph.aStar(Vertex.builder().id(0).position(new Point(1, 2, 0)).build(), Vertex.builder().id(1).position(new Point(2, 3, 0)).build());
         //then
         verify(heuristicFunction, times(2)).execute(any(), any());
     }
@@ -83,7 +83,7 @@ public class GraphImplTest {
         //given
         graph.setVertices(TWO_ITEMS_LIST);
         //when
-        graph.aStar(new Vertex(0, new Point(1, 2)), new Vertex(1, new Point(2, 3)));
+        graph.aStar(Vertex.builder().id(0).position(new Point(1, 2, 0)).build(), Vertex.builder().id(1).position(new Point(2, 3, 0)).build());
         //then
         verify(unionFind, times(1)).union(anyInt());
     }
