@@ -11,10 +11,12 @@ import com.wut.indoornavigation.data.mesh.processingStrategy.impl.WallProcessing
 import com.wut.indoornavigation.data.model.FloorObject;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Strategy provider class
  */
+@Singleton
 public class StrategyProvider {
     @Inject
     public StrategyProvider() {

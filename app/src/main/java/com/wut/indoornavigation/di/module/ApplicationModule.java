@@ -2,10 +2,9 @@ package com.wut.indoornavigation.di.module;
 
 import android.content.Context;
 
-import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
-import com.wut.indoornavigation.utils.CanvasExtender;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.impl.MapEngineImpl;
+import com.wut.indoornavigation.utils.CanvasExtender;
 
 import javax.inject.Singleton;
 
@@ -28,11 +27,5 @@ public class ApplicationModule {
     @Provides
     MapEngine provideMapEngine(CanvasExtender canvasExtender) {
         return new MapEngineImpl(context, canvasExtender);
-    }
-
-    @Singleton
-    @Provides
-    StrategyProvider provideStrategyProvider() {
-        return new StrategyProvider();
     }
 }

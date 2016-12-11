@@ -56,15 +56,15 @@ public final class Mesh {
     private static final int START_POINT_Y_SEED = 0;
     private static final int VERTEX_NOT_FOUND = -1;
 
+    @Inject
+    StrategyProvider processingStrategyProvider;
+
     private int idSeed;
 
     private Map<Integer, List<Vertex>> destinationVerticesDict;
     private Map<Integer, List<Vertex>> elevatorsVerticesDict;
     private Map<Integer, List<Vertex>> stairsVerticesDict;
     private Map<Integer, List<Point>> beaconsDict;
-
-    @Inject
-    StrategyProvider processingStrategyProvider;
 
     /**
      * Creates mesh (graph) for building
@@ -330,8 +330,7 @@ public final class Mesh {
 
         Vertex resultVertex = strategy.process(coordinates, elements, floorNumber, graph, idSeed);
 
-        if(resultVertex !=null)
-        {
+        if (resultVertex != null) {
             idSeed--;
         }
 

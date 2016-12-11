@@ -22,6 +22,7 @@ import java.util.PriorityQueue;
  */
 public class GraphImpl implements Graph {
     private static final int NO_PREVIOUS = -1;
+    private static final int NOT_FOUND = -1;
     private static final double DIST_DEFAULT_VALUE = 0;
     private static final int INFINITY = 10000;
 
@@ -156,7 +157,7 @@ public class GraphImpl implements Graph {
 
         final int sIndex = vertices.indexOf(s);
 
-        if (sIndex == -1) {
+        if (sIndex == NOT_FOUND) {
             return new ArrayList<>();
         }
 
@@ -266,12 +267,16 @@ public class GraphImpl implements Graph {
     public Vertex getVertexByCoordinates(float x, float y, int floorNumber) {
         for (Vertex vertex : vertices) {
             Point coordinates = vertex.getPosition();
-            if (coordinates.getX() == x && coordinates.getY() == y && coordinates.getZ() == floorNumber) {
+            if (areCoordinatesEqual(x, y, floorNumber, coordinates)) {
                 return vertex;
             }
         }
 
         return null;
+    }
+
+    private boolean areCoordinatesEqual(float x, float y, int floorNumber, Point coordinates) {
+        return coordinates.getX() == x && coordinates.getY() == y && coordinates.getZ() == floorNumber;
     }
 
     /**
@@ -283,13 +288,17 @@ public class GraphImpl implements Graph {
     @Override
     public boolean addVertex(Vertex vertex) {
         for (Vertex v : vertices) {
-            if (v.getId() == vertex.getId() || v.getPosition().equals(vertex.getPosition())) {
+            if (isVertexInGraph(vertex, v)) {
                 return false;
             }
         }
         vertices.add(vertex);
 
         return true;
+    }
+
+    private boolean isVertexInGraph(Vertex vertex, Vertex v) {
+        return v.getId() == vertex.getId() || v.getPosition().equals(vertex.getPosition());
     }
 
     /**
