@@ -3,6 +3,7 @@ package com.wut.indoornavigation.data.mesh;
 import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
+import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
 import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Door;
@@ -35,6 +36,7 @@ public class MeshTest {
     @Test
     public void meshTest_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -48,13 +50,14 @@ public class MeshTest {
         List<Elevator> elevators = new ArrayList<>();
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
     }
 
     @Test
     public void meshTestWithOffset_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
@@ -70,13 +73,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
     }
 
     @Test
     public void meshTestEdges_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -90,7 +94,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 4);
         Assert.assertEquals(result.getGraph().containsEdge(-3, -4), true);
         Assert.assertEquals(result.getGraph().containsEdge(-3, -2), true);
@@ -115,6 +119,7 @@ public class MeshTest {
     @Test
     public void meshTestDifferentShape_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
@@ -137,13 +142,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 25);
     }
 
     @Test
     public void meshTestTwoRoomsWithHallway_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -160,13 +166,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 36);
     }
 
     @Test
     public void meshTestNotRectangular_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -182,13 +189,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 30);
     }
 
     @Test
     public void meshTestTwoRoomsWithThinHallwayAndTwoDoors_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -204,13 +212,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 24);
     }
 
     @Test
     public void meshTestTwoRoomsOneHallwayWithDoors_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
@@ -238,13 +247,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 44);
     }
 
     @Test
     public void meshTestTwoRoomsOneHallwayWithDoorsTestingDestinationDoorQuantity_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
@@ -272,13 +282,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getDestinationPoints().get(0).size(), 2);
     }
 
     @Test
     public void meshTestTwoFloors_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -294,13 +305,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 18);
     }
 
     @Test
     public void meshTestThreeFloors_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -317,13 +329,14 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 27);
     }
 
     @Test
     public void meshTestTwoFloorsWithOneElevators_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER},
@@ -348,7 +361,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 2);
         Assert.assertEquals(graph.containsEdge(-1,-2), true);
@@ -360,6 +373,7 @@ public class MeshTest {
     @Test
     public void meshTestTwoFloorsWithTwoElevators_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -385,7 +399,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 4);
         Assert.assertEquals(graph.containsEdge(-4, -1), true);
@@ -403,6 +417,7 @@ public class MeshTest {
     @Test
     public void meshTestTwoFloorsWithTwoElevatorsSeparated_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -433,7 +448,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 6);
         Assert.assertEquals(graph.containsEdge(-4, -5), true);
@@ -455,6 +470,7 @@ public class MeshTest {
     @Test
     public void meshTestTwoFloorsWithTwoStairsSeparated_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -485,7 +501,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 6);
         Assert.assertEquals(graph.containsEdge(-4, -5), true);
@@ -507,6 +523,7 @@ public class MeshTest {
     @Test
     public void meshTestForSample2Building_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -588,7 +605,7 @@ public class MeshTest {
         floors.add(new Floor(firstFloor, 1, walls, doorsOne, stairsOne, elevatorsOne, null));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
         Assert.assertEquals(graph.verticesCount(), 378);
 
@@ -606,6 +623,7 @@ public class MeshTest {
     @Test
     public void meshTestTwoRoomsWithHallwayTestDestinationPoints_Success() {
         Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
         List<Floor> floors = new ArrayList<>();
         FloorObject[][] groundFloor = new FloorObject[][]{
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
@@ -630,7 +648,7 @@ public class MeshTest {
         floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, beacons));
         Building building = new Building(floors);
 
-        MeshResult result = mesh.create(building, heuristicFunction, unionFind);
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
     }
 }

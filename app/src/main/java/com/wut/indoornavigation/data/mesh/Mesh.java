@@ -8,6 +8,8 @@ import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.graph.VertexComparator;
 import com.wut.indoornavigation.data.graph.impl.GraphImpl;
+import com.wut.indoornavigation.data.mesh.processingStrategy.ProcessingStrategy;
+import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.BuildingObject;
 import com.wut.indoornavigation.data.model.Elevator;
@@ -25,6 +27,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Mesh creator for building
@@ -59,6 +63,9 @@ public final class Mesh {
     private Map<Integer, List<Vertex>> stairsVerticesDict;
     private Map<Integer, List<Point>> beaconsDict;
 
+    @Inject
+    StrategyProvider processingStrategyProvider;
+
     /**
      * Creates mesh (graph) for building
      *
@@ -67,7 +74,8 @@ public final class Mesh {
      * @param unionFind         union find structure (to inject into graph)
      * @return Mesh result object
      */
-    public MeshResult create(Building building, HeuristicFunction heuristicFunction, UnionFind unionFind) {
+    public MeshResult create(Building building, StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind) {
+        processingStrategyProvider = strategyProvider;
         init();
 
         Graph graph = new GraphImpl(heuristicFunction, unionFind, new VertexComparator(heuristicFunction));
@@ -295,29 +303,38 @@ public final class Mesh {
         return endVertexIndex;
     }
 
-    @Nullable
     private Vertex processCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         if (visited[x][y]) {
             return graph.getVertexByCoordinates((float) x / 2, (float) y / 2, floorNumber);
         }
+
         visited[x][y] = true;
 
+        ProcessingStrategy strategy = processingStrategyProvider.provideStrategy(enumMap[x][y]);
+        Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
+
+        Map<Integer, List<Vertex>> elements;
+        switch (enumMap[x][y]) {
+            case STAIRS:
+                elements = stairsVerticesDict;
+                break;
+            case ELEVATOR:
+                elements = elevatorsVerticesDict;
+                break;
+            case ROOM:
+                elements = destinationVerticesDict;
+                break;
+            default:
+                elements = null;
+        }
+
+        Vertex resultVertex = null;
+        // it needs to stay for now (testing purposes)
         if (shouldCurrentCellBelongToMesh(enumMap[x][y])) {
-            Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
-            Vertex vertex = new Vertex(idSeed--, coordinates);
-            graph.addVertex(vertex);
-
-            List<Vertex> vertices = findVerticesSetByFloorObjectSign(enumMap[x][y], floorNumber);
-
-            if (vertices != null) {
-                vertices.add(vertex);
-            }
-
-            return vertex;
+            resultVertex = strategy.process(coordinates, elements, floorNumber, graph, idSeed--);
         }
 
         if (enumMap[x][y] == FloorObject.BEACON) {
-            Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
             List<Point> floorBeacons = beaconsDict.get(floorNumber);
             if (floorBeacons == null) {
                 floorBeacons = new ArrayList<>();
@@ -326,41 +343,11 @@ public final class Mesh {
             floorBeacons.add(coordinates);
         }
 
-        return null;
+        return resultVertex;
     }
 
     private boolean shouldCurrentCellBelongToMesh(FloorObject floorObject) {
         return floorObject != FloorObject.CORNER && floorObject != FloorObject.WALL && floorObject != FloorObject.BEACON;
-    }
-
-    @Nullable
-    private List<Vertex> findVerticesSetByFloorObjectSign(FloorObject floorObject, int floorNumber) {
-        List<Vertex> vertices = null;
-        if (floorObject == FloorObject.ROOM) {
-            if (destinationVerticesDict.containsKey(floorNumber)) {
-                vertices = destinationVerticesDict.get(floorNumber);
-            } else {
-                vertices = new ArrayList<>();
-                destinationVerticesDict.put(floorNumber, vertices);
-            }
-        }
-        if (floorObject == FloorObject.ELEVATOR) {
-            if (elevatorsVerticesDict.containsKey(floorNumber)) {
-                vertices = elevatorsVerticesDict.get(floorNumber);
-            } else {
-                vertices = new ArrayList<>();
-                elevatorsVerticesDict.put(floorNumber, vertices);
-            }
-        }
-        if (floorObject == FloorObject.STAIRS) {
-            if (stairsVerticesDict.containsKey(floorNumber)) {
-                vertices = stairsVerticesDict.get(floorNumber);
-            } else {
-                vertices = new ArrayList<>();
-                stairsVerticesDict.put(floorNumber, vertices);
-            }
-        }
-        return vertices;
     }
 
     @SuppressWarnings("ConstantConditions")
