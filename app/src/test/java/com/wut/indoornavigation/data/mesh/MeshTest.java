@@ -10,7 +10,6 @@ import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
-import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
@@ -613,7 +612,6 @@ public class MeshTest {
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
-<<<<<<< HEAD
     }
 
     @Test
