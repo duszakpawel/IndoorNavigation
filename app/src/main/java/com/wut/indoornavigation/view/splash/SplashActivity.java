@@ -32,17 +32,15 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        // TODO: 12.12.2016 Podac dobra sciezke do pliku
-       // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+
         String[] permissions = {
-                "android.permission.READ_EXTERNAL_STORAGE",
-                "android.permission.WRITE_EXTERNAL_STORAGE"
+                "android.permission.READ_EXTERNAL_STORAGE"
         };
         int requestCode = 200;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             requestPermissions(permissions, requestCode);
         }
-        String buildingPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/test.xml";
+        String buildingPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/test.xml";
         splashPresenter.prepareMap(buildingPath, this);
     }
 
