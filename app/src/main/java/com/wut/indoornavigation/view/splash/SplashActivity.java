@@ -37,8 +37,6 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        // TODO: 12.12.2016 Podac dobra sciezke do pliku
-        splashPresenter.prepareMap("", this);
         checkPermission();
     }
 

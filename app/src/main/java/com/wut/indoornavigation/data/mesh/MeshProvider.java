@@ -1,6 +1,5 @@
 package com.wut.indoornavigation.data.mesh;
 
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
@@ -34,7 +33,7 @@ import javax.inject.Inject;
 /**
  * MeshProvider creator for building
  */
-public final class MeshProvider extends AsyncTask<Building, Void, MeshResult> {
+public final class MeshProvider {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */
@@ -393,16 +392,5 @@ public final class MeshProvider extends AsyncTask<Building, Void, MeshResult> {
 
     private boolean isSegmentDiagonal(int x, int y, int xRelative, int yRelative) {
         return (xRelative < x && yRelative < y) || (xRelative > x && yRelative < y) || (xRelative < x && yRelative > y) || (xRelative > x && yRelative > y);
-    }
-
-    @Override
-    protected MeshResult doInBackground(Building... params) {
-        if(params == null || params.length < 1){
-            throw new IllegalArgumentException("There was no building provided to convert into mesh.");
-        }
-
-        Building building = params[0];
-
-        return create(building);
     }
 }

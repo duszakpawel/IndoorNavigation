@@ -1,8 +1,11 @@
 package com.wut.indoornavigation.di.module;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.wut.indoornavigation.data.mesh.MeshProvider;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
+import com.wut.indoornavigation.di.qualifier.BuildingPreferences;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.map.impl.MapEngineImpl;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
@@ -19,6 +22,8 @@ import dagger.Provides;
  */
 @Module
 public class ApplicationModule {
+
+    public static final String BUILDING_PREFERENES = "buildingPreferences";
 
     private final Context context;
 
@@ -40,7 +45,14 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider) {
-        return new PathFinderEngineImpl(meshProvider);
+    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider, BuildingStorage buildingStorage) {
+        return new PathFinderEngineImpl(meshProvider, buildingStorage);
+    }
+
+    @Singleton
+    @BuildingPreferences
+    @Provides
+    SharedPreferences provideBuildingSharedPreferences() {
+        return context.getSharedPreferences(BUILDING_PREFERENES, Context.MODE_PRIVATE);
     }
 }

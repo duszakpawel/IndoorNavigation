@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.parser.Parser;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.map.OnMapReadyListener;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
@@ -24,15 +25,18 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
     private final Parser parser;
+    private final BuildingStorage storage;
 
     @NonNull
     private Subscription subscription;
 
     @Inject
-    public SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Parser parser) {
+    public SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine,
+                           Parser parser, BuildingStorage storage) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;
         this.parser = parser;
+        this.storage = storage;
         subscription = Subscriptions.unsubscribed();
         mapEngine.setOnMapReadyListener(this);
     }
@@ -52,6 +56,10 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
     public void prepareMap(String fileName, Context context) {
         subscription = Observable.just(fileName)
                 .map(parser::parse)
+                .concatMap(building -> {
+                    storage.storeBuilding(building);
+                    return Observable.just(building);
+                })
                 .doOnNext(building -> mapEngine.renderMap(context, building))
                 .doOnNext(pathFinderEngine::prepareMesh)
                 .subscribeOn(Schedulers.io())

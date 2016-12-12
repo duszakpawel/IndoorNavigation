@@ -14,14 +14,13 @@ import javax.inject.Inject;
 public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragmentContract.View>
         implements MapFragmentContract.Presenter {
 
-    private final Context context;
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
+
     @Inject
-    public MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Context context) {
+    public MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;
-        this.context= context;
     }
 
 
@@ -42,7 +41,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void roomSelected(int position) {
+    public void roomSelected(Context context, int position) {
         // TODO: 12.12.2016 Start navigation to selected room
         // these parameters need to be provided
         pathFinderEngine.renderPath(context, new Point(0,0,0), 0, 0);

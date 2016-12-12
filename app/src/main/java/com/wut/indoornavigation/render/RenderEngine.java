@@ -33,8 +33,7 @@ public abstract class RenderEngine {
             }
         }
 
-        return 0;
-        //throw new IllegalStateException("Cannot resolve action bar size");
+        throw new IllegalStateException("Cannot resolve action bar size");
     }
 
     protected int calculateStepWidth(int buildingWidth) {
