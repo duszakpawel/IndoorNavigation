@@ -15,6 +15,7 @@ import javax.inject.Singleton;
  * Canvas extender class
  */
 @Singleton
+@Deprecated
 public class CanvasExtender {
 
     @Inject

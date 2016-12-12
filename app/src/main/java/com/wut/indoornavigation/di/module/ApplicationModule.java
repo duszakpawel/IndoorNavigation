@@ -26,8 +26,8 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    MapEngine provideMapEngine(CanvasExtender canvasExtender) {
-        return new MapEngineImpl(canvasExtender);
+    MapEngine provideMapEngine() {
+        return new MapEngineImpl();
     }
 
     @Singleton
