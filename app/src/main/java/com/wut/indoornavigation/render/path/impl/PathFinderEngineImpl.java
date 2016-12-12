@@ -131,7 +131,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
-            final Bitmap bitmap = mapEngine.getMapForFloor(floorNumber).copy(Bitmap.Config.ARGB_8888, true).copy(Bitmap.Config.ARGB_8888, true);
+            final Bitmap bitmap = mapEngine.getMapForFloor(floorNumber).copy(Bitmap.Config.ARGB_8888, true);
             final Canvas canvas = new Canvas(bitmap);
             Path path = produceCurvedPath(paths.get(floorNumber));
             canvas.drawPath(path, pathPaint);
