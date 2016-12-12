@@ -12,6 +12,8 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -48,6 +50,9 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
         subscription = Observable.just(fileName)
                 .map(parser::parse)
                 .doOnNext(building -> mapEngine.renderMap(context, building))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterTerminate(getView()::hideLoadingView)
                 .subscribe(building -> Timber.d("Rendering map for %s", building),
                         throwable -> Timber.e(throwable, "Error while rendering map"));
     }

@@ -9,6 +9,8 @@ public interface SplashContract {
 
     interface View extends MvpView {
         void showMap();
+
+        void hideLoadingView();
     }
 
     interface Presenter extends MvpPresenter<View> {

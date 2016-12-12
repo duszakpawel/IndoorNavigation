@@ -3,8 +3,11 @@ package com.wut.indoornavigation.view.splash;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
+import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.presenter.splash.SplashContract;
 import com.wut.indoornavigation.presenter.splash.SplashPresenter;
 import com.wut.indoornavigation.view.base.BaseMvpActivity;
@@ -12,8 +15,13 @@ import com.wut.indoornavigation.view.map.MapActivity;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+
 public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashContract.Presenter>
         implements SplashContract.View {
+
+    @BindView(R.id.loadingView)
+    ProgressBar loadingView;
 
     @Inject
     SplashPresenter splashPresenter;
@@ -21,6 +29,7 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
         // TODO: 12.12.2016 Podac dobra sciezke do pliku
         splashPresenter.prepareMap("", this);
     }
@@ -45,5 +54,10 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     public void showMap() {
         MapActivity.startActivity(this);
         finish();
+    }
+
+    @Override
+    public void hideLoadingView() {
+        loadingView.setVisibility(View.GONE);
     }
 }
