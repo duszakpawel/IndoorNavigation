@@ -192,9 +192,8 @@ public final class Parser {
             final int floorNumber = Integer.parseInt(((Element) (mapNodes.item(i)))
                     .getAttribute(FLOOR_NUMBER_ATTR_TAG));
             final FloorObject[][] newMap = new FloorObject[rows][columns];
-            final Floor currentFloor = floors.get(findFloorIndex(floors, floorNumber));
-            // TODO: 28.11.2016 dokonczyc na podstawie zmian
-
+            int floorIndex = findFloorIndex(floors, floorNumber);
+            Floor currentFloor = floors.get(floorIndex);
             int roomIndex = 0, beaconIndex = 0, stairIndex = 0, elevatorIndex = 0;
 
             for (int r = 1; r < mapStrings.length - 1; r++) {
@@ -208,36 +207,51 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.WALL;
                             break;
 
-                        case 'D':
-                            newMap[r - 1][c / 2] = FloorObject.ROOM;
-                            Room room =currentFloor.getRooms().get(findBuildingObjectIndex(currentFloor.getRooms(), roomIndex++));
-                            room.toBuilder().x(r-1).y(c/2).build();
-                            break;
-
-                        case 'B':
-                            newMap[r - 1][c / 2] = FloorObject.BEACON;
-                            Beacon beacon = currentFloor.getBeacons().get(findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++));
-                            beacon.toBuilder().x(r-1).y(c/2).build();
-                            break;
-
-                        case 'S':
-                            newMap[r - 1][c / 2] = FloorObject.STAIRS;
-                            Stairs stair = currentFloor.getStairs().get(findBuildingObjectIndex(currentFloor.getStairs(), stairIndex++));
-                            stair.toBuilder().x(r-1).y(c/2).build();
-                            break;
-
-                        case 'E':
-                            newMap[r - 1][c / 2] = FloorObject.ELEVATOR;
-                            Elevator elevator = currentFloor.getElevators().get(findBuildingObjectIndex(currentFloor.getElevators(), elevatorIndex++));
-                            elevator.toBuilder().x(r-1).y(c/2).build();
+                        case 'P':
+                            newMap[r - 1][c / 2] = FloorObject.DOOR;
                             break;
 
                         case ' ':
                             newMap[r-1][c/2] = FloorObject.SPACE;
+                            break;
+
+                        case 'D':
+                            newMap[r - 1][c / 2] = FloorObject.ROOM;
+                            int roomInd = findBuildingObjectIndex(currentFloor.getRooms(), roomIndex++);
+                            Room room =currentFloor.getRooms().get(roomInd);
+                            room = room.toBuilder().x(r-1).y(c/2).build();
+                            currentFloor.getRooms().set(roomInd, room);
+                            break;
+
+                        case 'B':
+                            newMap[r - 1][c / 2] = FloorObject.BEACON;
+                            int beaconInd = findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++);
+                            Beacon beacon = currentFloor.getBeacons().get(beaconInd);
+                            beacon = beacon.toBuilder().x(r-1).y(c/2).build();
+                            currentFloor.getBeacons().set(beaconInd, beacon);
+                            break;
+
+                        case 'S':
+                            newMap[r - 1][c / 2] = FloorObject.STAIRS;
+                            int stairInd = findBuildingObjectIndex(currentFloor.getStairs(), stairIndex++);
+                            Stairs stair = currentFloor.getStairs().get(stairInd);
+                            stair = stair.toBuilder().x(r-1).y(c/2).build();
+                            currentFloor.getStairs().set(stairInd, stair);
+                            break;
+
+                        case 'E':
+                            newMap[r - 1][c / 2] = FloorObject.ELEVATOR;
+                            int elevatorInd = findBuildingObjectIndex(currentFloor.getElevators(), elevatorIndex++);
+                            Elevator elevator = currentFloor.getElevators().get(elevatorInd);
+                            elevator = elevator.toBuilder().x(r-1).y(c/2).build();
+                            currentFloor.getElevators().set(elevatorInd, elevator);
+                            break;
+
+
                     }
                 }
             }
-            currentFloor.toBuilder().enumMap(newMap);
+            floors.set(floorIndex, currentFloor.toBuilder().enumMap(newMap).build());
         }
     }
 
