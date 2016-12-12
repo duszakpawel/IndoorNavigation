@@ -16,7 +16,6 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
-import com.wut.indoornavigation.utils.CanvasExtender;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +31,6 @@ public final class MapEngineImpl implements MapEngine {
     private final Paint textPaint = new Paint();
     private final Paint textBackgroundPaint = new Paint();
 
-    private final CanvasExtender canvasExtender;
     private final SparseArray<Bitmap> mapBitmaps;
     private final List<Integer> keyList;
 
@@ -44,8 +42,7 @@ public final class MapEngineImpl implements MapEngine {
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
     @Inject
-    public MapEngineImpl(CanvasExtender canvasExtender) {
-        this.canvasExtender = canvasExtender;
+    public MapEngineImpl() {
         keyList = new LinkedList<>();
         mapBitmaps = new SparseArray<>();
     }
@@ -82,31 +79,48 @@ public final class MapEngineImpl implements MapEngine {
     private void renderFloor(Bitmap bitmap, Floor floor) {
         final Canvas canvas = new Canvas(bitmap);
         final FloorObject[][] map = floor.getEnumMap();
-        final int stepHeight = calculateStepHeight(map.length);
         final int stepWidth = calculateStepWidth(map[0].length);
+        final int stepHeight = calculateStepHeight(map.length);
+
+        setPaintsStrokeWidth(stepHeight);
+
+        int currentHeight = 0;
+        int currentWidth = 0;
 
         for (int i = 0 ; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-
+                switch (map[i][j]) {
+                    case SPACE:
+                        break;
+                    case ELEVATOR:
+                        canvas.drawLine(currentWidth, currentHeight,
+                                currentWidth + stepWidth, currentHeight, elevatorPaint);
+                        break;
+                    case STAIRS:
+                        canvas.drawLine(currentWidth, currentHeight,
+                                currentWidth + stepWidth, currentHeight, stairsPaint);
+                        break;
+                    case DOOR:
+                    case ROOM:
+                        canvas.drawLine(currentWidth, currentHeight,
+                                currentWidth + stepWidth, currentHeight, doorPaint);
+                        break;
+                    default:
+                        canvas.drawLine(currentWidth, currentHeight,
+                                currentWidth + stepWidth, currentHeight, wallPaint);
+                }
+                currentWidth += stepWidth;
             }
+            currentHeight += stepHeight;
+            currentWidth = 0;
         }
-//
-//        for(Door door : floor.getDoors()){
-//            canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);
-//
-//            if(door.isDestinationPoint()){
-//                String text = Integer.toString(door.getId());
-//                canvasExtender.DrawText(canvas, text, textSize, door.getStart(), door.getEnd(), textPadding, textPaint, textBackgroundPaint);
-//            }
-//        }
-//
-//        for(Stairs stairs : floor.getStairs()){
-//            canvasExtender.DrawLine(canvas, stairs.getStart(), stairs.getEnd(), stairsPaint);
-//        }
-//
-//        for(Elevator elevator : floor.getElevators()){
-//            canvasExtender.DrawLine(canvas, elevator.getStart(), elevator.getEnd(), elevatorPaint);
-//        }
+    }
+
+    private void setPaintsStrokeWidth(int paintsStrokeWidth) {
+        wallPaint.setStrokeWidth(paintsStrokeWidth);
+        doorPaint.setStrokeWidth(paintsStrokeWidth);
+        elevatorPaint.setStrokeWidth(paintsStrokeWidth);
+        stairsPaint.setStrokeWidth(paintsStrokeWidth);
     }
 
     private void getMapWidth(Context context) {
