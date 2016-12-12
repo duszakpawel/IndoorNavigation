@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
@@ -14,12 +15,16 @@ import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
+import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -31,8 +36,10 @@ public final class MapEngineImpl implements MapEngine {
     private final Paint stairsPaint = new Paint();
     private final Paint textPaint = new Paint();
     private final Paint textBackgroundPaint = new Paint();
+    private final Paint pathPaint = new Paint();
 
     private final SparseArray<Bitmap> mapBitmaps;
+    private final SparseArray<Bitmap> pathBitmaps;
     private final List<Integer> keyList;
     private final List<Integer> roomNumbers;
 
@@ -48,6 +55,7 @@ public final class MapEngineImpl implements MapEngine {
         keyList = new LinkedList<>();
         roomNumbers = new LinkedList<>();
         mapBitmaps = new SparseArray<>();
+        pathBitmaps = new SparseArray<>();
     }
 
     private void init(Context context) {
@@ -60,6 +68,7 @@ public final class MapEngineImpl implements MapEngine {
         stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
+        pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
         getMapHeight(context);
         getMapWidth(context);
     }
@@ -104,6 +113,57 @@ public final class MapEngineImpl implements MapEngine {
         throw new IllegalStateException("There is no map for floor: " + floorNumber);
     }
 
+    @Override
+    public void renderPath(Context context, List<Point> points) {
+        Map<Integer, List<Point>> paths = new HashMap<>();
+        List<Integer> keys = new ArrayList<>();
+        for (final Point point : points) {
+            // TODO: provide floor number for each of points
+            int floorNumber = (int) point.getZ();
+            List<Point> bufor;
+            if(paths.containsKey(floorNumber)){
+                bufor = paths.get(floorNumber);
+            }else{
+                bufor = new ArrayList<>();
+                paths.put(floorNumber, bufor);
+                keys.add(floorNumber);
+            }
+
+            bufor.add(point);
+        }
+
+        for (Integer key : keys) {
+            final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(bitmap);
+            Path path = produceCurvedPath(paths.get(key));
+            canvas.drawPath(path, pathPaint);
+
+            pathBitmaps.put(key ,bitmap);
+        }
+    }
+
+    private Path produceCurvedPath(List<Point> points) {
+        Path path = new Path();
+        boolean first = true;
+        for (int i = 0; i < points.size(); ) {
+            Point point = points.get(i);
+            if (first) {
+                first = false;
+                path.moveTo(point.getX(), point.getY());
+                i++;
+            } else if (i < points.size() - 1) {
+                Point next = points.get(i + 1);
+                path.quadTo(point.getX(), point.getY(), next.getX(), next.getY());
+                i += 2;
+            } else {
+                path.lineTo(point.getX(), point.getY());
+                i++;
+            }
+        }
+
+        return path;
+    }
+
     private void renderFloor(Bitmap bitmap, Floor floor) {
         final Canvas canvas = new Canvas(bitmap);
         final FloorObject[][] map = floor.getEnumMap();
@@ -115,7 +175,7 @@ public final class MapEngineImpl implements MapEngine {
         int currentHeight = stepHeight * 2;
         int currentWidth = 0;
 
-        for (int i = 0 ; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 switch (map[i][j]) {
                     case SPACE:
@@ -175,8 +235,7 @@ public final class MapEngineImpl implements MapEngine {
     private int getToolbarHeight(Context context) {
         final TypedValue tv = new TypedValue();
 
-        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
-        {
+        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 

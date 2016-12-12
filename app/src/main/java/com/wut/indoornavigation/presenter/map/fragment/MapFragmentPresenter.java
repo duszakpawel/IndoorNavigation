@@ -1,7 +1,9 @@
 package com.wut.indoornavigation.presenter.map.fragment;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
+import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.map.MapEngine;
+import com.wut.indoornavigation.path.PathFinderEngine;
 
 import java.util.List;
 
@@ -11,10 +13,11 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         implements MapFragmentContract.Presenter {
 
     private final MapEngine mapEngine;
-
+    private final PathFinderEngine pathFinderEngine;
     @Inject
-    public MapFragmentPresenter(MapEngine mapEngine) {
+    public MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
         this.mapEngine = mapEngine;
+        this.pathFinderEngine = pathFinderEngine;
     }
 
 
@@ -37,6 +40,8 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void roomSelected(int position) {
         // TODO: 12.12.2016 Start navigation to selected room
+        // these parameters need to be provided
+        List<Point> path = pathFinderEngine.computePath(new Point(0,0,0), 0, 0);
     }
 
     private String[] parseFloorNumbers() {

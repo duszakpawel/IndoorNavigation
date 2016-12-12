@@ -54,15 +54,6 @@ public interface Graph extends PathFinder {
     List<Vertex> aStar(int sourceId, int targetId);
 
     /**
-     * Returns vertex with specified coordinates
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @param floorNumber floor number
-     * @return desired vertex
-     */
-    Vertex getVertexByCoordinates(float x, float y, int floorNumber);
-
-    /**
      * Adds vertex to graph
      * @param vertex vertex object
      * @return true if vertex was added, otherwise false

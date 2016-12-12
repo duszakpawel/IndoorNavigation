@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
+import com.wut.indoornavigation.data.mesh.MeshProvider;
 import com.wut.indoornavigation.data.parser.Parser;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
+import com.wut.indoornavigation.path.PathFinderEngine;
 
 import javax.inject.Inject;
 
@@ -21,14 +23,16 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
         implements SplashContract.Presenter, OnMapReadyListener {
 
     private final MapEngine mapEngine;
+    private final PathFinderEngine pathFinderEngine;
     private final Parser parser;
 
     @NonNull
     private Subscription subscription;
 
     @Inject
-    public SplashPresenter(MapEngine mapEngine, Parser parser) {
+    public SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Parser parser) {
         this.mapEngine = mapEngine;
+        this.pathFinderEngine = pathFinderEngine;
         this.parser = parser;
         subscription = Subscriptions.unsubscribed();
         mapEngine.setOnMapReadyListener(this);
@@ -50,6 +54,7 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
         subscription = Observable.just(fileName)
                 .map(parser::parse)
                 .doOnNext(building -> mapEngine.renderMap(context, building))
+                .doOnNext(pathFinderEngine::prepareMesh)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(getView()::hideLoadingView)

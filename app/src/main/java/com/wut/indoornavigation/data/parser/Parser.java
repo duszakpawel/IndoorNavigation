@@ -1,8 +1,5 @@
 package com.wut.indoornavigation.data.parser;
 
-import com.wut.indoornavigation.data.exception.MapParseException;
-import com.wut.indoornavigation.data.mesh.Mesh;
-import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
 import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.BuildingObject;
@@ -13,19 +10,16 @@ import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 @Singleton

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.wut.indoornavigation.data.model.Building;
+import com.wut.indoornavigation.data.model.Point;
 
 import java.util.List;
 
@@ -46,4 +47,6 @@ public interface MapEngine {
      */
     @NonNull
     Bitmap getMapForFloor(int floorNumber);
+
+    void renderPath(Context context, List<Point> path);
 }

@@ -1,5 +1,6 @@
 package com.wut.indoornavigation.data.mesh;
 
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
@@ -31,9 +32,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Mesh creator for building
+ * MeshProvider creator for building
  */
-public final class Mesh {
+public final class MeshProvider extends AsyncTask<Building, Void, MeshResult> {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */
@@ -56,8 +57,9 @@ public final class Mesh {
     private static final int START_POINT_Y_SEED = 0;
     private static final int VERTEX_NOT_FOUND = -1;
 
-    @Inject
-    StrategyProvider processingStrategyProvider;
+    private final StrategyProvider processingStrategyProvider;
+    private final HeuristicFunction heuristicFunction;
+    private final UnionFind unionFind;
 
     private int idSeed;
 
@@ -66,16 +68,20 @@ public final class Mesh {
     private Map<Integer, List<Vertex>> stairsVerticesDict;
     private Map<Integer, List<Point>> beaconsDict;
 
+    @Inject
+    public MeshProvider(StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind){
+        this.processingStrategyProvider = strategyProvider;
+        this.heuristicFunction = heuristicFunction;
+        this.unionFind = unionFind;
+    }
+
     /**
      * Creates mesh (graph) for building
      *
      * @param building          Building object
-     * @param heuristicFunction heuristic function handler (to inject into graph)
-     * @param unionFind         union find structure (to inject into graph)
-     * @return Mesh result object
+     * @return MeshProvider result object
      */
-    public MeshResult create(Building building, StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind) {
-        processingStrategyProvider = strategyProvider;
+    public MeshResult create(Building building) {
         init();
 
         Graph graph = new GraphImpl(heuristicFunction, unionFind, new VertexComparator(heuristicFunction));
@@ -387,5 +393,16 @@ public final class Mesh {
 
     private boolean isSegmentDiagonal(int x, int y, int xRelative, int yRelative) {
         return (xRelative < x && yRelative < y) || (xRelative > x && yRelative < y) || (xRelative < x && yRelative > y) || (xRelative > x && yRelative > y);
+    }
+
+    @Override
+    protected MeshResult doInBackground(Building... params) {
+        if(params == null || params.length < 1){
+            throw new IllegalArgumentException("There was no building provided to convert into mesh.");
+        }
+
+        Building building = params[0];
+
+        return create(building);
     }
 }
