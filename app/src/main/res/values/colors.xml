@@ -11,5 +11,5 @@
     <color name="textColor">@color/white</color>
     <color name="textBackgroundColor">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="pathColor">#000000</color>
+    <color name="pathColor">#FF0000</color>
 </resources>

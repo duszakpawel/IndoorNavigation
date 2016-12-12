@@ -23,7 +23,7 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    public static final String BUILDING_PREFERENES = "buildingPreferences";
+    public static final String BUILDING_PREFERENCES = "buildingPreferences";
 
     private final Context context;
 
@@ -53,6 +53,6 @@ public class ApplicationModule {
     @BuildingPreferences
     @Provides
     SharedPreferences provideBuildingSharedPreferences() {
-        return context.getSharedPreferences(BUILDING_PREFERENES, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(BUILDING_PREFERENCES, Context.MODE_PRIVATE);
     }
 }

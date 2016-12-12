@@ -78,7 +78,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getPresenter().floorSelected(position);
+                getPresenter().floorSelected(position, floorSpinner.getSelectedItemPosition());
             }
 
             @Override
@@ -97,7 +97,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getPresenter().roomSelected(getContext(), position);
+                getPresenter().roomSelected(getContext(), position, floorSpinner.getSelectedItemPosition());
             }
 
             @Override

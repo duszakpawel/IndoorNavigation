@@ -19,8 +19,8 @@ public interface MapFragmentContract {
 
         String[] getRoomSpinnerData();
 
-        void floorSelected(int position);
+        void floorSelected(int position, int floorPosition);
 
-        void roomSelected(Context context, int position);
+        void roomSelected(Context context, int position, int floorPosition);
     }
 }

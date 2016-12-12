@@ -17,6 +17,8 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
 
+    private boolean initialized = false;
+
     @Inject
     public MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
         this.mapEngine = mapEngine;
@@ -35,16 +37,25 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void floorSelected(int position) {
+    public void floorSelected(int position, int floorPosition) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
     }
 
     @Override
-    public void roomSelected(Context context, int position) {
+    public void roomSelected(Context context, int position, int floorPosition) {
         // TODO: 12.12.2016 Start navigation to selected room
         // these parameters need to be provided
-        pathFinderEngine.renderPath(context, new Point(0,0,0), 0, 0);
+
+        if(!initialized){
+            initialized = true;
+            return;
+        }
+
+        pathFinderEngine.renderPath(mapEngine, context, new Point(0,0,0), floorPosition, position);
+
+        final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
+        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorPosition)));
     }
 
     private String[] parseFloorNumbers() {
