@@ -1,11 +1,10 @@
-package com.wut.indoornavigation.map;
+package com.wut.indoornavigation.render.map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.wut.indoornavigation.data.model.Building;
-import com.wut.indoornavigation.data.model.Point;
 
 import java.util.List;
 
@@ -47,11 +46,4 @@ public interface MapEngine {
      */
     @NonNull
     Bitmap getMapForFloor(int floorNumber);
-
-    /**
-     * Renders path
-     * @param context context object
-     * @param path path object
-     */
-    void renderPath(Context context, List<Point> path);
 }

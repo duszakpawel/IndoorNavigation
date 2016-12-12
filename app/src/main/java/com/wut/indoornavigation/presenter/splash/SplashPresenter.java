@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.parser.Parser;
-import com.wut.indoornavigation.map.MapEngine;
-import com.wut.indoornavigation.map.OnMapReadyListener;
-import com.wut.indoornavigation.path.PathFinderEngine;
+import com.wut.indoornavigation.render.map.MapEngine;
+import com.wut.indoornavigation.render.map.OnMapReadyListener;
+import com.wut.indoornavigation.render.path.PathFinderEngine;
 
 import javax.inject.Inject;
 
