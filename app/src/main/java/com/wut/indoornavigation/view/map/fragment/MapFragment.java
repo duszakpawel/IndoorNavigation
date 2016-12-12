@@ -20,7 +20,6 @@ import com.wut.indoornavigation.view.base.BaseMvpFragment;
 
 import javax.inject.Inject;
 
-import butterknife.BindArray;
 import butterknife.BindView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -28,9 +27,6 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         implements MapFragmentContract.View {
 
     public static final String TAG = MapFragment.class.getSimpleName();
-
-    @BindArray(R.array.room_array)
-    String[] rooms;
 
     @BindView(R.id.fragment_map_floor_spinner)
     Spinner floorSpinner;
@@ -94,10 +90,21 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
     private void initializeRoomSpinner() {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, rooms);
+                android.R.layout.simple_spinner_dropdown_item, mapFragmentPresenter.getRoomSpinnerData());
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomSpinner.setAdapter(adapter);
+        roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getPresenter().roomSelected(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override

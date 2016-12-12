@@ -24,9 +24,19 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
+    public String[] getRoomSpinnerData() {
+        return parseRoomNumbers();
+    }
+
+    @Override
     public void floorSelected(int position) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+    }
+
+    @Override
+    public void roomSelected(int position) {
+        // TODO: 12.12.2016 Start navigation to selected room
     }
 
     private String[] parseFloorNumbers() {
@@ -37,5 +47,15 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         }
 
         return floorNumbers;
+    }
+
+    private String[] parseRoomNumbers() {
+        final List<Integer> roomNumberList = mapEngine.getRoomNumbers();
+        final String[] roomNumbers = new String[roomNumberList.size()];
+        for (int i = 0; i < roomNumberList.size(); i++) {
+            roomNumbers[i] = String.valueOf(roomNumberList.get(i));
+        }
+
+        return roomNumbers;
     }
 }
