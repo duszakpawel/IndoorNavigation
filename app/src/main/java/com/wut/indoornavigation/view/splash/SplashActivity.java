@@ -1,6 +1,8 @@
 package com.wut.indoornavigation.view.splash;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -31,7 +33,17 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         // TODO: 12.12.2016 Podac dobra sciezke do pliku
-        splashPresenter.prepareMap("", this);
+       // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        String[] permissions = {
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+        };
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            requestPermissions(permissions, requestCode);
+        }
+        String buildingPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/test.xml";
+        splashPresenter.prepareMap(buildingPath, this);
     }
 
     @Override

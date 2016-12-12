@@ -613,6 +613,7 @@ public class MeshTest {
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
+<<<<<<< HEAD
     }
 
     @Test
@@ -645,5 +646,4 @@ public class MeshTest {
         List<Vertex> res = graph.aStar(result.getDestinationPoints().get(0).get(0), result.getDestinationPoints().get(0).get(1));
         Assert.assertEquals(res.size(), 2);
     }
-
 }
