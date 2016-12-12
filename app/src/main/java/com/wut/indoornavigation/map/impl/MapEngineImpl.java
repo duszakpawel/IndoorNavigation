@@ -27,6 +27,7 @@ public final class MapEngineImpl implements MapEngine {
 
     private final Paint wallPaint = new Paint();
     private final Paint doorPaint = new Paint();
+    private final Paint roomPaint = new Paint();
     private final Paint elevatorPaint = new Paint();
     private final Paint stairsPaint = new Paint();
     private final Paint textPaint = new Paint();
@@ -56,6 +57,7 @@ public final class MapEngineImpl implements MapEngine {
         textPadding = resources.getDimension(R.dimen.max_text_padding);
         wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
         doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
+        roomPaint.setColor(ContextCompat.getColor(context, R.color.roomColor));
         elevatorPaint.setColor(ContextCompat.getColor(context, R.color.elevatorColor));
         stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
@@ -129,9 +131,12 @@ public final class MapEngineImpl implements MapEngine {
                                 currentWidth + stepWidth, currentHeight, stairsPaint);
                         break;
                     case DOOR:
-                    case ROOM:
                         canvas.drawLine(currentWidth, currentHeight,
                                 currentWidth + stepWidth, currentHeight, doorPaint);
+                        break;
+                    case ROOM:
+                        canvas.drawLine(currentWidth, currentHeight,
+                                currentWidth + stepWidth, currentHeight, roomPaint);
                         break;
                     default:
                         canvas.drawLine(currentWidth, currentHeight,
@@ -155,6 +160,7 @@ public final class MapEngineImpl implements MapEngine {
         doorPaint.setStrokeWidth(paintsStrokeWidth);
         elevatorPaint.setStrokeWidth(paintsStrokeWidth);
         stairsPaint.setStrokeWidth(paintsStrokeWidth);
+        roomPaint.setStrokeWidth(paintsStrokeWidth);
     }
 
     private void getMapWidth(Context context) {
