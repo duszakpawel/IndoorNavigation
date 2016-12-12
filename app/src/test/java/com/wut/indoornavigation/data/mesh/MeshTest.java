@@ -12,8 +12,8 @@ import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
-import com.wut.indoornavigation.data.model.Wall;
 import com.wut.indoornavigation.data.model.graph.Edge;
+import com.wut.indoornavigation.data.model.graph.Vertex;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
 import org.junit.Assert;
@@ -44,12 +44,11 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
     }
@@ -66,12 +65,11 @@ public class MeshTest {
                 {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 9);
@@ -87,12 +85,11 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 4);
@@ -135,12 +132,11 @@ public class MeshTest {
                 {FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 25);
@@ -159,12 +155,11 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 36);
@@ -182,12 +177,11 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 30);
@@ -205,12 +199,11 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 24);
@@ -234,18 +227,15 @@ public class MeshTest {
                 {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
 
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        Door firstRoom = new Door(true);
-        firstRoom.setId(1);
+        Door firstRoom = Door.builder().destinationPoint(true).id(1).build();
         doors.add(firstRoom);
-        Door secondRoom = new Door(true);
-        secondRoom.setId(2);
+        Door secondRoom = Door.builder().destinationPoint(true).id(2).build();
         doors.add(secondRoom);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 44);
@@ -269,18 +259,15 @@ public class MeshTest {
                 {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
 
         };
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        Door firstRoom = new Door(true);
-        firstRoom.setId(1);
+        Door firstRoom = Door.builder().destinationPoint(true).id(1).build();
         doors.add(firstRoom);
-        Door secondRoom = new Door(true);
-        secondRoom.setId(2);
+        Door secondRoom = Door.builder().destinationPoint(true).id(2).build();
         doors.add(secondRoom);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getDestinationPoints().get(0).size(), 2);
@@ -297,13 +284,12 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(1).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 18);
@@ -320,14 +306,14 @@ public class MeshTest {
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevators, null));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, null));
-        floors.add(new Floor(groundFloor, 1, walls, doors, stairs, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairs).elevators(elevators).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(1).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
+
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getGraph().verticesCount(), 27);
@@ -342,24 +328,18 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER},
                 {FloorObject.WALL, FloorObject.ELEVATOR, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevatorsMinusOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Point bot = new Point((float)0.5, (float)1.5, -1);
-        Point mid = new Point((float)0.5, (float)1.5, 0);
-        Elevator elevatorMinusOne = new Elevator();
-        Elevator elevatorZero = new Elevator();
-        elevatorMinusOne.setStart(bot);
-        elevatorMinusOne.setEnd(mid);
-        elevatorZero.setStart(mid);
-        elevatorZero.setEnd(bot);
+        Elevator elevatorMinusOne = Elevator.builder().id(1).build();
+        Elevator elevatorZero = Elevator.builder().id(1).build();
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairs).elevators(elevatorsMinusOne).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevatorsZero).build());
+        Building building = Building.builder().floors(floors).build();
+
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
@@ -379,15 +359,14 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
                 {FloorObject.WALL, FloorObject.ELEVATOR, FloorObject.ELEVATOR, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevatorsMinusOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Elevator elevatorMinusOne = new Elevator();
-        Elevator elevatorMinusOneSecond = new Elevator();
-        Elevator elevatorZero = new Elevator();
-        Elevator elevatorZeroSecond = new Elevator();
+        Elevator elevatorMinusOne = Elevator.builder().build();
+        Elevator elevatorMinusOneSecond = Elevator.builder().build();
+        Elevator elevatorZero = Elevator.builder().build();
+        Elevator elevatorZeroSecond = Elevator.builder().build();
 
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
@@ -395,9 +374,10 @@ public class MeshTest {
         elevatorsMinusOne.add(elevatorMinusOneSecond);
         elevatorsZero.add(elevatorZeroSecond);
 
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairs).elevators(elevatorsMinusOne).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevatorsZero).build());
+        Building building = Building.builder().floors(floors).build();
+
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
@@ -423,19 +403,14 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
                 {FloorObject.WALL, FloorObject.ELEVATOR, FloorObject.SPACE, FloorObject.ELEVATOR, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevatorsMinusOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Elevator elevatorMinusOne = new Elevator();
-        elevatorMinusOne.setId(1);
-        Elevator elevatorMinusOneSecond = new Elevator();
-        elevatorMinusOneSecond.setId(2);
-        Elevator elevatorZero = new Elevator();
-        elevatorZero.setId(1);
-        Elevator elevatorZeroSecond = new Elevator();
-        elevatorZeroSecond.setId(2);
+        Elevator elevatorMinusOne = Elevator.builder().id(1).build();
+        Elevator elevatorMinusOneSecond = Elevator.builder().id(2).build();
+        Elevator elevatorZero = Elevator.builder().id(1).build();
+        Elevator elevatorZeroSecond = Elevator.builder().id(2).build();
 
         elevatorsMinusOne.add(elevatorMinusOne);
         elevatorsZero.add(elevatorZero);
@@ -443,10 +418,10 @@ public class MeshTest {
         elevatorsMinusOne.add(elevatorMinusOneSecond);
         elevatorsZero.add(elevatorZeroSecond);
 
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairs).elevators(elevatorsMinusOne).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevatorsZero).build());
+        Building building = Building.builder().floors(floors).build();
 
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairs, elevatorsMinusOne, null));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevatorsZero, null));
-        Building building = new Building(floors);
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
@@ -476,19 +451,14 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
                 {FloorObject.WALL, FloorObject.STAIRS, FloorObject.SPACE, FloorObject.STAIRS, FloorObject.WALL},
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}};
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
         List<Stairs> stairsMinusOne = new ArrayList<>();
         List<Stairs> stairsZero = new ArrayList<>();
-        Stairs stairMinusOne = new Stairs(1, 0);
-        stairMinusOne.setId(1);
-        Stairs stairMinusOneSecond = new Stairs(2, 0);
-        stairMinusOneSecond.setId(2);
-        Stairs stairZero = new Stairs(1, -1);
-        stairZero.setId(1);
-        Stairs stairZeroSecond = new Stairs(2, -1);
-        stairZeroSecond.setId(2);
+        Stairs stairMinusOne = Stairs.builder().endfloor(0).endid(1).id(1).build();
+        Stairs stairMinusOneSecond = Stairs.builder().endfloor(0).endid(2).id(2).build();
+        Stairs stairZero = Stairs.builder().endfloor(-1).endid(1).id(1).build();
+        Stairs stairZeroSecond = Stairs.builder().endfloor(-1).endid(2).id(2).build();
 
         stairsMinusOne.add(stairMinusOne);
         stairsZero.add(stairZero);
@@ -496,10 +466,9 @@ public class MeshTest {
         stairsMinusOne.add(stairMinusOneSecond);
         stairsZero.add(stairZeroSecond);
 
-
-        floors.add(new Floor(groundFloor, -1, walls, doors, stairsMinusOne, elevators, null));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairsZero, elevators, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairsMinusOne).elevators(elevators).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairsZero).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
@@ -559,32 +528,28 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
         };
 
-        List<Wall> walls = new ArrayList<>();
         List<Door> doorsZero = new ArrayList<>();
-        Door doorZero1 = new Door(true);
-        doorZero1.setId(1);
+        Door doorZero1 = Door.builder().destinationPoint(true).id(1).build();
         doorsZero.add(doorZero1);
-        Door doorZero2 = new Door(true);
-        doorZero2.setId(2);
+        Door doorZero2 = Door.builder().destinationPoint(true).id(2).build();
+
         doorsZero.add(doorZero2);
 
         List<Door> doorsOne = new ArrayList<>();
-        Door doorOne1 = new Door(true);
-        doorOne1.setId(1);
+        Door doorOne1 = Door.builder().destinationPoint(true).id(1).build();
         doorsOne.add(doorOne1);
-        Door doorOne2 = new Door(true);
-        doorOne2.setId(2);
+        Door doorOne2 = Door.builder().destinationPoint(true).id(2).build();
         doorsOne.add(doorOne2);
-        Door doorOne3 = new Door(true);
-        doorOne3.setId(2);
+        Door doorOne3 = Door.builder().destinationPoint(true).id(3).build();
         doorsOne.add(doorOne3);
         List<Stairs> stairsZero = new ArrayList<>();
         List<Stairs> stairsOne = new ArrayList<>();
 
-        Stairs stairZero1 = new Stairs(0, 1);
-        Stairs stairZero2 = new Stairs(1, 1);
-        Stairs stairOne1 = new Stairs(0, 0);
-        Stairs stairOne2 = new Stairs(1, 0);
+        Stairs stairZero1 = Stairs.builder().endfloor(1).endid(1).id(1).build();
+        Stairs stairZero2 = Stairs.builder().endfloor(1).endid(2).id(2).build();
+        Stairs stairOne1 = Stairs.builder().endfloor(0).endid(1).id(1).build();
+        Stairs stairOne2 = Stairs.builder().endfloor(0).endid(2).id(2).build();
+
         stairsZero.add(stairZero1);
         stairsZero.add(stairZero2);
 
@@ -593,17 +558,17 @@ public class MeshTest {
 
         List<Elevator> elevatorsOne = new ArrayList<>();
         List<Elevator> elevatorsZero = new ArrayList<>();
-        Elevator elevatorOne = new Elevator();
-        elevatorOne.setId(1);
-        Elevator elevatorZero = new Elevator();
-        elevatorZero.setId(1);
+        Elevator elevatorOne = Elevator.builder().id(1).build();
+        Elevator elevatorZero = Elevator.builder().id(1).build();
+
 
         elevatorsZero.add(elevatorZero);
         elevatorsOne.add(elevatorOne);
 
-        floors.add(new Floor(groundFloor, 0, walls, doorsZero, stairsZero, elevatorsZero, null));
-        floors.add(new Floor(firstFloor, 1, walls, doorsOne, stairsOne, elevatorsOne, null));
-        Building building = new Building(floors);
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doorsZero).stairs(stairsZero).elevators(elevatorsZero).build());
+        floors.add(Floor.builder().enumMap(firstFloor).number(1).doors(doorsOne).stairs(stairsOne).elevators(elevatorsOne).build());
+        Building building = Building.builder().floors(floors).build();
+
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Graph graph = result.getGraph();
@@ -632,23 +597,53 @@ public class MeshTest {
                 {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
         };
 
-        List<Wall> walls = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        Door door1 = new Door(true);
-        Door door2 = new Door(true);
-        door1.setId(1);
-        door2.setId(2);
+        Door door1 = Door.builder().destinationPoint(true).id(1).build();
+        Door door2 = Door.builder().destinationPoint(true).id(2).build();
+
         doors.add(door1);
         doors.add(door2);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
         List<Beacon> beacons = new ArrayList<>();
-        beacons.add(new Beacon(0));
-        beacons.add(new Beacon(1));
-        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, beacons));
-        Building building = new Building(floors);
+        beacons.add(Beacon.builder().id(0).build());
+        beacons.add(Beacon.builder().id(1).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).beacons(beacons).build());
+        Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
     }
+
+    @Test
+    public void meshTestTwoRoomsWithHallwaySimpleAstarTest_Success() {
+        Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.BEACON, FloorObject.ROOM, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.BEACON, FloorObject.SPACE, FloorObject.ROOM, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        List<Door> doors = new ArrayList<>();
+        Door door1 = Door.builder().destinationPoint(true).id(1).build();
+        Door door2 = Door.builder().destinationPoint(true).id(2).build();
+
+        doors.add(door1);
+        doors.add(door2);
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        floors.add(Floor.builder().enumMap(groundFloor).number(-1).doors(doors).stairs(stairs).elevators(elevators).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).build());
+        Building building = Building.builder().floors(floors).build();
+
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
+        Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
+        Graph graph = result.getGraph();
+        List<Vertex> res = graph.aStar(result.getDestinationPoints().get(0).get(0), result.getDestinationPoints().get(0).get(1));
+        Assert.assertEquals(res.size(), 2);
+    }
+
 }
