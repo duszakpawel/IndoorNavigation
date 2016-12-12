@@ -14,6 +14,7 @@ import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.Wall;
 import com.wut.indoornavigation.data.model.graph.Edge;
+import com.wut.indoornavigation.data.model.graph.Vertex;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
 import org.junit.Assert;
@@ -651,4 +652,40 @@ public class MeshTest {
         MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
         Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
     }
+
+    @Test
+    public void meshTestTwoRoomsWithHallwaySimpleAstarTest_Success() {
+        Mesh mesh = new Mesh();
+        StrategyProvider strategyProvider = new StrategyProvider();
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.BEACON, FloorObject.ROOM, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.BEACON, FloorObject.SPACE, FloorObject.ROOM, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        List<Wall> walls = new ArrayList<>();
+        List<Door> doors = new ArrayList<>();
+        Door door1 = new Door(true);
+        Door door2 = new Door(true);
+        door1.setId(1);
+        door2.setId(2);
+        doors.add(door1);
+        doors.add(door2);
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        List<Beacon> beacons = new ArrayList<>();
+        beacons.add(new Beacon(0));
+        beacons.add(new Beacon(1));
+        floors.add(new Floor(groundFloor, 0, walls, doors, stairs, elevators, beacons));
+        Building building = new Building(floors);
+
+        MeshResult result = mesh.create(building, strategyProvider, heuristicFunction, unionFind);
+        Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
+        Graph graph = result.getGraph();
+        List<Vertex> res = graph.aStar(result.getDestinationPoints().get(0).get(0), result.getDestinationPoints().get(0).get(1));
+        Assert.assertEquals(res.size(), 2);
+    }
+
 }
