@@ -22,9 +22,6 @@ import javax.inject.Inject;
 
 public final class MapEngineImpl implements MapEngine {
 
-    private final float textSize;
-    private final float textPadding;
-
     private final Paint wallPaint = new Paint();
     private final Paint doorPaint = new Paint();
     private final Paint elevatorPaint = new Paint();
@@ -32,41 +29,39 @@ public final class MapEngineImpl implements MapEngine {
     private final Paint textPaint = new Paint();
     private final Paint textBackgroundPaint = new Paint();
 
-    private final Context context;
     private final CanvasExtender canvasExtender;
     private final SparseArray<Bitmap> mapBitmaps;
 
     private int mapHeight;
     private int mapWidth;
+    private float textSize;
+    private float textPadding;
 
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
     @Inject
-    public MapEngineImpl(Context context, CanvasExtender canvasExtender) {
-        this.context = context;
+    public MapEngineImpl(CanvasExtender canvasExtender) {
         this.canvasExtender = canvasExtender;
         mapBitmaps = new SparseArray<>();
-        init();
+    }
 
+    private void init(Context context) {
         final Resources resources = context.getResources();
         textSize = resources.getDimension(R.dimen.map_text_size);
         textPadding = resources.getDimension(R.dimen.max_text_padding);
-
-    }
-
-    private void init() {
         wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
         doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
         elevatorPaint.setColor(ContextCompat.getColor(context, R.color.elevatorColor));
         stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
-        getMapHeight();
-        getMapWidth();
+        getMapHeight(context);
+        getMapWidth(context);
     }
 
     @Override
-    public void renderMap(@NonNull Building building) {
+    public void renderMap(Context context, @NonNull Building building) {
+        init(context);
         for (final Floor floor : building.getFloors()) {
             final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.RGB_565);
 
@@ -108,22 +103,22 @@ public final class MapEngineImpl implements MapEngine {
 //        }
     }
 
-    private void getMapWidth() {
+    private void getMapWidth(Context context) {
         final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
         final int width = context.getResources().getDisplayMetrics().widthPixels;
 
         mapWidth = width - 2 * widthPadding;
     }
 
-    private void getMapHeight() {
+    private void getMapHeight(Context context) {
         final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
         final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
         final int height = context.getResources().getDisplayMetrics().heightPixels;
 
-        mapHeight = height - 2 * heightPadding - headerHeight - getToolbarHeight();
+        mapHeight = height - 2 * heightPadding - headerHeight - getToolbarHeight(context);
     }
 
-    private int getToolbarHeight() {
+    private int getToolbarHeight(Context context) {
         final TypedValue tv = new TypedValue();
 
         if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
