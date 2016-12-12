@@ -61,9 +61,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.wut.indoornavigation.map.MapView
+        <ImageView
+            android:id="@+id/fragment_map_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:contentDescription="@null"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/events_fab"

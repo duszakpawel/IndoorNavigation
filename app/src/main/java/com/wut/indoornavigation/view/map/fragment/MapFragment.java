@@ -1,11 +1,13 @@
 package com.wut.indoornavigation.view.map.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -18,27 +20,25 @@ import com.wut.indoornavigation.view.base.BaseMvpFragment;
 
 import javax.inject.Inject;
 
-import butterknife.BindArray;
 import butterknife.BindView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFragmentContract.Presenter>
         implements MapFragmentContract.View {
 
     public static final String TAG = MapFragment.class.getSimpleName();
 
-    @BindArray(R.array.room_array)
-    String[] rooms;
-
-    @BindArray(R.array.floor_array)
-    String[] floors;
-
     @BindView(R.id.fragment_map_floor_spinner)
     Spinner floorSpinner;
     @BindView(R.id.fragment_map_room_spinner)
     Spinner roomSpinner;
+    @BindView(R.id.fragment_map_map)
+    ImageView map;
 
     @Inject
     MapFragmentPresenter mapFragmentPresenter;
+
+    private PhotoViewAttacher mapAttacher;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -53,7 +53,9 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeSpinners();
+        initializeFloorSpinner();
+        initializeRoomSpinner();
+        mapAttacher = new PhotoViewAttacher(map);
     }
 
     @NonNull
@@ -67,16 +69,47 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         IndoorNavigationApp.getDependencies(getContext()).getMapActivityComponent().inject(this);
     }
 
-    private void initializeSpinners() {
-        initializeSpinner(floorSpinner, floors);
-        initializeSpinner(roomSpinner, rooms);
-    }
-
-    private void initializeSpinner(Spinner spinner, String[] data) {
+    private void initializeFloorSpinner() {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, data);
+                android.R.layout.simple_spinner_dropdown_item, mapFragmentPresenter.getFloorSpinnerData());
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        floorSpinner.setAdapter(adapter);
+        floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getPresenter().floorSelected(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void initializeRoomSpinner() {
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item, mapFragmentPresenter.getRoomSpinnerData());
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roomSpinner.setAdapter(adapter);
+        roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getPresenter().roomSelected(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    @Override
+    public void showMap(Bitmap bitmap) {
+        map.setImageBitmap(bitmap);
+        mapAttacher.update();
     }
 }

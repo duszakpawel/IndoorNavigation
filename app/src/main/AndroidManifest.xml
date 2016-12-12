@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.wut.indoornavigation"
           xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:name=".IndoorNavigationApp"
         android:allowBackup="true"
@@ -10,17 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".view.splash.SplashActivity"
-            android:theme="@style/SplashTheme">
+        <activity android:name=".view.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
-        <activity android:name=".view.main.MainActivity">
-
         </activity>
 
         <activity android:name=".view.map.MapActivity"/>

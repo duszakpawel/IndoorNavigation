@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.impl.MapEngineImpl;
-import com.wut.indoornavigation.utils.CanvasExtender;
 
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import dagger.Module;
@@ -27,8 +25,8 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    MapEngine provideMapEngine(CanvasExtender canvasExtender) {
-        return new MapEngineImpl(context, canvasExtender);
+    MapEngine provideMapEngine() {
+        return new MapEngineImpl();
     }
 
     @Singleton
