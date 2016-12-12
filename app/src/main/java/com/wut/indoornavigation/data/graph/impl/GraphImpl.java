@@ -211,8 +211,8 @@ public class GraphImpl implements Graph {
                 }
             }
         }
-
-        return reproducePath(previous, t.getId());
+        previous[sIndex]= NO_PREVIOUS;
+        return reproducePath(previous, vertices.indexOf(t));
     }
 
     private List<Vertex> reproducePath(int[] previous, int targetIndex) {
