@@ -1,8 +1,12 @@
 package com.wut.indoornavigation.view.splash;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -20,6 +24,9 @@ import butterknife.BindView;
 public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashContract.Presenter>
         implements SplashContract.View {
 
+    private static final int PERMISSION_REQUEST = 501;
+    private static final String FILE_NAME = "/test.xml";
+
     @BindView(R.id.loadingView)
     ProgressBar loadingView;
 
@@ -32,6 +39,16 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
         setContentView(R.layout.activity_splash);
         // TODO: 12.12.2016 Podac dobra sciezke do pliku
         splashPresenter.prepareMap("", this);
+        checkPermission();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST) {
+            checkPermission();
+        }
     }
 
     @Override
@@ -59,5 +76,21 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     @Override
     public void hideLoadingView() {
         loadingView.setVisibility(View.GONE);
+    }
+
+    private void checkPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+        } else {
+            startMapEngine();
+        }
+    }
+
+    private void startMapEngine() {
+        final String buildingPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath() + FILE_NAME;
+        splashPresenter.prepareMap(buildingPath, this);
     }
 }

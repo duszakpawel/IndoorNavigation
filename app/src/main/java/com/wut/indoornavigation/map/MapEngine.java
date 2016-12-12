@@ -48,5 +48,10 @@ public interface MapEngine {
     @NonNull
     Bitmap getMapForFloor(int floorNumber);
 
+    /**
+     * Renders path
+     * @param context context object
+     * @param path path object
+     */
     void renderPath(Context context, List<Point> path);
 }

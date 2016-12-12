@@ -644,5 +644,4 @@ public class MeshProviderTest {
         List<Vertex> res = graph.aStar(result.getDestinationPoints().get(0).get(0), result.getDestinationPoints().get(0).get(1));
         Assert.assertEquals(res.size(), 2);
     }
-
 }
