@@ -3,20 +3,20 @@ package com.wut.indoornavigation.map.impl;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.SparseArray;
 import android.util.TypedValue;
 
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
+import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 import com.wut.indoornavigation.utils.CanvasExtender;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,7 +34,10 @@ public final class MapEngineImpl implements MapEngine {
 
     private final Context context;
     private final CanvasExtender canvasExtender;
-    private final Map<Integer, Bitmap> mapBitmaps;
+    private final SparseArray<Bitmap> mapBitmaps;
+
+    private int mapHeight;
+    private int mapWidth;
 
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
@@ -42,7 +45,7 @@ public final class MapEngineImpl implements MapEngine {
     public MapEngineImpl(Context context, CanvasExtender canvasExtender) {
         this.context = context;
         this.canvasExtender = canvasExtender;
-        mapBitmaps = new HashMap<>();
+        mapBitmaps = new SparseArray<>();
         init();
 
         final Resources resources = context.getResources();
@@ -58,12 +61,14 @@ public final class MapEngineImpl implements MapEngine {
         stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
+        getMapHeight();
+        getMapWidth();
     }
 
     @Override
     public void renderMap(@NonNull Building building) {
         for (final Floor floor : building.getFloors()) {
-            final Bitmap bitmap = Bitmap.createBitmap(getMapWidth(), getMapHeight(), Bitmap.Config.RGB_565);
+            final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.RGB_565);
 
             mapBitmaps.put(floor.getNumber(), bitmap);
             renderFloor(bitmap, floor);
@@ -74,7 +79,16 @@ public final class MapEngineImpl implements MapEngine {
 
     // TODO: 28.11.2016 Need to be changed
     private void renderFloor(Bitmap bitmap, Floor floor) {
+        final Canvas canvas = new Canvas(bitmap);
+        final FloorObject[][] map = floor.getEnumMap();
+        final int stepHeight = calculateStepHeight(map.length);
+        final int stepWidth = calculateStepWidth(map[0].length);
 
+        for (int i = 0 ; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+
+            }
+        }
 //
 //        for(Door door : floor.getDoors()){
 //            canvasExtender.DrawLine(canvas, door.getStart(), door.getEnd(), doorPaint);
@@ -94,19 +108,19 @@ public final class MapEngineImpl implements MapEngine {
 //        }
     }
 
-    private int getMapWidth() {
+    private void getMapWidth() {
         final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
         final int width = context.getResources().getDisplayMetrics().widthPixels;
 
-        return width - 2 * widthPadding;
+        mapWidth = width - 2 * widthPadding;
     }
 
-    private int getMapHeight() {
+    private void getMapHeight() {
         final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
         final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
         final int height = context.getResources().getDisplayMetrics().heightPixels;
 
-        return height - 2 * heightPadding - headerHeight - getToolbarHeight();
+        mapHeight = height - 2 * heightPadding - headerHeight - getToolbarHeight();
     }
 
     private int getToolbarHeight() {
@@ -118,6 +132,14 @@ public final class MapEngineImpl implements MapEngine {
         }
 
         throw new IllegalStateException("Cannot resolve action bar size");
+    }
+
+    private int calculateStepWidth(int buildingWidth) {
+        return mapWidth / buildingWidth;
+    }
+
+    private int calculateStepHeight(int buildingHeight) {
+        return mapHeight / buildingHeight;
     }
 
     @Override
