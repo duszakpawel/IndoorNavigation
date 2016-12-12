@@ -7,6 +7,8 @@ import com.wut.indoornavigation.map.impl.MapEngineImpl;
 import com.wut.indoornavigation.utils.CanvasExtender;
 
 import javax.inject.Singleton;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import dagger.Module;
 import dagger.Provides;
@@ -27,5 +29,11 @@ public class ApplicationModule {
     @Provides
     MapEngine provideMapEngine(CanvasExtender canvasExtender) {
         return new MapEngineImpl(context, canvasExtender);
+    }
+
+    @Singleton
+    @Provides
+    DocumentBuilderFactory provideDocumentBuilder() {
+        return DocumentBuilderFactory.newInstance();
     }
 }

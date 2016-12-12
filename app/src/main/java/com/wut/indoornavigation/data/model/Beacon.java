@@ -1,10 +1,16 @@
 package com.wut.indoornavigation.data.model;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
-public class Beacon  {
+@EqualsAndHashCode(callSuper = true)
+public class Beacon extends BuildingObject {
 
-    int id;
-    //Point position;
+    @Builder(toBuilder = true)
+    private Beacon(int id, int x, int y) {
+        super(id, x, y);
+    }
 }
+
