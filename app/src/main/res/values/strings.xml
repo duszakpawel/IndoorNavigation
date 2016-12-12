@@ -10,9 +10,4 @@
         <item>103</item>
         <item>104</item>
     </string-array>
-    <string-array name="floor_array">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
 </resources>

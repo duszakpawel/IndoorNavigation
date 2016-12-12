@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.wut.indoornavigation.R;
 
+@Deprecated
 public class MapView extends View {
 
     private final Paint wallPaint = new Paint();

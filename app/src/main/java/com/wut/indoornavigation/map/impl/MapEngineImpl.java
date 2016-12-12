@@ -18,6 +18,9 @@ import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 import com.wut.indoornavigation.utils.CanvasExtender;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 public final class MapEngineImpl implements MapEngine {
@@ -31,6 +34,7 @@ public final class MapEngineImpl implements MapEngine {
 
     private final CanvasExtender canvasExtender;
     private final SparseArray<Bitmap> mapBitmaps;
+    private final List<Integer> keyList;
 
     private int mapHeight;
     private int mapWidth;
@@ -42,6 +46,7 @@ public final class MapEngineImpl implements MapEngine {
     @Inject
     public MapEngineImpl(CanvasExtender canvasExtender) {
         this.canvasExtender = canvasExtender;
+        keyList = new LinkedList<>();
         mapBitmaps = new SparseArray<>();
     }
 
@@ -65,6 +70,7 @@ public final class MapEngineImpl implements MapEngine {
         for (final Floor floor : building.getFloors()) {
             final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.RGB_565);
 
+            keyList.add(floor.getNumber());
             mapBitmaps.put(floor.getNumber(), bitmap);
             renderFloor(bitmap, floor);
         }
@@ -140,5 +146,20 @@ public final class MapEngineImpl implements MapEngine {
     @Override
     public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
         this.onMapReadyListener = onMapReadyListener == null ? OnMapReadyListener.NULL : onMapReadyListener;
+    }
+
+    @Override
+    public List<Integer> getFloorNumbers() {
+        return keyList;
+    }
+
+    @NonNull
+    @Override
+    public Bitmap getMapForFloor(int floorNumber) {
+        final Bitmap bitmap = mapBitmaps.get(floorNumber);
+        if (bitmap != null) {
+            return bitmap;
+        }
+        throw new IllegalStateException("There is no map for floor: " + floorNumber);
     }
 }
