@@ -14,6 +14,7 @@ import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
+import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.map.MapEngine;
 import com.wut.indoornavigation.map.OnMapReadyListener;
 
@@ -33,6 +34,7 @@ public final class MapEngineImpl implements MapEngine {
 
     private final SparseArray<Bitmap> mapBitmaps;
     private final List<Integer> keyList;
+    private final List<Integer> roomNumbers;
 
     private int mapHeight;
     private int mapWidth;
@@ -44,6 +46,7 @@ public final class MapEngineImpl implements MapEngine {
     @Inject
     public MapEngineImpl() {
         keyList = new LinkedList<>();
+        roomNumbers = new LinkedList<>();
         mapBitmaps = new SparseArray<>();
     }
 
@@ -67,12 +70,38 @@ public final class MapEngineImpl implements MapEngine {
         for (final Floor floor : building.getFloors()) {
             final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.ARGB_8888);
 
+            addRoomNumbers(floor.getRooms());
             keyList.add(floor.getNumber());
             mapBitmaps.put(floor.getNumber(), bitmap);
             renderFloor(bitmap, floor);
         }
 
         onMapReadyListener.onMapReady();
+    }
+
+    @Override
+    public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
+        this.onMapReadyListener = onMapReadyListener == null ? OnMapReadyListener.NULL : onMapReadyListener;
+    }
+
+    @Override
+    public List<Integer> getFloorNumbers() {
+        return keyList;
+    }
+
+    @Override
+    public List<Integer> getRoomNumbers() {
+        return roomNumbers;
+    }
+
+    @NonNull
+    @Override
+    public Bitmap getMapForFloor(int floorNumber) {
+        final Bitmap bitmap = mapBitmaps.get(floorNumber);
+        if (bitmap != null) {
+            return bitmap;
+        }
+        throw new IllegalStateException("There is no map for floor: " + floorNumber);
     }
 
     private void renderFloor(Bitmap bitmap, Floor floor) {
@@ -115,6 +144,12 @@ public final class MapEngineImpl implements MapEngine {
         }
     }
 
+    private void addRoomNumbers(List<Room> rooms) {
+        for (final Room room : rooms) {
+            roomNumbers.add(room.getNumber());
+        }
+    }
+
     private void setPaintsStrokeWidth(int paintsStrokeWidth) {
         wallPaint.setStrokeWidth(paintsStrokeWidth);
         doorPaint.setStrokeWidth(paintsStrokeWidth);
@@ -154,25 +189,5 @@ public final class MapEngineImpl implements MapEngine {
 
     private int calculateStepHeight(int buildingHeight) {
         return mapHeight / buildingHeight;
-    }
-
-    @Override
-    public void setOnMapReadyListener(OnMapReadyListener onMapReadyListener) {
-        this.onMapReadyListener = onMapReadyListener == null ? OnMapReadyListener.NULL : onMapReadyListener;
-    }
-
-    @Override
-    public List<Integer> getFloorNumbers() {
-        return keyList;
-    }
-
-    @NonNull
-    @Override
-    public Bitmap getMapForFloor(int floorNumber) {
-        final Bitmap bitmap = mapBitmaps.get(floorNumber);
-        if (bitmap != null) {
-            return bitmap;
-        }
-        throw new IllegalStateException("There is no map for floor: " + floorNumber);
     }
 }

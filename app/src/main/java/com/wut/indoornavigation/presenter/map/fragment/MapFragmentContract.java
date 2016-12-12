@@ -14,6 +14,10 @@ public interface MapFragmentContract {
     interface Presenter extends MvpPresenter<View> {
         String[] getFloorSpinnerData();
 
+        String[] getRoomSpinnerData();
+
         void floorSelected(int position);
+
+        void roomSelected(int position);
     }
 }

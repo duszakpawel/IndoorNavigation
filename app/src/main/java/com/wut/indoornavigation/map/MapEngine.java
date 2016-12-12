@@ -34,6 +34,12 @@ public interface MapEngine {
     List<Integer> getFloorNumbers();
 
     /**
+     * Gets room numbers
+     * @return room numbers
+     */
+    List<Integer> getRoomNumbers();
+
+    /**
      * Gets map for selected floor
      * @param floorNumber selected floor number
      * @return floor map

@@ -3,11 +3,4 @@
 
     <string name="map_fragment_header_floor">Floor</string>
     <string name="map_fragment_header_room">Room</string>
-
-    <string-array name="room_array">
-        <item>101</item>
-        <item>102</item>
-        <item>103</item>
-        <item>104</item>
-    </string-array>
 </resources>
