@@ -3,10 +3,10 @@ package com.wut.indoornavigation.map.impl;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
@@ -21,8 +21,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public final class MapEngineImpl implements MapEngine {
-    private static final int DEFAULT_MAP_WIDTH = 100;
-    private static final int DEFAULT_MAP_HEIGHT = 100;
 
     private final float textSize;
     private final float textPadding;
@@ -64,19 +62,18 @@ public final class MapEngineImpl implements MapEngine {
 
     @Override
     public void renderMap(@NonNull Building building) {
-        for (Floor floor : building.getFloors()) {
-            Bitmap bitmap = Bitmap.createBitmap(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, Bitmap.Config.ARGB_8888);
-            mapBitmaps.put(floor.getNumber(), bitmap);
+        for (final Floor floor : building.getFloors()) {
+            final Bitmap bitmap = Bitmap.createBitmap(getMapWidth(), getMapHeight(), Bitmap.Config.RGB_565);
 
-            Canvas canvas = new Canvas(bitmap);
-            renderFloor(canvas, floor);
+            mapBitmaps.put(floor.getNumber(), bitmap);
+            renderFloor(bitmap, floor);
         }
 
         onMapReadyListener.onMapReady();
     }
 
     // TODO: 28.11.2016 Need to be changed
-    private void renderFloor(Canvas canvas, Floor floor) {
+    private void renderFloor(Bitmap bitmap, Floor floor) {
 
 //
 //        for(Door door : floor.getDoors()){
@@ -95,6 +92,32 @@ public final class MapEngineImpl implements MapEngine {
 //        for(Elevator elevator : floor.getElevators()){
 //            canvasExtender.DrawLine(canvas, elevator.getStart(), elevator.getEnd(), elevatorPaint);
 //        }
+    }
+
+    private int getMapWidth() {
+        final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
+        final int width = context.getResources().getDisplayMetrics().widthPixels;
+
+        return width - 2 * widthPadding;
+    }
+
+    private int getMapHeight() {
+        final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
+        final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
+        final int height = context.getResources().getDisplayMetrics().heightPixels;
+
+        return height - 2 * heightPadding - headerHeight - getToolbarHeight();
+    }
+
+    private int getToolbarHeight() {
+        final TypedValue tv = new TypedValue();
+
+        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
+        {
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+
+        throw new IllegalStateException("Cannot resolve action bar size");
     }
 
     @Override
