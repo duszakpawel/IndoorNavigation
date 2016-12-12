@@ -110,9 +110,9 @@ public final class MapEngineImpl implements MapEngine {
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
-        setPaintsStrokeWidth(stepHeight);
+        setPaintsStrokeWidth(stepWidth);
 
-        int currentHeight = 0;
+        int currentHeight = stepHeight * 2;
         int currentWidth = 0;
 
         for (int i = 0 ; i < map.length; i++) {
@@ -139,7 +139,7 @@ public final class MapEngineImpl implements MapEngine {
                 }
                 currentWidth += stepWidth;
             }
-            currentHeight += stepHeight;
+            currentHeight += stepWidth;
             currentWidth = 0;
         }
     }
