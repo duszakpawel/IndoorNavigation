@@ -1,9 +1,12 @@
 package com.wut.indoornavigation.data.parser;
 
 import com.wut.indoornavigation.data.exception.MapParseException;
+import com.wut.indoornavigation.data.mesh.Mesh;
+import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
 import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.BuildingObject;
+import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -11,6 +14,7 @@ import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +53,26 @@ public final class Parser {
     }
 
     public Building parse(String filename) {
-        try {
+        List<Floor> floors = new ArrayList<>();
+        FloorObject[][] groundFloor = new FloorObject[][]{
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
+                {FloorObject.BEACON, FloorObject.ROOM, FloorObject.SPACE, FloorObject.WALL},
+                {FloorObject.BEACON, FloorObject.SPACE, FloorObject.ROOM, FloorObject.WALL},
+                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
+        };
+
+        List<Door> doors = new ArrayList<>();
+        List<Stairs> stairs = new ArrayList<>();
+        List<Elevator> elevators = new ArrayList<>();
+        List<Beacon> beacons = new ArrayList<>();
+        List<Room> rooms = new ArrayList<>();
+        rooms.add(Room.builder().number(1).id(1).build());
+        rooms.add(Room.builder().number(2).id(2).build());
+        beacons.add(Beacon.builder().id(0).build());
+        beacons.add(Beacon.builder().id(1).build());
+        floors.add(Floor.builder().enumMap(groundFloor).rooms(rooms).number(0).doors(doors).stairs(stairs).elevators(elevators).beacons(beacons).build());
+        return Building.builder().floors(floors).build();
+        /*try {
             final File fXmlFile = new File(filename);
             final DocumentBuilder dBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = dBuilder.parse(fXmlFile);
@@ -93,7 +116,7 @@ public final class Parser {
                     .build();
         } catch (Exception e) {
             throw new MapParseException("Error while parsing map", e);
-        }
+        }*/
     }
 
     private void addStairs(List<Floor> floors, Document document) {
