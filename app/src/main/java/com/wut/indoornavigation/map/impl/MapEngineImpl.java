@@ -65,7 +65,7 @@ public final class MapEngineImpl implements MapEngine {
     public void renderMap(Context context, @NonNull Building building) {
         init(context);
         for (final Floor floor : building.getFloors()) {
-            final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.RGB_565);
+            final Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.ARGB_8888);
 
             keyList.add(floor.getNumber());
             mapBitmaps.put(floor.getNumber(), bitmap);
