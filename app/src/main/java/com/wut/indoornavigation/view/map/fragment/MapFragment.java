@@ -99,8 +99,8 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 int destinationRoomNumber = Integer.parseInt((String)roomSpinner.getSelectedItem());
-
-                getPresenter().roomSelected(getContext(), destinationRoomNumber);
+                int floorIndex = floorSpinner.getSelectedItemPosition();
+                getPresenter().roomSelected(getContext(), destinationRoomNumber, floorIndex);
             }
 
             @Override

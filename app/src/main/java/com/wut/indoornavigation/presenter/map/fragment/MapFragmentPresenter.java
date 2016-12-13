@@ -46,7 +46,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void roomSelected(Context context, int roomNumber) {
+    public void roomSelected(Context context, int roomNumber, int floorIndex) {
         // TODO: 12.12.2016 Start navigation to selected room
         // these parameters need to be provided
 
@@ -61,7 +61,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), destinationFloorIndex, destinationRoomIndex);
 
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(destinationFloorIndex)));
+        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorIndex)));
     }
 
     private String[] parseFloorNumbers() {

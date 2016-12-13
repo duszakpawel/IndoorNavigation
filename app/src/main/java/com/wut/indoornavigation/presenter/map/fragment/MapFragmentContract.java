@@ -21,6 +21,6 @@ public interface MapFragmentContract {
 
         void floorSelected(int position, int floorPosition);
 
-        void roomSelected(Context context, int roomNumber);
+        void roomSelected(Context context, int roomNumber, int floorIndex);
     }
 }
