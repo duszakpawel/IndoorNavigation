@@ -1,25 +1,27 @@
 package com.wut.indoornavigation.data.parser;
 
+import com.wut.indoornavigation.data.exception.MapParseException;
 import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.BuildingObject;
-import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 @Singleton
@@ -47,26 +49,7 @@ public final class Parser {
     }
 
     public Building parse(String filename) {
-        List<Floor> floors = new ArrayList<>();
-        FloorObject[][] groundFloor = new FloorObject[][]{
-                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
-                {FloorObject.BEACON, FloorObject.ROOM, FloorObject.SPACE, FloorObject.WALL},
-                {FloorObject.BEACON, FloorObject.SPACE, FloorObject.ROOM, FloorObject.WALL},
-                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER}
-        };
-
-        List<Door> doors = new ArrayList<>();
-        List<Stairs> stairs = new ArrayList<>();
-        List<Elevator> elevators = new ArrayList<>();
-        List<Beacon> beacons = new ArrayList<>();
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(Room.builder().number(1).id(1).build());
-        rooms.add(Room.builder().number(2).id(2).build());
-        beacons.add(Beacon.builder().id(0).build());
-        beacons.add(Beacon.builder().id(1).build());
-        floors.add(Floor.builder().enumMap(groundFloor).rooms(rooms).number(0).doors(doors).stairs(stairs).elevators(elevators).beacons(beacons).build());
-        return Building.builder().floors(floors).build();
-        /*try {
+        try {
             final File fXmlFile = new File(filename);
             final DocumentBuilder dBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = dBuilder.parse(fXmlFile);
@@ -79,7 +62,7 @@ public final class Parser {
 
             for (int i = 0; i < roomsNodes.getLength(); i++) {
                 final Node roomsNode = roomsNodes.item(i);
-                int roomId =0;
+                int roomId = 0;
                 if (roomsNode.getNodeType() == Node.ELEMENT_NODE) {
                     final Element roomsElement = (Element) roomsNode;
                     final List<Room> roomList = new LinkedList<>();
@@ -110,7 +93,7 @@ public final class Parser {
                     .build();
         } catch (Exception e) {
             throw new MapParseException("Error while parsing map", e);
-        }*/
+        }
     }
 
     private void addStairs(List<Floor> floors, Document document) {
@@ -229,14 +212,14 @@ public final class Parser {
                             break;
 
                         case ' ':
-                            newMap[r-1][c/2] = FloorObject.SPACE;
+                            newMap[r - 1][c / 2] = FloorObject.SPACE;
                             break;
 
                         case 'D':
                             newMap[r - 1][c / 2] = FloorObject.ROOM;
                             int roomInd = findBuildingObjectIndex(currentFloor.getRooms(), roomIndex++);
-                            Room room =currentFloor.getRooms().get(roomInd);
-                            room = room.toBuilder().x(r-1).y(c/2).build();
+                            Room room = currentFloor.getRooms().get(roomInd);
+                            room = room.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getRooms().set(roomInd, room);
                             break;
 
@@ -244,7 +227,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.BEACON;
                             int beaconInd = findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++);
                             Beacon beacon = currentFloor.getBeacons().get(beaconInd);
-                            beacon = beacon.toBuilder().x(r-1).y(c/2).build();
+                            beacon = beacon.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getBeacons().set(beaconInd, beacon);
                             break;
 
@@ -252,7 +235,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.STAIRS;
                             int stairInd = findBuildingObjectIndex(currentFloor.getStairs(), stairIndex++);
                             Stairs stair = currentFloor.getStairs().get(stairInd);
-                            stair = stair.toBuilder().x(r-1).y(c/2).build();
+                            stair = stair.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getStairs().set(stairInd, stair);
                             break;
 
@@ -260,7 +243,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.ELEVATOR;
                             int elevatorInd = findBuildingObjectIndex(currentFloor.getElevators(), elevatorIndex++);
                             Elevator elevator = currentFloor.getElevators().get(elevatorInd);
-                            elevator = elevator.toBuilder().x(r-1).y(c/2).build();
+                            elevator = elevator.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getElevators().set(elevatorInd, elevator);
                             break;
 

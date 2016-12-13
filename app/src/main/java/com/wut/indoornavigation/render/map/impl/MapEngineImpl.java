@@ -79,6 +79,7 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         }
 
         onMapReadyListener.onMapReady();
+        onMapReadyListener = OnMapReadyListener.NULL;
     }
 
     @Override

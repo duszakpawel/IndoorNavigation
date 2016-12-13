@@ -47,12 +47,12 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         // TODO: 12.12.2016 Start navigation to selected room
         // these parameters need to be provided
 
-        if(!initialized){
+        if (!initialized) {
             initialized = true;
             return;
         }
 
-        pathFinderEngine.renderPath(mapEngine, context, new Point(0,0,0), floorPosition, position);
+        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), floorPosition, position);
 
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorPosition)));
