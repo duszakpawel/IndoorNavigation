@@ -92,7 +92,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         for (Vertex vertex : vertexPath) {
             Point position = vertex.getPosition();
-            Point coordinates = new Point(currentWidth + position.getX() * stepWidth, currentHeight + position.getY() * stepHeight, position.getZ());
+            Point coordinates = new Point(position.getY() * 2 * stepHeight, currentHeight + position.getX() * 2 * stepWidth, position.getZ());
             result.add(coordinates);
         }
 //        result.add(new Point(0,0,0));
