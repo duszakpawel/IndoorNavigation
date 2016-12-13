@@ -3,7 +3,10 @@ package com.wut.indoornavigation.presenter.map.fragment;
 import android.content.Context;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
+import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.data.model.Room;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
 
@@ -43,7 +46,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void roomSelected(Context context, int position, int floorPosition) {
+    public void roomSelected(Context context, int roomNumber) {
         // TODO: 12.12.2016 Start navigation to selected room
         // these parameters need to be provided
 
@@ -52,10 +55,13 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
             return;
         }
 
-        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), floorPosition, position);
+        int destinationFloorIndex = pathFinderEngine.getFloorIndex(roomNumber);
+        int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
+
+        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), destinationFloorIndex, destinationRoomIndex);
 
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorPosition)));
+        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(destinationFloorIndex)));
     }
 
     private String[] parseFloorNumbers() {

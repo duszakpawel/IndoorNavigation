@@ -17,6 +17,7 @@ import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
@@ -148,6 +149,33 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
             return bitmap;
         }
         throw new IllegalStateException("There is no map for floor: " + floorNumber);
+    }
+
+    @Override
+    public int getRoomIndex(int roomNumber) {
+        for (Floor floor : storage.getBuilding().getFloors()) {
+            for (Room room : floor.getRooms()) {
+                if(room.getNumber() == roomNumber){
+                    return floor.getRooms().indexOf(room);
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Room index not found for specified room number.");
+
+    }
+
+    @Override
+    public int getFloorIndex(int roomNumber) {
+        for (Floor floor : storage.getBuilding().getFloors()) {
+            for (Room room : floor.getRooms()) {
+                if(room.getNumber() == roomNumber){
+                    return storage.getBuilding().getFloors().indexOf(floor);
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Floor index not found for specified room number.");
     }
 
     private Path produceCurvedPath(List<Point> points) {

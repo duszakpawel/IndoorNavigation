@@ -35,4 +35,8 @@ public interface PathFinderEngine {
      */
     @NonNull
     Bitmap getMapWithPathForFloor(int floorNumber);
+
+    int getRoomIndex(int roomNumber);
+
+    int getFloorIndex(int roomNumber);
 }
