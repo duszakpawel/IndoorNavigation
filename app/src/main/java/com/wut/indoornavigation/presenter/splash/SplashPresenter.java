@@ -31,7 +31,7 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
     private Subscription subscription;
 
     @Inject
-    public SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine,
+    SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine,
                            Parser parser, BuildingStorage storage) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;

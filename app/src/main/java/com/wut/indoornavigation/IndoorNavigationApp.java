@@ -8,6 +8,9 @@ import com.wut.indoornavigation.di.DependencyComponentManager;
 
 import javax.inject.Inject;
 
+/**
+ * Application class
+ */
 public class IndoorNavigationApp extends Application {
 
     @Inject

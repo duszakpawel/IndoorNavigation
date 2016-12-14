@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">IndoorNavigation</string>
 
-    <string name="map_fragment_header_floor">Floor</string>
-    <string name="map_fragment_header_room">Room</string>
+    <string name="action_ok">OK</string>
+
+    <string name="floor">Floor</string>
+    <string name="wall">Wall</string>
+    <string name="stairs">Stairs</string>
+    <string name="door">Door</string>
+    <string name="elevator">Elevator</string>
+    <string name="room">Room</string>
+    <string name="legend">Legend</string>
+
+    <string name="title_progress_path">Path</string>
+    <string name="progress_looking_path">Looking for shortest path. Please wait</string>
 </resources>

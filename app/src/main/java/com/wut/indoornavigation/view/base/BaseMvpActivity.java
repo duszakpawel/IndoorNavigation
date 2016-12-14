@@ -11,6 +11,11 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 
 import butterknife.ButterKnife;
 
+/**
+ * Base class for activities with MVP pattern
+ * @param <V> view contract
+ * @param <P> presenter contract
+ */
 public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<V>>
         extends MvpActivity<V, P> {
 
@@ -44,6 +49,13 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
      */
     protected abstract void resetDependencies();
 
+    /**
+     * Replaces fragment in selected container
+     * @param containerViewId selected container id
+     * @param fragment selected fragment
+     * @param tag selected fragment tag
+     * @return instance of {@link FragmentTransaction}
+     */
     protected FragmentTransaction replaceFragment(int containerViewId, Fragment fragment, String tag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerViewId, fragment, tag);

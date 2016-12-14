@@ -3,23 +3,23 @@ package com.wut.indoornavigation.view.map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
-import com.wut.indoornavigation.presenter.map.MapActivityPresenter;
-import com.wut.indoornavigation.presenter.map.MapActivityViewContract;
-import com.wut.indoornavigation.view.base.BaseMvpActivity;
+import com.wut.indoornavigation.view.base.BaseActivity;
 import com.wut.indoornavigation.view.map.fragment.MapFragment;
-
-import javax.inject.Inject;
+import com.wut.indoornavigation.view.map.legend.MapLegendDialogFragment;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 
-public class MapActivity extends BaseMvpActivity<MapActivityViewContract.View, MapActivityViewContract.Presenter>
-        implements MapActivityViewContract.View {
+/**
+ * Activity which contains view with map
+ */
+public class MapActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -27,9 +27,10 @@ public class MapActivity extends BaseMvpActivity<MapActivityViewContract.View, M
     @BindColor(R.color.white)
     int colorWhite;
 
-    @Inject
-    MapActivityPresenter mapActivityPresenter;
-
+    /**
+     * Starts {@link MapActivity} instance
+     * @param context current context
+     */
     public static void startActivity(Context context) {
         final Intent intent = new Intent(context, MapActivity.class);
         context.startActivity(intent);
@@ -41,14 +42,27 @@ public class MapActivity extends BaseMvpActivity<MapActivityViewContract.View, M
         setContentView(R.layout.activity_map);
         initializeToolbar();
         if (savedInstanceState == null) {
-            replaceFragment(R.id.activity_map_container, MapFragment.newInstance(), MapFragment.TAG).commit();
+            replaceFragment(R.id.activity_map_container, MapFragment.newInstance(),
+                    MapFragment.TAG).commit();
         }
     }
 
-    @NonNull
     @Override
-    public MapActivityViewContract.Presenter createPresenter() {
-        return mapActivityPresenter;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.map_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_legend:
+                MapLegendDialogFragment.newInstance().show(getSupportFragmentManager(),
+                        MapLegendDialogFragment.TAG);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
