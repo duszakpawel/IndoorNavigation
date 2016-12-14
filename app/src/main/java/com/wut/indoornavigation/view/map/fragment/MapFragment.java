@@ -23,9 +23,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+/**
+ * Fragment which shows map
+ */
 public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFragmentContract.Presenter>
         implements MapFragmentContract.View {
 
+    /**
+     * Tag for {@link MapFragment}
+     */
     public static final String TAG = MapFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_map_floor_spinner)
@@ -40,6 +46,10 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
     private PhotoViewAttacher mapAttacher;
 
+    /**
+     * Creates new instance of {@link MapFragment}
+     * @return new instance of {@link MapFragment}
+     */
     public static MapFragment newInstance() {
         return new MapFragment();
     }
@@ -78,7 +88,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getPresenter().floorSelected(position, floorSpinner.getSelectedItemPosition());
+                getPresenter().floorSelected(position);
             }
 
             @Override

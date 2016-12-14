@@ -40,7 +40,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void floorSelected(int position, int floorPosition) {
+    public void floorSelected(int position) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
     }

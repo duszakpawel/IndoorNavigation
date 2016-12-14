@@ -12,6 +12,11 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+/**
+ * Base class for fragments with MVP pattern
+ * @param <V> view contract
+ * @param <P> presenter contract
+ */
 public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<V>> extends MvpFragment<V, P> {
 
     private Unbinder unbinder;
@@ -34,5 +39,8 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
         unbinder.unbind();
     }
 
+    /**
+     * Injects Dagger dependencies. See also {@link com.wut.indoornavigation.di.DependencyComponentManager}
+     */
     protected abstract void injectDependencies();
 }

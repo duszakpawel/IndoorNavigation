@@ -17,6 +17,9 @@
     <dimen name="map_view_room_1_width">100dp</dimen>
     <dimen name="map_view_room_1_height">90dp</dimen>
 
+    <dimen name="legend_dialog_margin_bottom">12dp</dimen>
+    <dimen name="legend_dialog_color_size">20dp</dimen>
+
     <dimen name="map_view_room_2_width">200dp</dimen>
     <dimen name="map_view_room_2_height">120dp</dimen>
     <dimen name="pathWidth">4dp</dimen>

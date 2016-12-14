@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
 
+/**
+ * Base activity class
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
@@ -41,6 +44,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract void resetDependencies();
 
+    /**
+     * Replaces fragment in selected container
+     * @param containerViewId selected container id
+     * @param fragment selected fragment
+     * @param tag selected fragment tag
+     * @return instance of {@link FragmentTransaction}
+     */
     protected FragmentTransaction replaceFragment(int containerViewId, Fragment fragment, String tag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerViewId, fragment, tag);
