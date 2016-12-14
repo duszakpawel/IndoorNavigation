@@ -23,7 +23,7 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    public static final String BUILDING_PREFERENCES = "buildingPreferences";
+    private static final String BUILDING_PREFERENCES = "buildingPreferences";
 
     private final Context context;
 

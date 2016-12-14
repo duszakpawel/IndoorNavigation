@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
-import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.parser.Parser;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.map.MapEngine;
@@ -55,27 +54,15 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
 
     @Override
     public void prepareMap(String fileName, Context context) {
-        // TODO: invoke async
-        Building building = parser.parse(fileName);
-        storage.storeBuilding(building);
-        pathFinderEngine.prepareMesh(building);
-        mapEngine.renderMap(context, building);
-        getView().hideLoadingView();
-//        subscription = Observable.just(fileName)
-//                .map(parser::parse)
-//                .concatMap(building -> {
-//                    storage.storeBuilding(building);
-//                    return Observable.just(building);
-//                })
-//                .concatMap(building -> {
-//                    pathFinderEngine.prepareMesh(building);
-//                        return Observable.just(building);
-//                })
-//                .doOnNext(building -> mapEngine.renderMap(context, building))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doAfterTerminate(getView()::hideLoadingView)
-//                .subscribe(building -> Timber.d("Rendering map for %s", building),
-//                        throwable -> Timber.e(throwable, "Error while rendering map"));
+        subscription = Observable.just(fileName)
+                .map(parser::parse)
+                .doOnNext(storage::storeBuilding)
+                .doOnNext(pathFinderEngine::prepareMesh)
+                .doOnNext(building -> mapEngine.renderMap(context, building))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doAfterTerminate(getView()::hideLoadingView)
+                .subscribe(building -> Timber.d("Rendering map for %s", building),
+                        throwable -> Timber.e(throwable, "Error while rendering map"));
     }
 }
