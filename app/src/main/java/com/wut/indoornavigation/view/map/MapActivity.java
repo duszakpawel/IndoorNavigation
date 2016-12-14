@@ -3,20 +3,15 @@ package com.wut.indoornavigation.view.map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
-import com.wut.indoornavigation.presenter.map.MapActivityPresenter;
-import com.wut.indoornavigation.presenter.map.MapActivityViewContract;
-import com.wut.indoornavigation.view.base.BaseMvpActivity;
+import com.wut.indoornavigation.view.base.BaseActivity;
 import com.wut.indoornavigation.view.map.fragment.MapFragment;
 import com.wut.indoornavigation.view.map.legend.MapLegendDialogFragment;
-
-import javax.inject.Inject;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -24,17 +19,13 @@ import butterknife.BindView;
 /**
  * Activity which contains view with map
  */
-public class MapActivity extends BaseMvpActivity<MapActivityViewContract.View, MapActivityViewContract.Presenter>
-        implements MapActivityViewContract.View {
+public class MapActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindColor(R.color.white)
     int colorWhite;
-
-    @Inject
-    MapActivityPresenter mapActivityPresenter;
 
     /**
      * Starts {@link MapActivity} instance
@@ -72,12 +63,6 @@ public class MapActivity extends BaseMvpActivity<MapActivityViewContract.View, M
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @NonNull
-    @Override
-    public MapActivityViewContract.Presenter createPresenter() {
-        return mapActivityPresenter;
     }
 
     @Override

@@ -24,6 +24,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * Implementation of {@link MapEngine}
+ */
 public final class MapEngineImpl extends RenderEngine implements MapEngine {
 
     private final Paint wallPaint = new Paint();

@@ -21,6 +21,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
+/**
+ * Splash activity which show static image for user
+ */
 public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashContract.Presenter>
         implements SplashContract.View {
 

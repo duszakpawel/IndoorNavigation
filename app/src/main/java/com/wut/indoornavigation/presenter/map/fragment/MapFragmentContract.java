@@ -21,6 +21,22 @@ public interface MapFragmentContract {
          * @param bitmap map
          */
         void showMap(Bitmap bitmap);
+
+        /**
+         * Shows progress dialog
+         */
+        void showProgressDialog();
+
+        /**
+         * Hides progress dialog
+         */
+        void hideProgressDialog();
+
+        /**
+         * Shows error message
+         * @param message error message
+         */
+        void showError(String message);
     }
 
     /**

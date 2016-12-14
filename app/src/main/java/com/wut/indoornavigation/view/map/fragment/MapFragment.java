@@ -1,5 +1,6 @@
 package com.wut.indoornavigation.view.map.fragment;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
@@ -20,6 +22,7 @@ import com.wut.indoornavigation.view.base.BaseMvpFragment;
 
 import javax.inject.Inject;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -34,6 +37,11 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
      */
     public static final String TAG = MapFragment.class.getSimpleName();
 
+    @BindString(R.string.title_progress_path)
+    String progressDialogTitle;
+    @BindString(R.string.progress_looking_path)
+    String progressDialogMessage;
+
     @BindView(R.id.fragment_map_floor_spinner)
     Spinner floorSpinner;
     @BindView(R.id.fragment_map_room_spinner)
@@ -45,6 +53,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
     MapFragmentPresenter mapFragmentPresenter;
 
     private PhotoViewAttacher mapAttacher;
+    private ProgressDialog progressDialog;
 
     /**
      * Creates new instance of {@link MapFragment}
@@ -77,6 +86,28 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
     @Override
     protected void injectDependencies() {
         IndoorNavigationApp.getDependencies(getContext()).getMapActivityComponent().inject(this);
+    }
+
+    @Override
+    public void showMap(Bitmap bitmap) {
+        map.setImageBitmap(bitmap);
+        mapAttacher.update();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        progressDialog = ProgressDialog.show(getContext(), progressDialogTitle,
+                progressDialogMessage, true);
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void initializeFloorSpinner() {
@@ -118,11 +149,5 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
             }
         });
-    }
-
-    @Override
-    public void showMap(Bitmap bitmap) {
-        map.setImageBitmap(bitmap);
-        mapAttacher.update();
     }
 }
