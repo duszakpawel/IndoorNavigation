@@ -74,7 +74,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      * @return list of scaled points (path)
      */
     private List<Point> computePath(Point source, int destinationFloorIndex,
-                                    int destinationVertexIndex, int buildingWidth, int buildingHeight) {
+                                    int destinationVertexIndex, int stepWidth, int stepHeight) {
         PathFinder pathFinder = mesh.getGraph();
         // TODO: hardcoded for now, may throw exception
         Vertex start = mesh.getDestinationPoints().get(0).get(0);
@@ -84,23 +84,11 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         List<Point> result = new ArrayList<>(vertexPath.size());
 
-        final int stepWidth = calculateStepWidth(buildingWidth);
-        final int stepHeight = calculateStepHeight(buildingHeight);
-
-        int currentHeight = stepHeight * 2;
-        int currentWidth = 0;
-
         for (Vertex vertex : vertexPath) {
             Point position = vertex.getPosition();
-            Point coordinates = new Point(position.getY() * 2 * stepHeight, currentHeight + position.getX() * 2 * stepWidth, position.getZ());
+            Point coordinates = new Point(position.getY() * 2 * stepWidth + stepWidth/2, (position.getX() )  * stepHeight + 2 * stepWidth + stepHeight - 10f, position.getZ());
             result.add(coordinates);
         }
-//        result.add(new Point(0,0,0));
-//        result.add(new Point(100, 100,0));
-//        result.add(new Point(100, 200,0));
-//        result.add(new Point(200, 200,0));
-//        result.add(new Point(200, 500,0));
-//        result.add(new Point(200, 600,0));
 
         return result;
     }
