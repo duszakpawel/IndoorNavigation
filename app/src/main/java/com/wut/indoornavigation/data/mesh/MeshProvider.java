@@ -373,7 +373,7 @@ public final class MeshProvider {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
 
-                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ() /*&& weight != DIAGONAL_EDGE_WEIGHT*/) {
+                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ()) {
                         graph.addEdge(new Edge(v, vertex, weight));
                         graph.addEdge(new Edge(vertex, v, weight));
                     }

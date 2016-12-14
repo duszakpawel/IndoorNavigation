@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.NonNull;
@@ -53,9 +54,15 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         building = storage.getBuilding();
         pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
         pathPaint.setStyle(Paint.Style.STROKE);
+
         // TODO: move to resources
         pathPaint.setStrokeWidth(10f);
 
+
+        pathPaint.setStrokeJoin(Paint.Join.ROUND);    // set the join to round you want
+        pathPaint.setStrokeCap(Paint.Cap.ROUND);      // set the paint cap to round too
+        pathPaint.setPathEffect(new CornerPathEffect(100) );   // set the path effect when they join.
+        pathPaint.setAntiAlias(true);                         // set anti alias so it smooths
         getMapHeight(context);
         getMapWidth(context);
     }
@@ -69,16 +76,16 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      * Computes path between point and destination point on map
      *
      * @param source                 source point
-     * @param destinationFloorIndex  destination floor index in floors list
+     * @param destinationFloorNumber  destination floor number
      * @param destinationVertexIndex destination vertex index in vertices list
      * @return list of scaled points (path)
      */
-    private List<Point> computePath(Point source, int destinationFloorIndex,
+    private List<Point> computePath(Point source, int destinationFloorNumber,
                                     int destinationVertexIndex, int stepWidth, int stepHeight) {
         PathFinder pathFinder = mesh.getGraph();
         // TODO: hardcoded for now, may throw exception
-        Vertex start = mesh.getDestinationPoints().get(0).get(0);
-        Vertex end = mesh.getDestinationPoints().get(destinationFloorIndex).get(destinationVertexIndex);
+        Vertex start = mesh.getDestinationPoints().get(1).get(0);
+        Vertex end = mesh.getDestinationPoints().get(destinationFloorNumber).get(destinationVertexIndex);
 
         List<Vertex> vertexPath = pathFinder.aStar(start, end);
 
@@ -97,14 +104,14 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
 
     @Override
-    public void renderPath(MapEngine mapEngine, Context context, Point source, int destinationFloorIndex, int destinationVertexIndex) {
+    public void renderPath(MapEngine mapEngine, Context context, Point source, int destinationFloorNumber, int destinationVertexIndex) {
         init(context);
 
         final FloorObject[][] map = building.getFloors().get(0).getEnumMap();
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
-        List<Point> points = computePath(source, destinationFloorIndex, destinationVertexIndex, stepWidth, stepHeight);
+        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex, stepWidth, stepHeight);
 
         Map<Integer, List<Point>> paths = new HashMap<>();
         for (final Point point : points) {
@@ -156,16 +163,14 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     }
 
     @Override
-    public int getFloorIndex(int roomNumber) {
-        for (Floor floor : storage.getBuilding().getFloors()) {
-            for (Room room : floor.getRooms()) {
-                if (room.getNumber() == roomNumber) {
-                    return storage.getBuilding().getFloors().indexOf(floor);
-                }
-            }
+    public int destinationFloorNumber(int floorIndex) {
+        Floor floor = storage.getBuilding().getFloors().get(floorIndex);
+
+        if(floor != null){
+            return floor.getNumber();
         }
 
-        throw new IllegalArgumentException("Floor index not found for specified room number.");
+        throw new IllegalArgumentException("Incorrect floor index.");
     }
 
     private Path produceCurvedPath(List<Point> points) {

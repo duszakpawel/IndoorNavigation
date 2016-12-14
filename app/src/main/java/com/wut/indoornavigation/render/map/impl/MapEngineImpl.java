@@ -120,28 +120,31 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
 
         for (int i = 0 ; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                switch (map[i][j]) {
-                    case SPACE:
-                        break;
-                    case ELEVATOR:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, elevatorPaint);
-                        break;
-                    case STAIRS:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, stairsPaint);
-                        break;
-                    case DOOR:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, doorPaint);
-                        break;
-                    case ROOM:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, roomPaint);
-                        break;
-                    default:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, wallPaint);
+                // TODO: make decision if the if statement will fix the bug with empty cells
+                if(map[i][j]!=null) {
+                    switch (map[i][j]) {
+                        case SPACE:
+                            break;
+                        case ELEVATOR:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, elevatorPaint);
+                            break;
+                        case STAIRS:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, stairsPaint);
+                            break;
+                        case DOOR:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, doorPaint);
+                            break;
+                        case ROOM:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, roomPaint);
+                            break;
+                        default:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, wallPaint);
+                    }
                 }
                 currentWidth += stepWidth;
             }

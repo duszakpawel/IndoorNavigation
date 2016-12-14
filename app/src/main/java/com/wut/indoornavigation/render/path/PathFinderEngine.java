@@ -38,5 +38,5 @@ public interface PathFinderEngine {
 
     int getRoomIndex(int roomNumber);
 
-    int getFloorIndex(int roomNumber);
+    int destinationFloorNumber(int floorIndex);
 }

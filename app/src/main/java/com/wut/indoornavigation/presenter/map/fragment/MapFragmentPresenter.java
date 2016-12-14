@@ -55,10 +55,10 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
             return;
         }
 
-        int destinationFloorIndex = pathFinderEngine.getFloorIndex(roomNumber);
+        int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
         int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
 
-        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), destinationFloorIndex, destinationRoomIndex);
+        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), destinationFloorNumber, destinationRoomIndex);
 
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorIndex)));
