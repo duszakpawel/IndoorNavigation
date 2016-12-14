@@ -109,9 +109,9 @@ public final class MeshProvider {
 
         Comparator<Vertex> by2dPosition = (v1, v2) -> {
             if (v2.getPosition().getY() - v1.getPosition().getY() == 0) {
-                return Math.round(v2.getPosition().getX() - v1.getPosition().getX());
+                return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
             } else {
-                return Math.round(v2.getPosition().getY() - v1.getPosition().getY());
+                return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
             }
         };
 
@@ -373,7 +373,7 @@ public final class MeshProvider {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
 
-                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ()) {
+                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ() /*&& weight != DIAGONAL_EDGE_WEIGHT*/) {
                         graph.addEdge(new Edge(v, vertex, weight));
                         graph.addEdge(new Edge(vertex, v, weight));
                     }

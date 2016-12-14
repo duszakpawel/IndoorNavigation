@@ -86,7 +86,9 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         for (Vertex vertex : vertexPath) {
             Point position = vertex.getPosition();
-            Point coordinates = new Point(position.getY() * 2 * stepWidth + stepWidth/2, (position.getX() )  * stepHeight + 2 * stepWidth + stepHeight - 10f, position.getZ());
+            // TODO: provide
+            final float strokeWidth = 10f;
+            Point coordinates = new Point(position.getY() * 2 * stepWidth + stepWidth / 2, position.getX() * stepHeight + 2 * stepWidth + stepHeight - strokeWidth, position.getZ());
             result.add(coordinates);
         }
 
@@ -143,7 +145,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     public int getRoomIndex(int roomNumber) {
         for (Floor floor : storage.getBuilding().getFloors()) {
             for (Room room : floor.getRooms()) {
-                if(room.getNumber() == roomNumber){
+                if (room.getNumber() == roomNumber) {
                     return floor.getRooms().indexOf(room);
                 }
             }
@@ -157,7 +159,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     public int getFloorIndex(int roomNumber) {
         for (Floor floor : storage.getBuilding().getFloors()) {
             for (Room room : floor.getRooms()) {
-                if(room.getNumber() == roomNumber){
+                if (room.getNumber() == roomNumber) {
                     return storage.getBuilding().getFloors().indexOf(floor);
                 }
             }
@@ -169,11 +171,11 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     private Path produceCurvedPath(List<Point> points) {
         Path path = new Path();
 
-        if(points == null){
+        if (points == null) {
             return path;
         }
 
-        if(points.size() == 2){
+        if (points.size() == 2) {
             Point first = points.get(0);
             Point second = points.get(1);
             path.moveTo(first.getX(), first.getY());
