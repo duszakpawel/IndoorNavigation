@@ -1,4 +1,4 @@
-package com.wut.indoornavigation.map;
+package com.wut.indoornavigation.render.map;
 
 public interface OnMapReadyListener {
 

@@ -1,7 +1,14 @@
 package com.wut.indoornavigation.presenter.map.fragment;
 
+import android.content.Context;
+
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
-import com.wut.indoornavigation.map.MapEngine;
+import com.wut.indoornavigation.data.model.Floor;
+import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.data.model.Room;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
+import com.wut.indoornavigation.render.map.MapEngine;
+import com.wut.indoornavigation.render.path.PathFinderEngine;
 
 import java.util.List;
 
@@ -11,10 +18,14 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         implements MapFragmentContract.Presenter {
 
     private final MapEngine mapEngine;
+    private final PathFinderEngine pathFinderEngine;
+
+    private boolean initialized = false;
 
     @Inject
-    public MapFragmentPresenter(MapEngine mapEngine) {
+    public MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
         this.mapEngine = mapEngine;
+        this.pathFinderEngine = pathFinderEngine;
     }
 
 
@@ -29,14 +40,28 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void floorSelected(int position) {
+    public void floorSelected(int position, int floorPosition) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
     }
 
     @Override
-    public void roomSelected(int position) {
+    public void roomSelected(Context context, int roomNumber, int floorIndex) {
         // TODO: 12.12.2016 Start navigation to selected room
+        // these parameters need to be provided
+
+        if (!initialized) {
+            initialized = true;
+            return;
+        }
+
+        int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
+        int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
+
+        pathFinderEngine.renderPath(mapEngine, context, new Point(0, 0, 0), destinationFloorNumber, destinationRoomIndex);
+
+        final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
+        getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(floorIndex)));
     }
 
     private String[] parseFloorNumbers() {

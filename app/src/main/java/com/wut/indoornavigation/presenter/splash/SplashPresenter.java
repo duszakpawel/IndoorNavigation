@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.parser.Parser;
-import com.wut.indoornavigation.map.MapEngine;
-import com.wut.indoornavigation.map.OnMapReadyListener;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
+import com.wut.indoornavigation.render.map.MapEngine;
+import com.wut.indoornavigation.render.map.OnMapReadyListener;
+import com.wut.indoornavigation.render.path.PathFinderEngine;
 
 import javax.inject.Inject;
 
@@ -21,15 +23,20 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
         implements SplashContract.Presenter, OnMapReadyListener {
 
     private final MapEngine mapEngine;
+    private final PathFinderEngine pathFinderEngine;
     private final Parser parser;
+    private final BuildingStorage storage;
 
     @NonNull
     private Subscription subscription;
 
     @Inject
-    public SplashPresenter(MapEngine mapEngine, Parser parser) {
+    public SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine,
+                           Parser parser, BuildingStorage storage) {
         this.mapEngine = mapEngine;
+        this.pathFinderEngine = pathFinderEngine;
         this.parser = parser;
+        this.storage = storage;
         subscription = Subscriptions.unsubscribed();
         mapEngine.setOnMapReadyListener(this);
     }
@@ -49,8 +56,10 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
     public void prepareMap(String fileName, Context context) {
         subscription = Observable.just(fileName)
                 .map(parser::parse)
+                .doOnNext(storage::storeBuilding)
+                .doOnNext(pathFinderEngine::prepareMesh)
                 .doOnNext(building -> mapEngine.renderMap(context, building))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(getView()::hideLoadingView)
                 .subscribe(building -> Timber.d("Rendering map for %s", building),

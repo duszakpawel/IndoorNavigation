@@ -1,4 +1,4 @@
-package com.wut.indoornavigation.map.impl;
+package com.wut.indoornavigation.render.map.impl;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,22 +8,23 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
-import android.util.TypedValue;
 
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
-import com.wut.indoornavigation.map.MapEngine;
-import com.wut.indoornavigation.map.OnMapReadyListener;
+import com.wut.indoornavigation.render.RenderEngine;
+import com.wut.indoornavigation.render.map.MapEngine;
+import com.wut.indoornavigation.render.map.OnMapReadyListener;
+
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public final class MapEngineImpl implements MapEngine {
+public final class MapEngineImpl extends RenderEngine implements MapEngine {
 
     private final Paint wallPaint = new Paint();
     private final Paint doorPaint = new Paint();
@@ -37,8 +38,6 @@ public final class MapEngineImpl implements MapEngine {
     private final List<Integer> keyList;
     private final List<Integer> roomNumbers;
 
-    private int mapHeight;
-    private int mapWidth;
     private float textSize;
     private float textPadding;
 
@@ -62,6 +61,7 @@ public final class MapEngineImpl implements MapEngine {
         stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
+
         getMapHeight(context);
         getMapWidth(context);
     }
@@ -79,6 +79,7 @@ public final class MapEngineImpl implements MapEngine {
         }
 
         onMapReadyListener.onMapReady();
+        onMapReadyListener = OnMapReadyListener.NULL;
     }
 
     @Override
@@ -119,28 +120,31 @@ public final class MapEngineImpl implements MapEngine {
 
         for (int i = 0 ; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                switch (map[i][j]) {
-                    case SPACE:
-                        break;
-                    case ELEVATOR:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, elevatorPaint);
-                        break;
-                    case STAIRS:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, stairsPaint);
-                        break;
-                    case DOOR:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, doorPaint);
-                        break;
-                    case ROOM:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, roomPaint);
-                        break;
-                    default:
-                        canvas.drawLine(currentWidth, currentHeight,
-                                currentWidth + stepWidth, currentHeight, wallPaint);
+                // TODO: make decision if the if statement will fix the bug with empty cells
+                if(map[i][j]!=null) {
+                    switch (map[i][j]) {
+                        case SPACE:
+                            break;
+                        case ELEVATOR:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, elevatorPaint);
+                            break;
+                        case STAIRS:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, stairsPaint);
+                            break;
+                        case DOOR:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, doorPaint);
+                            break;
+                        case ROOM:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, roomPaint);
+                            break;
+                        default:
+                            canvas.drawLine(currentWidth, currentHeight,
+                                    currentWidth + stepWidth, currentHeight, wallPaint);
+                    }
                 }
                 currentWidth += stepWidth;
             }
@@ -148,6 +152,7 @@ public final class MapEngineImpl implements MapEngine {
             currentWidth = 0;
         }
     }
+
 
     private void addRoomNumbers(List<Room> rooms) {
         for (final Room room : rooms) {
@@ -161,39 +166,5 @@ public final class MapEngineImpl implements MapEngine {
         elevatorPaint.setStrokeWidth(paintsStrokeWidth);
         stairsPaint.setStrokeWidth(paintsStrokeWidth);
         roomPaint.setStrokeWidth(paintsStrokeWidth);
-    }
-
-    private void getMapWidth(Context context) {
-        final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
-        final int width = context.getResources().getDisplayMetrics().widthPixels;
-
-        mapWidth = width - 2 * widthPadding;
-    }
-
-    private void getMapHeight(Context context) {
-        final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
-        final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
-        final int height = context.getResources().getDisplayMetrics().heightPixels;
-
-        mapHeight = height - 2 * heightPadding - headerHeight - getToolbarHeight(context);
-    }
-
-    private int getToolbarHeight(Context context) {
-        final TypedValue tv = new TypedValue();
-
-        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true))
-        {
-            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-        }
-
-        throw new IllegalStateException("Cannot resolve action bar size");
-    }
-
-    private int calculateStepWidth(int buildingWidth) {
-        return mapWidth / buildingWidth;
-    }
-
-    private int calculateStepHeight(int buildingHeight) {
-        return mapHeight / buildingHeight;
     }
 }

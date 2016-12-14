@@ -15,4 +15,13 @@ public interface PathFinder {
      * @return path (ordered list of vertices)
      */
     List<Vertex> aStar(Vertex source, Vertex target);
+
+    /**
+     * Returns vertex with specified coordinates
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param floorNumber floor number
+     * @return desired vertex
+     */
+    Vertex getVertexByCoordinates(float x, float y, int floorNumber);
 }

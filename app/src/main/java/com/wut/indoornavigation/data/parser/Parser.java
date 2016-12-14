@@ -62,7 +62,7 @@ public final class Parser {
 
             for (int i = 0; i < roomsNodes.getLength(); i++) {
                 final Node roomsNode = roomsNodes.item(i);
-                int roomId =0;
+                int roomId = 0;
                 if (roomsNode.getNodeType() == Node.ELEMENT_NODE) {
                     final Element roomsElement = (Element) roomsNode;
                     final List<Room> roomList = new LinkedList<>();
@@ -212,14 +212,14 @@ public final class Parser {
                             break;
 
                         case ' ':
-                            newMap[r-1][c/2] = FloorObject.SPACE;
+                            newMap[r - 1][c / 2] = FloorObject.SPACE;
                             break;
 
                         case 'D':
                             newMap[r - 1][c / 2] = FloorObject.ROOM;
                             int roomInd = findBuildingObjectIndex(currentFloor.getRooms(), roomIndex++);
-                            Room room =currentFloor.getRooms().get(roomInd);
-                            room = room.toBuilder().x(r-1).y(c/2).build();
+                            Room room = currentFloor.getRooms().get(roomInd);
+                            room = room.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getRooms().set(roomInd, room);
                             break;
 
@@ -227,7 +227,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.BEACON;
                             int beaconInd = findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++);
                             Beacon beacon = currentFloor.getBeacons().get(beaconInd);
-                            beacon = beacon.toBuilder().x(r-1).y(c/2).build();
+                            beacon = beacon.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getBeacons().set(beaconInd, beacon);
                             break;
 
@@ -235,7 +235,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.STAIRS;
                             int stairInd = findBuildingObjectIndex(currentFloor.getStairs(), stairIndex++);
                             Stairs stair = currentFloor.getStairs().get(stairInd);
-                            stair = stair.toBuilder().x(r-1).y(c/2).build();
+                            stair = stair.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getStairs().set(stairInd, stair);
                             break;
 
@@ -243,7 +243,7 @@ public final class Parser {
                             newMap[r - 1][c / 2] = FloorObject.ELEVATOR;
                             int elevatorInd = findBuildingObjectIndex(currentFloor.getElevators(), elevatorIndex++);
                             Elevator elevator = currentFloor.getElevators().get(elevatorInd);
-                            elevator = elevator.toBuilder().x(r-1).y(c/2).build();
+                            elevator = elevator.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getElevators().set(elevatorInd, elevator);
                             break;
 

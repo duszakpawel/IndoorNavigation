@@ -31,9 +31,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Mesh creator for building
+ * MeshProvider creator for building
  */
-public final class Mesh {
+public final class MeshProvider {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */
@@ -56,8 +56,9 @@ public final class Mesh {
     private static final int START_POINT_Y_SEED = 0;
     private static final int VERTEX_NOT_FOUND = -1;
 
-    @Inject
-    StrategyProvider processingStrategyProvider;
+    private final StrategyProvider processingStrategyProvider;
+    private final HeuristicFunction heuristicFunction;
+    private final UnionFind unionFind;
 
     private int idSeed;
 
@@ -66,16 +67,20 @@ public final class Mesh {
     private Map<Integer, List<Vertex>> stairsVerticesDict;
     private Map<Integer, List<Point>> beaconsDict;
 
+    @Inject
+    public MeshProvider(StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind){
+        this.processingStrategyProvider = strategyProvider;
+        this.heuristicFunction = heuristicFunction;
+        this.unionFind = unionFind;
+    }
+
     /**
      * Creates mesh (graph) for building
      *
      * @param building          Building object
-     * @param heuristicFunction heuristic function handler (to inject into graph)
-     * @param unionFind         union find structure (to inject into graph)
-     * @return Mesh result object
+     * @return MeshProvider result object
      */
-    public MeshResult create(Building building, StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind) {
-        processingStrategyProvider = strategyProvider;
+    public MeshResult create(Building building) {
         init();
 
         Graph graph = new GraphImpl(heuristicFunction, unionFind, new VertexComparator(heuristicFunction));
@@ -104,9 +109,9 @@ public final class Mesh {
 
         Comparator<Vertex> by2dPosition = (v1, v2) -> {
             if (v2.getPosition().getY() - v1.getPosition().getY() == 0) {
-                return Math.round(v2.getPosition().getX() - v1.getPosition().getX());
+                return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
             } else {
-                return Math.round(v2.getPosition().getY() - v1.getPosition().getY());
+                return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
             }
         };
 
