@@ -16,7 +16,7 @@ public final class DependencyComponentManager {
 
     public DependencyComponentManager(IndoorNavigationApp application) {
         applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(application.getBaseContext()))
+                .applicationModule(new ApplicationModule(application))
                 .build();
     }
 
