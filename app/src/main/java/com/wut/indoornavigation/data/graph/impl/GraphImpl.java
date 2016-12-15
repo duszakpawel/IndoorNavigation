@@ -55,7 +55,11 @@ public class GraphImpl implements Graph {
     @Override
     public void setVertices(@NonNull List<Vertex> vertices) {
         this.vertices.clear();
-        this.vertices.addAll(vertices);
+        for (Vertex vertex : vertices) {
+            if(!addVertex(vertex)){
+                throw new IllegalArgumentException("Attempt to add not unique vertex to graph.");
+            }
+        }
     }
 
     /**
@@ -298,7 +302,7 @@ public class GraphImpl implements Graph {
     }
 
     private boolean isVertexInGraph(Vertex vertex, Vertex v) {
-        return v.getId() == vertex.getId() || v.getPosition().equals(vertex.getPosition());
+        return v.getId() == vertex.getId();
     }
 
     /**

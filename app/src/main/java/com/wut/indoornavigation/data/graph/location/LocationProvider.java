@@ -26,7 +26,7 @@ public class LocationProvider {
     }
 
     /**
-     * Computes location of user depending on received becons signal strengths
+     * Computes location of user depending on received beacons signal strengths
      * @param positions position of beacons
      * @param weights weights of signals
      * @return User location computed by algorithm
@@ -34,7 +34,11 @@ public class LocationProvider {
     public Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
         if (positions.size() != weights.size()) {
             // TODO: custom exception to be handled
-            throw new RuntimeException("Collections must have equal length.");
+            throw new IllegalArgumentException("Collections must have equal length.");
+        }
+
+        if(positions.size()==0){
+            throw new IllegalArgumentException("No points were provided to approximate.");
         }
 
         double xNominator = 0;
