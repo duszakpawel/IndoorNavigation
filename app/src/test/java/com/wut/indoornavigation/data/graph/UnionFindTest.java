@@ -7,7 +7,7 @@ import org.junit.Test;
 public class UnionFindTest {
 
     @Test
-    public void unionFindTest_Success() {
+    public void unionFindTestSuccess() {
         UnionFind unionFind = new UnionFind();
         unionFind.initialize(3);
         unionFind.union(0, 1);
@@ -16,7 +16,7 @@ public class UnionFindTest {
     }
 
     @Test
-    public void unionFindTest2_Success() {
+    public void unionFindTestTwoSuccess() {
         UnionFind unionFind = new UnionFind();
         unionFind.initialize(3);
         unionFind.union(0, 1);
@@ -25,4 +25,12 @@ public class UnionFindTest {
         Assert.assertEquals(unionFind.connected(0, 2), true);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void unionFindTestForNotInitializedStructureShouldThrowException() {
+        UnionFind unionFind = new UnionFind();
+        unionFind.union(0, 1);
+        unionFind.union(0, 2);
+        Assert.assertEquals(unionFind.connected(0, 1), true);
+        Assert.assertEquals(unionFind.connected(0, 2), true);
+    }
 }
