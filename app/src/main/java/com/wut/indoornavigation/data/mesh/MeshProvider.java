@@ -109,9 +109,9 @@ public final class MeshProvider {
 
         Comparator<Vertex> by2dPosition = (v1, v2) -> {
             if (v2.getPosition().getY() - v1.getPosition().getY() == 0) {
-                return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
+                return Math.round(v2.getPosition().getX() - v1.getPosition().getX());
             } else {
-                return Math.round(v1.getPosition().getY() - v2.getPosition().getY());
+                return Math.round(v2.getPosition().getY() - v1.getPosition().getY());
             }
         };
 
@@ -310,13 +310,13 @@ public final class MeshProvider {
 
     private Vertex processCell(int x, int y, FloorObject[][] enumMap, int floorNumber, boolean[][] visited, Graph graph) {
         if (visited[x][y]) {
-            return graph.getVertexByCoordinates((float) x / 2, (float) y / 2, floorNumber);
+            return graph.getVertexByCoordinates((float) y / 2, (float) x / 2, floorNumber);
         }
 
         visited[x][y] = true;
 
         ProcessingStrategy strategy = processingStrategyProvider.provideStrategy(enumMap[x][y]);
-        Point coordinates = new Point((float) x / 2, (float) y / 2, floorNumber);
+        Point coordinates = new Point((float) y / 2, (float) x / 2, floorNumber);
 
         Map<Integer, List<Vertex>> elements;
         switch (enumMap[x][y]) {
@@ -373,7 +373,7 @@ public final class MeshProvider {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
 
-                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ()) {
+                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ() && weight!=DIAGONAL_EDGE_WEIGHT) {
                         graph.addEdge(new Edge(v, vertex, weight));
                         graph.addEdge(new Edge(vertex, v, weight));
                     }
