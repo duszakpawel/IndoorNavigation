@@ -62,7 +62,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         pathPaint.setStrokeJoin(Paint.Join.ROUND);
         pathPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        pathPaint.setPathEffect(new CornerPathEffect(100));
+        pathPaint.setPathEffect(new CornerPathEffect( 360.0f));//100));
         pathPaint.setAntiAlias(true);
 
         getMapHeight(context);
@@ -95,7 +95,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex, int stepWidth, int stepHeight) {
         PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
-        Vertex start = mesh.getDestinationPoints().get(0).get(0);
+        Vertex start = mesh.getDestinationPoints().get(0).get(1);
         Vertex end = mesh.getDestinationPoints().get(destinationFloorNumber).get(destinationVertexIndex);
 
         List<Vertex> vertexPath = pathFinder.aStar(start, end);
