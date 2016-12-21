@@ -35,6 +35,7 @@ import java.util.Map;
  */
 public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngine {
     private static final float STROKE_WIDTH = 10f;
+    public static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
     private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private final SparseArray<Bitmap> pathBitmaps;
@@ -61,14 +62,12 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         pathPaint.setStrokeJoin(Paint.Join.ROUND);
         pathPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        pathPaint.setPathEffect(new CornerPathEffect( 360.0f));//100));
+        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
         pathPaint.setAntiAlias(true);
 
         getMapHeight(context);
         getMapWidth(context);
     }
-
-
 
     /**
      * Computes path between point and destination point on map
@@ -78,10 +77,10 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      * @param destinationVertexIndex destination vertex index in vertices list
      * @return list of scaled points (path)
      */
-    private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex, int stepWidth, int stepHeight) {
+    private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
         PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
-        Vertex start = mesh.getGraph().getVertices().get(0);//.getMeshDetails().destinationVerticesDict.get(0).get(0);
+        Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
         Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         List<Vertex> vertexPath = pathFinder.aStar(start, end);
@@ -109,9 +108,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
-        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex, stepWidth, stepHeight);
-
-        //Map<Integer, List<Point>> scaledCurvedPath = pathFactory.produceSmoothPath(points);
+        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex);
 
         Map<Integer, List<Point>> smoothedPaths = pathFactory.getScaledSmoothPath(stepWidth, stepHeight, points, building, mesh);
 
@@ -126,8 +123,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
             pathBitmaps.put(floorNumber, bitmap);
         }
     }
-
-
 
     @NonNull
     @Override

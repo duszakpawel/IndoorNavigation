@@ -81,6 +81,10 @@ public class PathFactoryImpl implements PathFactory {
 
             List<Point> pointsToScale = smoothedPaths.get(floorNumber);
 
+            if(pointsToScale==null || pointsToScale.isEmpty()){
+                continue;
+            }
+
             for (int i = 0; i < pointsToScale.size(); i++) {
                 Point scaledPoint = calculateScaledPoint(stepWidth, stepHeight, pointsToScale.get(i));
                 pointsToScale.set(i, scaledPoint);
