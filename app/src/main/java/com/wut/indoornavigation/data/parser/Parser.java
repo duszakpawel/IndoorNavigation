@@ -11,7 +11,6 @@ import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,80 +49,51 @@ public final class Parser {
     }
 
     public Building parse(String filename) {
-        List<Floor> floors = new ArrayList<>();
-        FloorObject[][] groundFloor = new FloorObject[][]{
-                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
-                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
-                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.ROOM, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
-                {FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
-                {FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE},
-                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER},
-                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
-                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.ROOM, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
-                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.WALL},
-                {FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.SPACE, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.WALL, FloorObject.CORNER, FloorObject.WALL, FloorObject.WALL, FloorObject.ROOM, FloorObject.CORNER},
+        try {
+            final File fXmlFile = new File(filename);
+            final DocumentBuilder dBuilder = documentBuilderFactory.newDocumentBuilder();
+            final Document document = dBuilder.parse(fXmlFile);
 
-        };
-        List<Room> doors = new ArrayList<>();
-        Room firstRoom = Room.builder().id(1).number(1).build();
-        doors.add(firstRoom);
-        Room secondRoom = Room.builder().id(2).number(2).build();
-        doors.add(secondRoom);
-        Room thirdRoom = Room.builder().id(3).number(3).build();
-        doors.add(thirdRoom);
-        List<Stairs> stairs = new ArrayList<>();
-        List<Elevator> elevators = new ArrayList<>();
-        floors.add(Floor.builder().enumMap(groundFloor).number(0).rooms(doors).stairs(stairs).elevators(elevators).build());
-        //floors.add(Floor.builder().enumMap(groundFloor).number(1).rooms(doors).stairs(stairs).elevators(elevators).build());
-        //floors.add(Floor.builder().enumMap(groundFloor).number(2).rooms(doors).stairs(stairs).elevators(elevators).build());
-        //floors.add(Floor.builder().enumMap(groundFloor).number(3).rooms(doors).stairs(stairs).elevators(elevators).build());
-        Building building = Building.builder().floors(floors).build();
-        return building;
-//        try {
-//            final File fXmlFile = new File(filename);
-//            final DocumentBuilder dBuilder = documentBuilderFactory.newDocumentBuilder();
-//            final Document document = dBuilder.parse(fXmlFile);
-//
-//            document.getDocumentElement().normalize();
-//
-//            final List<Floor> floorsList = new LinkedList<>();
-//
-//            final NodeList roomsNodes = document.getElementsByTagName(ROOMS_TAG);
-//
-//            for (int i = 0; i < roomsNodes.getLength(); i++) {
-//                final Node roomsNode = roomsNodes.item(i);
-//                int roomId = 0;
-//                if (roomsNode.getNodeType() == Node.ELEMENT_NODE) {
-//                    final Element roomsElement = (Element) roomsNode;
-//                    final List<Room> roomList = new LinkedList<>();
-//                    final NodeList roomNodes = roomsElement.getElementsByTagName(ROOM_TAG);
-//
-//                    for (int j = 0; j < roomNodes.getLength(); j++) {
-//                        final int roomNumber = Integer.parseInt(roomNodes.item(j).getTextContent());
-//                        roomList.add(Room.builder()
-//                                .id(roomId++)
-//                                .number(roomNumber)
-//                                .build());
-//                    }
-//
-//                    floorsList.add(Floor.builder()
-//                            .number(Integer.parseInt(roomsElement.getAttribute(FLOOR_NUMBER_ATTR_TAG)))
-//                            .rooms(roomList)
-//                            .build());
-//                }
-//            }//Floors and rooms added
-//
-//            addStairs(floorsList, document);
-//            addElevators(floorsList, document);
-//            addBeacons(floorsList, document);
-//            addMap(floorsList, document);
-//
-//            return Building.builder()
-//                    .floors(floorsList)
-//                    .build();
-//        } catch (Exception e) {
-//            throw new MapParseException("Error while parsing map", e);
-//        }
+            document.getDocumentElement().normalize();
+
+            final List<Floor> floorsList = new LinkedList<>();
+
+            final NodeList roomsNodes = document.getElementsByTagName(ROOMS_TAG);
+
+            for (int i = 0; i < roomsNodes.getLength(); i++) {
+                final Node roomsNode = roomsNodes.item(i);
+                int roomId = 0;
+                if (roomsNode.getNodeType() == Node.ELEMENT_NODE) {
+                    final Element roomsElement = (Element) roomsNode;
+                    final List<Room> roomList = new LinkedList<>();
+                    final NodeList roomNodes = roomsElement.getElementsByTagName(ROOM_TAG);
+
+                    for (int j = 0; j < roomNodes.getLength(); j++) {
+                        final int roomNumber = Integer.parseInt(roomNodes.item(j).getTextContent());
+                        roomList.add(Room.builder()
+                                .id(roomId++)
+                                .number(roomNumber)
+                                .build());
+                    }
+
+                    floorsList.add(Floor.builder()
+                            .number(Integer.parseInt(roomsElement.getAttribute(FLOOR_NUMBER_ATTR_TAG)))
+                            .rooms(roomList)
+                            .build());
+                }
+            }//Floors and rooms added
+
+            addStairs(floorsList, document);
+            addElevators(floorsList, document);
+            addBeacons(floorsList, document);
+            addMap(floorsList, document);
+
+            return Building.builder()
+                    .floors(floorsList)
+                    .build();
+        } catch (Exception e) {
+            throw new MapParseException("Error while parsing map", e);
+        }
     }
 
     private void addStairs(List<Floor> floors, Document document) {
