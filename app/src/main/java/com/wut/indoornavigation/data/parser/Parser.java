@@ -74,6 +74,9 @@ public final class Parser {
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
         floors.add(Floor.builder().enumMap(groundFloor).number(0).rooms(doors).stairs(stairs).elevators(elevators).build());
+        //floors.add(Floor.builder().enumMap(groundFloor).number(1).rooms(doors).stairs(stairs).elevators(elevators).build());
+        //floors.add(Floor.builder().enumMap(groundFloor).number(2).rooms(doors).stairs(stairs).elevators(elevators).build());
+        //floors.add(Floor.builder().enumMap(groundFloor).number(3).rooms(doors).stairs(stairs).elevators(elevators).build());
         Building building = Building.builder().floors(floors).build();
         return building;
 //        try {

@@ -24,10 +24,9 @@ import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.RenderEngine;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
-import com.wut.indoornavigation.render.path.PathSmoothingTool;
+import com.wut.indoornavigation.render.path.PathFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,15 +40,15 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     private final SparseArray<Bitmap> pathBitmaps;
     private final MeshProvider meshProvider;
     private final BuildingStorage storage;
-    private final PathSmoothingTool pathSmoothingTool;
+    private final PathFactory pathFactory;
 
     private MeshResult mesh;
     private Building building;
 
-    public PathFinderEngineImpl(MeshProvider meshProvider, BuildingStorage storage, PathSmoothingTool pathSmoothingTool) {
+    public PathFinderEngineImpl(MeshProvider meshProvider, BuildingStorage storage, PathFactory pathSmoothingTool) {
         this.meshProvider = meshProvider;
         this.storage = storage;
-        this.pathSmoothingTool = pathSmoothingTool;
+        this.pathFactory = pathSmoothingTool;
         pathBitmaps = new SparseArray<>();
     }
 
@@ -69,20 +68,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         getMapWidth(context);
     }
 
-    private void splitPathDueToFloorNumber(List<Point> points, Map<Integer, List<Point>> paths) {
-        for (final Point point : points) {
-            int floorNumber = (int) point.getZ();
-            List<Point> bufor;
-            if (paths.containsKey(floorNumber)) {
-                bufor = paths.get(floorNumber);
-            } else {
-                bufor = new ArrayList<>();
-                paths.put(floorNumber, bufor);
-            }
 
-            bufor.add(point);
-        }
-    }
 
     /**
      * Computes path between point and destination point on map
@@ -95,8 +81,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex, int stepWidth, int stepHeight) {
         PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
-        Vertex start = mesh.getDestinationPoints().get(0).get(1);
-        Vertex end = mesh.getDestinationPoints().get(destinationFloorNumber).get(destinationVertexIndex);
+        Vertex start = mesh.getGraph().getVertices().get(0);//.getMeshDetails().destinationVerticesDict.get(0).get(0);
+        Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         List<Vertex> vertexPath = pathFinder.aStar(start, end);
 
@@ -104,19 +90,10 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         for (Vertex vertex : vertexPath) {
             Point position = vertex.getPosition();
-            Point coordinates = calculateScaledPoint(stepWidth, stepHeight, position);
-            result.add(coordinates);
+            result.add(position);
         }
 
         return result;
-    }
-
-    @NonNull
-    private Point calculateScaledPoint(int stepWidth, int stepHeight, Point position) {
-        float xValue = position.getX() * 2 * stepWidth + stepWidth / 2;
-        float yValue = position.getY() * 2 * stepWidth + 2 * stepHeight;
-
-        return new Point(xValue, yValue, position.getZ());
     }
 
     @Override
@@ -134,12 +111,13 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex, stepWidth, stepHeight);
 
-        Map<Integer, List<Point>> paths = new HashMap<>();
-        splitPathDueToFloorNumber(points, paths);
+        //Map<Integer, List<Point>> scaledCurvedPath = pathFactory.produceSmoothPath(points);
+
+        Map<Integer, List<Point>> smoothedPaths = pathFactory.getScaledSmoothPath(stepWidth, stepHeight, points, building, mesh);
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
-            Path path = produceCurvedPath(paths.get(floorNumber));
+            Path path = produceCurvedPath(smoothedPaths.get(floorNumber));
 
             final Bitmap bitmap = mapEngine.getMapForFloor(floorNumber).copy(Bitmap.Config.ARGB_8888, true);
             final Canvas canvas = new Canvas(bitmap);
@@ -148,6 +126,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
             pathBitmaps.put(floorNumber, bitmap);
         }
     }
+
+
 
     @NonNull
     @Override
@@ -185,6 +165,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     }
 
     private Path produceCurvedPath(List<Point> points) {
-        return pathSmoothingTool.produceSmoothPath(points);
+        return pathFactory.producePath(points);
     }
 }

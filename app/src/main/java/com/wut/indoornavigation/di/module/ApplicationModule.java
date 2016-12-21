@@ -8,10 +8,10 @@ import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.di.qualifier.BuildingPreferences;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.map.impl.MapEngineImpl;
+import com.wut.indoornavigation.render.path.PathFactory;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
-import com.wut.indoornavigation.render.path.PathSmoothingTool;
 import com.wut.indoornavigation.render.path.impl.PathFinderEngineImpl;
-import com.wut.indoornavigation.render.path.impl.PathSmoothingToolImpl;
+import com.wut.indoornavigation.render.path.impl.PathFactoryImpl;
 
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,7 +47,7 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider, BuildingStorage buildingStorage, PathSmoothingTool pathSmoothingTool) {
+    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider, BuildingStorage buildingStorage, PathFactory pathSmoothingTool) {
         return new PathFinderEngineImpl(meshProvider, buildingStorage, pathSmoothingTool);
     }
 
@@ -60,7 +60,7 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    PathSmoothingTool providePathSmoothingTool(){
-        return new PathSmoothingToolImpl();
+    PathFactory providePathSmoothingTool(){
+        return new PathFactoryImpl();
     }
 }
