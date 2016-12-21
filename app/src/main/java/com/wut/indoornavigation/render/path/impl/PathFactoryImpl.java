@@ -26,12 +26,6 @@ public class PathFactoryImpl implements PathFactory {
 
     }
 
-    /**
-     * Returns path of points
-     *
-     * @param points points list
-     * @return path of points
-     */
     @NonNull
     @Override
     public Path producePath(List<Point> points) {
@@ -53,16 +47,6 @@ public class PathFactoryImpl implements PathFactory {
         return path;
     }
 
-    /**
-     * Returns scaled and smooth path of points
-     *
-     * @param stepWidth  x-scale coefficient
-     * @param stepHeight y-scale coefficient
-     * @param points     points list
-     * @param building   building object
-     * @param mesh       mesh object
-     * @return scaled and smooth path of points
-     */
     @NonNull
     public Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points, Building building, MeshResult mesh) {
         Map<Integer, List<Point>> paths = splitPointsDueToFloorNumber(points);

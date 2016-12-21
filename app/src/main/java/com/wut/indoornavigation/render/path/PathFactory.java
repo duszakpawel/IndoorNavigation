@@ -19,6 +19,16 @@ public interface PathFactory {
     @NonNull
     Path producePath(List<Point> points);
 
+    /**
+     * Returns scaled and smooth path of points
+     *
+     * @param stepWidth  x-scale coefficient
+     * @param stepHeight y-scale coefficient
+     * @param points     points list
+     * @param building   building object
+     * @param mesh       mesh object
+     * @return scaled and smooth path of points
+     */
     @NonNull
     Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points, Building building, MeshResult mesh);
 }
