@@ -13,7 +13,7 @@ import javax.inject.Singleton;
  * Vertex comparator class for aStar implementation
  */
 @Singleton
-public class VertexComparator implements Comparator<Vertex> {
+public class VertexComparator implements Comparator<Integer> {
 
     private final HeuristicFunction heuristicFunction;
     private final List<Vertex> vertices;
@@ -50,9 +50,9 @@ public class VertexComparator implements Comparator<Vertex> {
      * @return number less than 0 if x < y, 0 if x == y, otherwise number greater than 0
      */
     @Override
-    public int compare(Vertex x, Vertex y) {
-        final double xSum = heuristicFunction.execute(x, target) + distance[vertices.indexOf(x)];
-        final double ySum = heuristicFunction.execute(y, target) + distance[vertices.indexOf(y)];
+    public int compare(Integer x, Integer y) {
+        final double xSum = heuristicFunction.execute(vertices.get(x), target) + distance[x];
+        final double ySum = heuristicFunction.execute(vertices.get(y), target) + distance[y];
 
         return (int)(xSum - ySum);
     }

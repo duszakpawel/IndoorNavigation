@@ -30,6 +30,7 @@ public class GraphImpl implements Graph {
     private final UnionFind close;
     private final VertexComparator comparator;
     private final List<Vertex> vertices;
+    private final Map<Float, Map<Float, Map<Float, Integer>>> spaceMap;
     private final Map<Vertex, List<Edge>> edges;
 
     /**
@@ -45,6 +46,7 @@ public class GraphImpl implements Graph {
         this.comparator = comparator;
         this.vertices = new ArrayList<>();
         this.edges = new HashMap<>();
+        this.spaceMap = new HashMap<>();
     }
 
     /**
@@ -170,22 +172,21 @@ public class GraphImpl implements Graph {
         comparator.initialize(vertices, distance, t);
         close.initialize(verticesCount);
 
-        final PriorityQueue<Vertex> open = new PriorityQueue<>(verticesCount, comparator);
-        open.add(s);
+        final PriorityQueue<Integer> open = new PriorityQueue<>(verticesCount, comparator);
+        open.add(sIndex);
 
         while (!open.isEmpty()) {
-            Vertex u = open.peek();
-            int uIndex = vertices.indexOf(u);
-            for (final Vertex iVertex : open) {
-                final int iIndex = vertices.indexOf(iVertex);
+            int uIndex = open.peek();
+            Vertex u = vertices.get(uIndex);
 
+            for (final int iIndex : open) {
                 if (distance[iIndex] + heuristicFunction.execute(vertices.get(iIndex), t) <= distance[uIndex] + heuristicFunction.execute(vertices.get(uIndex), t)) {
-                    u = iVertex;
-                    uIndex = vertices.indexOf(u);
+                    u = vertices.get(iIndex);
+                    uIndex = iIndex;
                 }
             }
 
-            open.remove(u);
+            open.remove(uIndex);
             close.union(uIndex);
             if (vertices.get(uIndex).equals(t)) {
                 break;
@@ -204,8 +205,8 @@ public class GraphImpl implements Graph {
                     }
                 }
                 if (!close.connected(wIndex)) {
-                    if (!open.contains(wVertex)) {
-                        open.add(wVertex);
+                    if (!open.contains(wIndex)) {
+                        open.add(wIndex);
                         distance[wIndex] = INFINITY;
                     }
                     if (distance[wIndex] > distance[uIndex] + uwWeight) {
@@ -269,14 +270,26 @@ public class GraphImpl implements Graph {
      */
     @Override
     public Vertex getVertexByCoordinates(float x, float y, int floorNumber) {
-        for (Vertex vertex : vertices) {
-            Point coordinates = vertex.getPosition();
-            if (areCoordinatesEqual(x, y, floorNumber, coordinates)) {
-                return vertex;
-            }
+//        for (Vertex vertex : vertices) {
+//            Point coordinates = vertex.getPosition();
+//            if (areCoordinatesEqual(x, y, floorNumber, coordinates)) {
+//                return vertex;
+//            }
+//        }
+//
+//        return null;
+        if(!spaceMap.containsKey(x)){
+            return null;
         }
-
-        return null;
+        Map<Float, Map<Float, Integer>> mapTwo = spaceMap.get(x);
+        if(!mapTwo.containsKey(y)){
+            return null;
+        }
+        Map<Float, Integer> mapOne = mapTwo.get(y);
+        if(!mapOne.containsKey((float)floorNumber)){
+            return null;
+        }
+        return vertices.get(mapOne.get((float)floorNumber));
     }
 
     private boolean areCoordinatesEqual(float x, float y, int floorNumber, Point coordinates) {
@@ -291,18 +304,40 @@ public class GraphImpl implements Graph {
      */
     @Override
     public boolean addVertex(Vertex vertex) {
-        for (Vertex v : vertices) {
-            if (isVertexInGraph(vertex, v)) {
-                return false;
-            }
+        if(!spaceMap.containsKey(vertex.getPosition().getX())){
+            Map<Float, Map<Float, Integer>> twoMap = new HashMap<>();
+            spaceMap.put(vertex.getPosition().getX(), twoMap);
+            Map<Float, Integer> oneMap = new HashMap<>();
+            twoMap.put(vertex.getPosition().getY(), oneMap);
+            oneMap.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
         }
-        vertices.add(vertex);
+        Map<Float, Map<Float, Integer>> mapThree = spaceMap.get(vertex.getPosition().getX());
+        if(!mapThree.containsKey(vertex.getPosition().getY())){
+            Map<Float, Integer> twoMap = new HashMap<>();
+            mapThree.put(vertex.getPosition().getY(), twoMap);
+            twoMap.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
+        }
+        Map<Float, Integer> mapTwo = mapThree.get(vertex.getPosition().getY());
+        if(!mapTwo.containsKey(vertex.getPosition().getZ())){
+            mapTwo.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
+        } else{
+            return false;
+        }
 
-        return true;
-    }
+//        for (Vertex v : vertices) {
+//            if (isVertexInGraph(vertex, v)) {
+//                return false;
+//            }
+//        }
+//        vertices.add(vertex);
 
-    private boolean isVertexInGraph(Vertex vertex, Vertex v) {
-        return v.getId() == vertex.getId();
+ //       return true;
     }
 
     /**
