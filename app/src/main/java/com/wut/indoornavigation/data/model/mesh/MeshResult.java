@@ -2,6 +2,7 @@ package com.wut.indoornavigation.data.model.mesh;
 
 import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.PathFinder;
+import com.wut.indoornavigation.data.mesh.MeshDetails;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
@@ -16,6 +17,5 @@ import lombok.Value;
 @Value
 public class MeshResult {
     Graph graph;
-    Map<Integer, List<Vertex>> destinationPoints;
-    Map<Integer, List<Point>> beaconsDict;
+    MeshDetails meshDetails;
 }

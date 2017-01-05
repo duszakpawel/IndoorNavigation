@@ -278,7 +278,7 @@ public class MeshProviderTest {
         Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building);
-        Assert.assertEquals(result.getDestinationPoints().get(0).size(), 2);
+        Assert.assertEquals(result.getMeshDetails().getDestinationVerticesDict().get(0).size(), 2);
     }
 
     @Test
@@ -612,7 +612,7 @@ public class MeshProviderTest {
         Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building);
-        Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
+        Assert.assertEquals(result.getMeshDetails().getBeaconsDict().get(0).size(), 2);
     }
 
     @Test
@@ -639,9 +639,9 @@ public class MeshProviderTest {
         Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building);
-        Assert.assertEquals(result.getBeaconsDict().get(0).size(), 2);
+        Assert.assertEquals(result.getMeshDetails().getBeaconsDict().get(0).size(), 2);
         Graph graph = result.getGraph();
-        List<Vertex> res = graph.aStar(result.getDestinationPoints().get(0).get(0), result.getDestinationPoints().get(0).get(1));
-        Assert.assertEquals(res.size(), 2);
+        List<Vertex> res = graph.aStar(result.getMeshDetails().getDestinationVerticesDict().get(0).get(0), result.getMeshDetails().getDestinationVerticesDict().get(0).get(1));
+        Assert.assertEquals(res.size(), 3);
     }
 }

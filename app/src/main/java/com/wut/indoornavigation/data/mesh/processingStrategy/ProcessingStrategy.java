@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.wut.indoornavigation.data.graph.Graph;
+import com.wut.indoornavigation.data.mesh.MeshDetails;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
@@ -26,7 +27,7 @@ public abstract class ProcessingStrategy {
      * @return added vertex to graph, otherwise null
      */
     @Nullable
-    public abstract Vertex process(Point position, Map<Integer, List<Vertex>> elements, int floorNumber, Graph graph, int id);
+    public abstract Vertex process(Point position, MeshDetails elements, int floorNumber, Graph graph, int id);
 
     @NonNull
     protected Vertex addVertexToGraph(Point position, Graph graph, int id) {
@@ -35,8 +36,8 @@ public abstract class ProcessingStrategy {
         return vertex;
     }
 
-    protected void addVertexToCorrespondingSet(Map<Integer, List<Vertex>> elements, int floorNumber, Vertex vertex) {
-        List<Vertex> vertices;
+    protected <T> void addVertexToCorrespondingSet(Map<Integer, List<T>> elements, int floorNumber, T vertex) {
+        List<T> vertices;
         if (elements.containsKey(floorNumber)) {
             vertices = elements.get(floorNumber);
         } else {

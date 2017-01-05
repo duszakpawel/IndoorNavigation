@@ -20,7 +20,8 @@ import java.util.PriorityQueue;
 /**
  * Implementation of graph interface
  */
-public class GraphImpl implements Graph {
+public class GraphImpl implements Graph
+{
     private static final int NO_PREVIOUS = -1;
     private static final int NOT_FOUND = -1;
     private static final double DIST_DEFAULT_VALUE = 0;
@@ -30,6 +31,7 @@ public class GraphImpl implements Graph {
     private final UnionFind close;
     private final VertexComparator comparator;
     private final List<Vertex> vertices;
+    private final Map<Float, Map<Float, Map<Float, Integer>>> spaceMap;
     private final Map<Vertex, List<Edge>> edges;
 
     /**
@@ -39,12 +41,14 @@ public class GraphImpl implements Graph {
      * @param close             close union-find set
      * @param comparator        vertex comparator for aStar purposes
      */
-    public GraphImpl(HeuristicFunction heuristicFunction, UnionFind close, VertexComparator comparator) {
+    public GraphImpl(HeuristicFunction heuristicFunction, UnionFind close, VertexComparator comparator)
+    {
         this.heuristicFunction = heuristicFunction;
         this.close = close;
         this.comparator = comparator;
         this.vertices = new ArrayList<>();
         this.edges = new HashMap<>();
+        this.spaceMap = new HashMap<>();
     }
 
     /**
@@ -53,10 +57,13 @@ public class GraphImpl implements Graph {
      * @param vertices vertices list
      */
     @Override
-    public void setVertices(@NonNull List<Vertex> vertices) {
+    public void setVertices(@NonNull List<Vertex> vertices)
+    {
         this.vertices.clear();
-        for (Vertex vertex : vertices) {
-            if(!addVertex(vertex)){
+        for (Vertex vertex : vertices)
+        {
+            if (!addVertex(vertex))
+            {
                 throw new IllegalArgumentException("Attempt to add not unique vertex to graph.");
             }
         }
@@ -69,22 +76,28 @@ public class GraphImpl implements Graph {
      * @return true if operation succeeded, otherwise false
      */
     @Override
-    public boolean addEdge(@NonNull Edge edge) {
+    public boolean addEdge(@NonNull Edge edge)
+    {
         Vertex from = edge.getFrom();
         Vertex to = edge.getTo();
 
-        if (vertices.contains(from) && vertices.contains(to)) {
-            if (!edges.containsKey(from)) {
+        if (vertices.contains(from) && vertices.contains(to))
+        {
+            if (!edges.containsKey(from))
+            {
                 List<Edge> outEdges = new ArrayList<>();
                 outEdges.add(edge);
                 edges.put(from, outEdges);
 
                 return true;
-            } else {
+            } else
+            {
                 List<Edge> fromOutEdges = edges.get(from);
-                if (fromOutEdges.contains(edge)) {
+                if (fromOutEdges.contains(edge))
+                {
                     return false;
-                } else {
+                } else
+                {
                     fromOutEdges.add(edge);
 
                     return true;
@@ -101,19 +114,23 @@ public class GraphImpl implements Graph {
      * @return vertices count
      */
     @Override
-    public int verticesCount() {
+    public int verticesCount()
+    {
         return vertices.size();
     }
 
     @Override
-    public List<Vertex> outVertices(@NonNull Vertex vertex) {
+    public List<Vertex> outVertices(@NonNull Vertex vertex)
+    {
         List<Edge> outEdges = edges.get(vertex);
         List<Vertex> outVertices = new ArrayList<>();
-        if (outEdges == null || outEdges.isEmpty()) {
+        if (outEdges == null || outEdges.isEmpty())
+        {
             return outVertices;
         }
 
-        for (final Edge outEdge : outEdges) {
+        for (final Edge outEdge : outEdges)
+        {
             outVertices.add(outEdge.getTo());
         }
         return outVertices;
@@ -126,12 +143,15 @@ public class GraphImpl implements Graph {
      * @return list of edges
      */
     @Override
-    public List<Edge> outEdges(int vertexId) {
+    public List<Edge> outEdges(int vertexId)
+    {
         Vertex vertex;
         int verticesCount = vertices.size();
-        for (int i = 0; i < verticesCount; i++) {
+        for (int i = 0; i < verticesCount; i++)
+        {
             Vertex v = vertices.get(i);
-            if (v.getId() == vertexId) {
+            if (v.getId() == vertexId)
+            {
                 vertex = v;
                 return edges.get(vertex);
             }
@@ -149,19 +169,22 @@ public class GraphImpl implements Graph {
      * @return (ordered list of vertices)
      */
     @Override
-    public List<Vertex> aStar(Vertex s, Vertex t) {
+    public List<Vertex> aStar(Vertex s, Vertex t)
+    {
         final int verticesCount = verticesCount();
         final double[] distance = new double[verticesCount];
         final int[] previous = new int[verticesCount];
 
-        for (int i = 0; i < verticesCount; i++) {
+        for (int i = 0; i < verticesCount; i++)
+        {
             distance[i] = INFINITY;
             previous[i] = NO_PREVIOUS;
         }
 
         final int sIndex = vertices.indexOf(s);
 
-        if (sIndex == NOT_FOUND) {
+        if (sIndex == NOT_FOUND)
+        {
             return new ArrayList<>();
         }
 
@@ -170,58 +193,69 @@ public class GraphImpl implements Graph {
         comparator.initialize(vertices, distance, t);
         close.initialize(verticesCount);
 
-        final PriorityQueue<Vertex> open = new PriorityQueue<>(verticesCount, comparator);
-        open.add(s);
+        final PriorityQueue<Integer> open = new PriorityQueue<>(verticesCount, comparator);
+        open.add(sIndex);
 
-        while (!open.isEmpty()) {
-            Vertex u = open.peek();
-            int uIndex = vertices.indexOf(u);
-            for (final Vertex iVertex : open) {
-                final int iIndex = vertices.indexOf(iVertex);
+        while (!open.isEmpty())
+        {
+            int uIndex = open.peek();
+            Vertex u = vertices.get(uIndex);
 
-                if (distance[iIndex] + heuristicFunction.execute(vertices.get(iIndex), t) <= distance[uIndex] + heuristicFunction.execute(vertices.get(uIndex), t)) {
-                    u = iVertex;
-                    uIndex = vertices.indexOf(u);
+            for (final int iIndex : open)
+            {
+                if (distance[iIndex] + heuristicFunction.execute(vertices.get(iIndex), t) <= distance[uIndex] + heuristicFunction.execute(vertices.get(uIndex), t))
+                {
+                    u = vertices.get(iIndex);
+                    uIndex = iIndex;
                 }
             }
 
-            open.remove(u);
+            open.remove(uIndex);
             close.union(uIndex);
-            if (vertices.get(uIndex).equals(t)) {
+            if (vertices.get(uIndex).equals(t))
+            {
                 break;
             }
 
             final List<Vertex> outVertices = outVertices(u);
-            for (final Vertex wVertex : outVertices) {
+            for (final Vertex wVertex : outVertices)
+            {
                 final int wIndex = vertices.indexOf(wVertex);
                 double uwWeight = 0;
 
                 final List<Edge> uOutEdges = edges.get(vertices.get(uIndex));
-                for (final Edge uOutEdge : uOutEdges) {
-                    if (uOutEdge.getTo() == wVertex) {
+                for (final Edge uOutEdge : uOutEdges)
+                {
+                    if (uOutEdge.getTo() == wVertex)
+                    {
                         uwWeight = uOutEdge.getWeight();
                         break;
                     }
                 }
-                if (!close.connected(wIndex)) {
-                    if (!open.contains(wVertex)) {
-                        open.add(wVertex);
+                if (!close.connected(wIndex))
+                {
+                    if (!open.contains(wIndex))
+                    {
+                        open.add(wIndex);
                         distance[wIndex] = INFINITY;
                     }
-                    if (distance[wIndex] > distance[uIndex] + uwWeight) {
+                    if (distance[wIndex] > distance[uIndex] + uwWeight)
+                    {
                         distance[wIndex] = distance[uIndex] + uwWeight;
                         previous[wIndex] = uIndex;
                     }
                 }
             }
         }
-        previous[sIndex]= NO_PREVIOUS;
+        previous[sIndex] = NO_PREVIOUS;
         return reproducePath(previous, vertices.indexOf(t));
     }
 
-    private List<Vertex> reproducePath(int[] previous, int targetIndex) {
+    private List<Vertex> reproducePath(int[] previous, int targetIndex)
+    {
         final List<Vertex> result = new ArrayList<>();
-        while (targetIndex != NO_PREVIOUS) {
+        while (targetIndex != NO_PREVIOUS)
+        {
             result.add(0, vertices.get(targetIndex));
             targetIndex = previous[targetIndex];
         }
@@ -229,9 +263,12 @@ public class GraphImpl implements Graph {
         return result;
     }
 
-    private Vertex findVertex(int id) {
-        for (final Vertex vertex : vertices) {
-            if (vertex.getId() == id) {
+    private Vertex findVertex(int id)
+    {
+        for (final Vertex vertex : vertices)
+        {
+            if (vertex.getId() == id)
+            {
                 return vertex;
             }
         }
@@ -248,11 +285,13 @@ public class GraphImpl implements Graph {
      * @return (ordered list of vertices)
      */
     @Override
-    public List<Vertex> aStar(int s, int t) {
+    public List<Vertex> aStar(int s, int t)
+    {
         final Vertex sVertex = findVertex(s);
         final Vertex tVertex = findVertex(t);
 
-        if (sVertex == null || tVertex == null) {
+        if (sVertex == null || tVertex == null)
+        {
             throw new RuntimeException("One ore more vertices does not exist in graph.");
         }
 
@@ -268,18 +307,27 @@ public class GraphImpl implements Graph {
      * @return desired vertex
      */
     @Override
-    public Vertex getVertexByCoordinates(float x, float y, int floorNumber) {
-        for (Vertex vertex : vertices) {
-            Point coordinates = vertex.getPosition();
-            if (areCoordinatesEqual(x, y, floorNumber, coordinates)) {
-                return vertex;
-            }
+    public Vertex getVertexByCoordinates(float x, float y, int floorNumber)
+    {
+        if (!spaceMap.containsKey(x))
+        {
+            return null;
         }
-
-        return null;
+        Map<Float, Map<Float, Integer>> mapTwo = spaceMap.get(x);
+        if (!mapTwo.containsKey(y))
+        {
+            return null;
+        }
+        Map<Float, Integer> mapOne = mapTwo.get(y);
+        if (!mapOne.containsKey((float) floorNumber))
+        {
+            return null;
+        }
+        return vertices.get(mapOne.get((float) floorNumber));
     }
 
-    private boolean areCoordinatesEqual(float x, float y, int floorNumber, Point coordinates) {
+    private boolean areCoordinatesEqual(float x, float y, int floorNumber, Point coordinates)
+    {
         return coordinates.getX() == x && coordinates.getY() == y && coordinates.getZ() == floorNumber;
     }
 
@@ -290,19 +338,50 @@ public class GraphImpl implements Graph {
      * @return true if vertex was added, otherwise false
      */
     @Override
-    public boolean addVertex(Vertex vertex) {
-        for (Vertex v : vertices) {
-            if (isVertexInGraph(vertex, v)) {
-                return false;
+    public boolean addVertex(Vertex vertex)
+    {
+        if (vertex.getPosition() == null)
+        {
+            for (Vertex v : vertices)
+            {
+                if (vertex.getId() == v.getId())
+                {
+                    return false;
+                }
             }
+            vertices.add(vertex);
+
+            return true;
         }
-        vertices.add(vertex);
-
-        return true;
-    }
-
-    private boolean isVertexInGraph(Vertex vertex, Vertex v) {
-        return v.getId() == vertex.getId();
+        if (!spaceMap.containsKey(vertex.getPosition().getX()))
+        {
+            Map<Float, Map<Float, Integer>> twoMap = new HashMap<>();
+            spaceMap.put(vertex.getPosition().getX(), twoMap);
+            Map<Float, Integer> oneMap = new HashMap<>();
+            twoMap.put(vertex.getPosition().getY(), oneMap);
+            oneMap.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
+        }
+        Map<Float, Map<Float, Integer>> mapThree = spaceMap.get(vertex.getPosition().getX());
+        if (!mapThree.containsKey(vertex.getPosition().getY()))
+        {
+            Map<Float, Integer> twoMap = new HashMap<>();
+            mapThree.put(vertex.getPosition().getY(), twoMap);
+            twoMap.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
+        }
+        Map<Float, Integer> mapTwo = mapThree.get(vertex.getPosition().getY());
+        if (!mapTwo.containsKey(vertex.getPosition().getZ()))
+        {
+            mapTwo.put(vertex.getPosition().getZ(), vertices.size());
+            vertices.add(vertex);
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
     /**
@@ -313,14 +392,18 @@ public class GraphImpl implements Graph {
      * @return true if yes, otherwise false
      */
     @Override
-    public boolean containsEdge(int vId, int wId) {
+    public boolean containsEdge(int vId, int wId)
+    {
         List<Edge> vOutEdges = outEdges(vId);
-        if (vOutEdges == null) {
+        if (vOutEdges == null)
+        {
             return false;
         }
 
-        for (Edge vOutEdge : vOutEdges) {
-            if (vOutEdge.getTo().getId() == wId) {
+        for (Edge vOutEdge : vOutEdges)
+        {
+            if (vOutEdge.getTo().getId() == wId)
+            {
                 return true;
             }
         }
@@ -335,7 +418,8 @@ public class GraphImpl implements Graph {
      */
     @VisibleForTesting
     @Override
-    public List<Vertex> getVertices() {
+    public List<Vertex> getVertices()
+    {
         return vertices;
     }
 
@@ -346,7 +430,8 @@ public class GraphImpl implements Graph {
      */
     @VisibleForTesting
     @Override
-    public Map<Vertex, List<Edge>> getEdges() {
+    public Map<Vertex, List<Edge>> getEdges()
+    {
         return edges;
     }
 }

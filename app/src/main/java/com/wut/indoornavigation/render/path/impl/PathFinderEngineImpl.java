@@ -24,9 +24,9 @@ import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.RenderEngine;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
+import com.wut.indoornavigation.render.path.PathFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,57 +34,54 @@ import java.util.Map;
  * Path finder engine implementation
  */
 public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngine {
+    private static final float STROKE_WIDTH = 10f;
+    public static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
     private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private final SparseArray<Bitmap> pathBitmaps;
     private final MeshProvider meshProvider;
     private final BuildingStorage storage;
+    private final PathFactory pathFactory;
 
     private MeshResult mesh;
     private Building building;
 
-    public PathFinderEngineImpl(MeshProvider meshProvider, BuildingStorage storage) {
+    public PathFinderEngineImpl(MeshProvider meshProvider, BuildingStorage storage, PathFactory pathSmoothingTool) {
         this.meshProvider = meshProvider;
         this.storage = storage;
+        this.pathFactory = pathSmoothingTool;
         pathBitmaps = new SparseArray<>();
     }
 
     private void init(Context context) {
         building = storage.getBuilding();
         pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
+
         pathPaint.setStyle(Paint.Style.STROKE);
+        pathPaint.setStrokeWidth(STROKE_WIDTH);
+        pathPaint.setStrokeJoin(Paint.Join.ROUND);
+        pathPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        // TODO: move to resources
-        pathPaint.setStrokeWidth(10f);
+        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
+        pathPaint.setAntiAlias(true);
 
-
-        pathPaint.setStrokeJoin(Paint.Join.ROUND);    // set the join to round you want
-        pathPaint.setStrokeCap(Paint.Cap.ROUND);      // set the paint cap to round too
-        pathPaint.setPathEffect(new CornerPathEffect(100) );   // set the path effect when they join.
-        pathPaint.setAntiAlias(true);                         // set anti alias so it smooths
         getMapHeight(context);
         getMapWidth(context);
-    }
-
-    @Override
-    public void prepareMesh(Building building) {
-        mesh = meshProvider.create(building);
     }
 
     /**
      * Computes path between point and destination point on map
      *
      * @param source                 source point
-     * @param destinationFloorNumber  destination floor number
+     * @param destinationFloorNumber destination floor number
      * @param destinationVertexIndex destination vertex index in vertices list
      * @return list of scaled points (path)
      */
-    private List<Point> computePath(Point source, int destinationFloorNumber,
-                                    int destinationVertexIndex, int stepWidth, int stepHeight) {
+    private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
         PathFinder pathFinder = mesh.getGraph();
-        // TODO: hardcoded for now, may throw exception
-        Vertex start = mesh.getDestinationPoints().get(1).get(0);
-        Vertex end = mesh.getDestinationPoints().get(destinationFloorNumber).get(destinationVertexIndex);
+        //TODO: provide source and use it
+        Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
+        Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         List<Vertex> vertexPath = pathFinder.aStar(start, end);
 
@@ -92,15 +89,16 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         for (Vertex vertex : vertexPath) {
             Point position = vertex.getPosition();
-            // TODO: provide
-            final float strokeWidth = 10f;
-            Point coordinates = new Point(position.getY() * 2 * stepWidth + stepWidth / 2, position.getX() * stepHeight + 2 * stepWidth + stepHeight - strokeWidth, position.getZ());
-            result.add(coordinates);
+            result.add(position);
         }
 
         return result;
     }
 
+    @Override
+    public void prepareMesh(Building building) {
+        mesh = meshProvider.create(building);
+    }
 
     @Override
     public void renderPath(MapEngine mapEngine, Context context, Point source, int destinationFloorNumber, int destinationVertexIndex) {
@@ -110,29 +108,18 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
-        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex, stepWidth, stepHeight);
+        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex);
 
-        Map<Integer, List<Point>> paths = new HashMap<>();
-        for (final Point point : points) {
-            int floorNumber = (int) point.getZ();
-            List<Point> bufor;
-            if (paths.containsKey(floorNumber)) {
-                bufor = paths.get(floorNumber);
-            } else {
-                bufor = new ArrayList<>();
-                paths.put(floorNumber, bufor);
-            }
-
-            bufor.add(point);
-        }
+        Map<Integer, List<Point>> smoothedPaths = pathFactory.getScaledSmoothPath(stepWidth, stepHeight, points, building, mesh);
 
         for (Floor floor : building.getFloors()) {
             int floorNumber = floor.getNumber();
+            Path path = produceCurvedPath(smoothedPaths.get(floorNumber));
+
             final Bitmap bitmap = mapEngine.getMapForFloor(floorNumber).copy(Bitmap.Config.ARGB_8888, true);
             final Canvas canvas = new Canvas(bitmap);
-            Path path = produceCurvedPath(paths.get(floorNumber));
-            canvas.drawPath(path, pathPaint);
 
+            canvas.drawPath(path, pathPaint);
             pathBitmaps.put(floorNumber, bitmap);
         }
     }
@@ -165,7 +152,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     public int destinationFloorNumber(int floorIndex) {
         Floor floor = storage.getBuilding().getFloors().get(floorIndex);
 
-        if(floor != null){
+        if (floor != null) {
             return floor.getNumber();
         }
 
@@ -173,36 +160,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     }
 
     private Path produceCurvedPath(List<Point> points) {
-        Path path = new Path();
-
-        if (points == null) {
-            return path;
-        }
-
-        if (points.size() == 2) {
-            Point first = points.get(0);
-            Point second = points.get(1);
-            path.moveTo(first.getX(), first.getY());
-            path.lineTo(second.getX(), second.getY());
-        }
-
-        boolean first = true;
-        for (int i = 0; i < points.size(); ) {
-            Point point = points.get(i);
-            if (first) {
-                first = false;
-                path.moveTo(point.getX(), point.getY());
-                i++;
-            } else if (i < points.size() - 1) {
-                Point next = points.get(i + 1);
-                path.quadTo(point.getX(), point.getY(), next.getX(), next.getY());
-                i += 2;
-            } else {
-                path.lineTo(point.getX(), point.getY());
-                i++;
-            }
-        }
-
-        return path;
+        return pathFactory.producePath(points);
     }
 }
