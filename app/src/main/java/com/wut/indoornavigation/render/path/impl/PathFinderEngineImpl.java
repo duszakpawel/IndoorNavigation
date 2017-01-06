@@ -82,13 +82,13 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
-        List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex);
+        final List<Point> points = computePath(source, destinationFloorNumber, destinationVertexIndex);
 
-        Map<Integer, List<Point>> smoothedPaths = pathFactory.getScaledSmoothPath(stepWidth, stepHeight, points, building, mesh);
+        final Map<Integer, List<Point>> smoothedPaths = pathFactory.getScaledSmoothPath(stepWidth, stepHeight, points, building, mesh);
 
-        for (Floor floor : building.getFloors()) {
-            int floorNumber = floor.getNumber();
-            Path path = produceCurvedPath(smoothedPaths.get(floorNumber));
+        for (final Floor floor : building.getFloors()) {
+            final int floorNumber = floor.getNumber();
+            final Path path = produceCurvedPath(smoothedPaths.get(floorNumber));
 
             final Bitmap bitmap = mapEngine.getMapForFloor(floorNumber).copy(Bitmap.Config.ARGB_8888, true);
             final Canvas canvas = new Canvas(bitmap);
@@ -110,8 +110,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     @Override
     public int getRoomIndex(int roomNumber) {
-        for (Floor floor : storage.getBuilding().getFloors()) {
-            for (Room room : floor.getRooms()) {
+        for (final Floor floor : storage.getBuilding().getFloors()) {
+            for (final Room room : floor.getRooms()) {
                 if (room.getNumber() == roomNumber) {
                     return floor.getRooms().indexOf(room);
                 }
@@ -124,7 +124,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     @Override
     public int destinationFloorNumber(int floorIndex) {
-        Floor floor = storage.getBuilding().getFloors().get(floorIndex);
+        final Floor floor = storage.getBuilding().getFloors().get(floorIndex);
 
         if (floor != null) {
             return floor.getNumber();
@@ -142,18 +142,16 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      * @return list of scaled points (path)
      */
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
-        PathFinder pathFinder = mesh.getGraph();
+        final PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
-        Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
-        Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
+        final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(1).get(0);
+        final Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
-        List<Vertex> vertexPath = pathFinder.aStar(start, end);
+        final List<Vertex> vertexPath = pathFinder.aStar(start, end);
+        final List<Point> result = new ArrayList<>(vertexPath.size());
 
-        List<Point> result = new ArrayList<>(vertexPath.size());
-
-        for (Vertex vertex : vertexPath) {
-            Point position = vertex.getPosition();
-            result.add(position);
+        for (final Vertex vertex : vertexPath) {
+            result.add(vertex.getPosition());
         }
 
         return result;

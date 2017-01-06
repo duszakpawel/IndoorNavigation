@@ -75,5 +75,12 @@ public interface MapFragmentContract {
          * @param floorIndex current floor index
          */
         void roomSelected(Context context, int roomNumber, int floorIndex);
+
+        /**
+         * Reacts when empty room selected
+         *
+         * @param floorIndex current floor index
+         */
+        void emptyRoomSelected(int floorIndex);
     }
 }

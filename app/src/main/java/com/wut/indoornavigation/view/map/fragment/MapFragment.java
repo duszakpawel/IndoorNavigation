@@ -139,11 +139,12 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final int floorIndex = floorSpinner.getSelectedItemPosition();
                 if (position == 0) {
+                    getPresenter().emptyRoomSelected(floorIndex);
                     return;
                 }
                 final int destinationRoomNumber = Integer.parseInt((String) roomSpinner.getSelectedItem());
-                final int floorIndex = floorSpinner.getSelectedItemPosition();
                 getPresenter().roomSelected(getContext(), destinationRoomNumber, floorIndex);
             }
 

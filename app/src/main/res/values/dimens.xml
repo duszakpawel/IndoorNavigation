@@ -24,5 +24,5 @@
     <dimen name="map_view_room_2_height">120dp</dimen>
     <dimen name="pathWidth">4dp</dimen>
 
-    <dimen name="splash_loading_padding_bottom">64dp</dimen>
+    <dimen name="splash_loading_margin_top">96dp</dimen>
 </resources>
