@@ -3,7 +3,6 @@ package com.wut.indoornavigation.data.storage;
 import android.content.SharedPreferences;
 
 import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.di.qualifier.BuildingPreferences;
 
@@ -21,15 +20,12 @@ public class BuildingStorage {
     private static final String BUILDING = "building";
 
     private final SharedPreferences preferences;
-    private final Moshi moshi;
     private final JsonAdapter<Building> jsonAdapter;
 
     @Inject
-    public BuildingStorage(@BuildingPreferences SharedPreferences preferences) {
+    public BuildingStorage(@BuildingPreferences SharedPreferences preferences, JsonAdapter<Building> jsonAdapter) {
         this.preferences = preferences;
-        moshi = new Moshi.Builder().build();
-        jsonAdapter = moshi.adapter(Building.class);
-
+        this.jsonAdapter = jsonAdapter;
     }
 
     /**

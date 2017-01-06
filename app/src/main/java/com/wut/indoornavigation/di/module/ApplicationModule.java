@@ -3,7 +3,10 @@ package com.wut.indoornavigation.di.module;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.wut.indoornavigation.data.mesh.MeshProvider;
+import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.di.qualifier.BuildingPreferences;
 import com.wut.indoornavigation.render.map.MapEngine;
@@ -90,5 +93,17 @@ public class ApplicationModule {
     @Provides
     PathFactory providePathFactory() {
         return new PathFactoryImpl();
+    }
+
+    @Singleton
+    @Provides
+    Moshi provideMoshi() {
+        return new Moshi.Builder().build();
+    }
+
+    @Singleton
+    @Provides
+    JsonAdapter<Building> provideBuildinJsonAdapter(Moshi moshi) {
+        return moshi.adapter(Building.class);
     }
 }
