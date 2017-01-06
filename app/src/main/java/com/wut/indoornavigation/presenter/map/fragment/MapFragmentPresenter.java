@@ -31,8 +31,6 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @NonNull
     private Subscription pathFinderSubscription;
 
-    private boolean initialized = false;
-
     @Inject
     MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
         this.mapEngine = mapEngine;
@@ -63,14 +61,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void roomSelected(Context context, int roomNumber, int floorIndex) {
-        // TODO: 12.12.2016 Start navigation to selected room
-        // these parameters need to be provided
-        if (!initialized) {
-            initialized = true;
-            return;
-        }
-
+    public void startNavigation(Context context, int roomNumber, int floorIndex) {
         getView().showProgressDialog();
         final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
@@ -90,6 +81,12 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
                 });
     }
 
+    @Override
+    public void emptyRoomSelected(int floorIndex) {
+        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
+        getView().showMap(mapEngine.getMapForFloor(destinationFloorNumber));
+    }
+
     private String[] parseFloorNumbers() {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         final String[] floorNumbers = new String[floorNumberList.size()];
@@ -102,9 +99,10 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
 
     private String[] parseRoomNumbers() {
         final List<Integer> roomNumberList = mapEngine.getRoomNumbers();
-        final String[] roomNumbers = new String[roomNumberList.size()];
+        final String[] roomNumbers = new String[roomNumberList.size() + 1];
+        roomNumbers[0] = "";
         for (int i = 0; i < roomNumberList.size(); i++) {
-            roomNumbers[i] = String.valueOf(roomNumberList.get(i));
+            roomNumbers[i + 1] = String.valueOf(roomNumberList.get(i));
         }
 
         return roomNumbers;

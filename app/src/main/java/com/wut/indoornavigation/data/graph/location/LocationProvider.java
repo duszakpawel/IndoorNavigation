@@ -2,6 +2,7 @@ package com.wut.indoornavigation.data.graph.location;
 
 import android.support.annotation.NonNull;
 
+import com.wut.indoornavigation.data.exception.CollectionSizeNoEqualsException;
 import com.wut.indoornavigation.data.model.Point;
 
 import java.util.List;
@@ -16,28 +17,28 @@ import javax.inject.Singleton;
 public class LocationProvider {
 
     /**
-     * Some constant value for weighted-centroid algorithm; in papers it's usually 1 or 1/2.
+     * Constant value for weighted-centroid algorithm; in papers it's usually 1 or 1/2.
      */
     private static final int K = 1;
 
     @Inject
-    public LocationProvider() {
+    LocationProvider() {
 
     }
 
     /**
      * Computes location of user depending on received beacons signal strengths
+     *
      * @param positions position of beacons
-     * @param weights weights of signals
+     * @param weights   weights of signals
      * @return User location computed by algorithm
      */
-    public Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
+    Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
         if (positions.size() != weights.size()) {
-            // TODO: custom exception to be handled
-            throw new IllegalArgumentException("Collections must have equal length.");
+            throw new CollectionSizeNoEqualsException("Collections must have equal length.");
         }
 
-        if(positions.size()==0){
+        if (positions.size() == 0) {
             throw new IllegalArgumentException("No points were provided to approximate.");
         }
 
@@ -54,6 +55,6 @@ public class LocationProvider {
             denominator += divider;
         }
 
-        return new Point((float)(xNominator / denominator), (float)(yNominator / denominator), (float)(zNominator / denominator));
+        return new Point((float) (xNominator / denominator), (float) (yNominator / denominator), (float) (zNominator / denominator));
     }
 }

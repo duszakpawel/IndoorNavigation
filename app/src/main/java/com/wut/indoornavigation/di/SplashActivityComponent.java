@@ -13,5 +13,10 @@ import dagger.Subcomponent;
 @Subcomponent(modules = SplashActivityModule.class)
 public interface SplashActivityComponent {
 
+    /**
+     * Injects dependencies to SplashActivity
+     *
+     * @param activity {@link SplashActivity}
+     */
     void inject(SplashActivity activity);
 }

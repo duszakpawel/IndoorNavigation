@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import com.wut.indoornavigation.R;
+import com.wut.indoornavigation.data.exception.MapNotFoundException;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -107,7 +108,7 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         if (bitmap != null) {
             return bitmap;
         }
-        throw new IllegalStateException("There is no map for floor: " + floorNumber);
+        throw new MapNotFoundException("There is no map for floor: " + floorNumber);
     }
 
     private void renderFloor(Bitmap bitmap, Floor floor) {
@@ -121,10 +122,10 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         int currentHeight = stepHeight * 2;
         int currentWidth = 0;
 
-        for (int i = 0 ; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 // TODO: make decision if the if statement will fix the bug with empty cells
-                if(map[i][j]!=null) {
+                if (map[i][j] != null) {
                     switch (map[i][j]) {
                         case SPACE:
                             break;

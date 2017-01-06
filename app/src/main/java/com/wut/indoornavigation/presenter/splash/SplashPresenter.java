@@ -32,7 +32,7 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
 
     @Inject
     SplashPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine,
-                           Parser parser, BuildingStorage storage) {
+                    Parser parser, BuildingStorage storage) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;
         this.parser = parser;
@@ -63,6 +63,9 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(getView()::hideLoadingView)
                 .subscribe(building -> Timber.d("Rendering map for %s", building),
-                        throwable -> Timber.e(throwable, "Error while rendering map"));
+                        throwable -> {
+                            Timber.e(throwable, "Error while rendering map");
+                            getView().showError(throwable.getMessage());
+                        });
     }
 }

@@ -1,7 +1,7 @@
 package com.wut.indoornavigation.data.mesh.processingStrategy.impl;
 
 import com.wut.indoornavigation.data.graph.Graph;
-import com.wut.indoornavigation.data.mesh.MeshDetails;
+import com.wut.indoornavigation.data.model.mesh.MeshDetails;
 import com.wut.indoornavigation.data.mesh.processingStrategy.ProcessingStrategy;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Vertex;

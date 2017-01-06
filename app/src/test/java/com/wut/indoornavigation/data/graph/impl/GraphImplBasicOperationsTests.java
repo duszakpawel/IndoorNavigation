@@ -16,10 +16,11 @@ import java.util.List;
 
 public class GraphImplBasicOperationsTests {
 
+    private static final int DEFAULT_EDGE_WEIGHT = 1;
+
     private HeuristicFunction heuristicFunction = new HeuristicFunction();
     private UnionFind unionFind = new UnionFind();
     private VertexComparator vertexComparator = new VertexComparator(heuristicFunction);
-    private final int DEFAULT_EDGE_WEIGHT = 1;
 
     @Test
     public void graphAddVertexTestForNotUniqueVertexShouldRejectVertex() {
