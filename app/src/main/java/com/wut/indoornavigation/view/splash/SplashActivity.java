@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
@@ -77,6 +78,11 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     @Override
     public void hideLoadingView() {
         loadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void checkPermission() {

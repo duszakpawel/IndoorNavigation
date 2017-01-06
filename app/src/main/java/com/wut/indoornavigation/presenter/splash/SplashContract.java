@@ -24,6 +24,12 @@ public interface SplashContract {
          * Hides loading view
          */
         void hideLoadingView();
+
+        /**
+         * Shows error to user
+         * @param message message for user
+         */
+        void showError(String message);
     }
 
     /**

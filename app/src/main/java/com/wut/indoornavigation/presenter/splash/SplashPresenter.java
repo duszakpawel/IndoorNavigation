@@ -63,6 +63,9 @@ public class SplashPresenter extends MvpNullObjectBasePresenter<SplashContract.V
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(getView()::hideLoadingView)
                 .subscribe(building -> Timber.d("Rendering map for %s", building),
-                        throwable -> Timber.e(throwable, "Error while rendering map"));
+                        throwable -> {
+                            Timber.e(throwable, "Error while rendering map");
+                            getView().showError(throwable.getMessage());
+                        });
     }
 }
