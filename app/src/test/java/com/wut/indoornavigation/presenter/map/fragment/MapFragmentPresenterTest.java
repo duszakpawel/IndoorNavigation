@@ -139,7 +139,7 @@ public class MapFragmentPresenterTest {
     }
 
     @Test
-    public void shouldHideProgressDialogWhenUserStartsNavigation() {
+    public void shouldHideProgressDialogWhenComputationCompleted() {
         //given
         //when
         presenter.startNavigation(context, ROOM_NUMBER, FLOOR_NUMBER);

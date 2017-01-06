@@ -28,7 +28,7 @@ import org.w3c.dom.NodeList;
  * Parser which parse document with building plan to proper clases
  */
 @Singleton
-public final class Parser {
+public class Parser {
 
     private static final String ROOMS_TAG = "Rooms";
     private static final String ROOM_TAG = "Room";
