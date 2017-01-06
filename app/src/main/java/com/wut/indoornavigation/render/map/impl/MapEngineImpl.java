@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import com.wut.indoornavigation.R;
+import com.wut.indoornavigation.data.exception.MapNotFoundException;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -107,7 +108,7 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         if (bitmap != null) {
             return bitmap;
         }
-        throw new IllegalStateException("There is no map for floor: " + floorNumber);
+        throw new MapNotFoundException("There is no map for floor: " + floorNumber);
     }
 
     private void renderFloor(Bitmap bitmap, Floor floor) {

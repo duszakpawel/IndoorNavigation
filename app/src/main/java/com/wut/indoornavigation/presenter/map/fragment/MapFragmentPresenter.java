@@ -61,7 +61,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void roomSelected(Context context, int roomNumber, int floorIndex) {
+    public void startNavigation(Context context, int roomNumber, int floorIndex) {
         getView().showProgressDialog();
         final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);

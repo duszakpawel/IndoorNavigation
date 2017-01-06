@@ -112,7 +112,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         if (roomSpinner.getSelectedItemPosition() != 0) {
             final int destinationRoomNumber = Integer.parseInt((String) roomSpinner.getSelectedItem());
             final int floorIndex = floorSpinner.getSelectedItemPosition();
-            getPresenter().roomSelected(getContext(), destinationRoomNumber, floorIndex);
+            getPresenter().startNavigation(getContext(), destinationRoomNumber, floorIndex);
         }
     }
 

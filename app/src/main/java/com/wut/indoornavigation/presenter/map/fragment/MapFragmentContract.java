@@ -68,13 +68,13 @@ public interface MapFragmentContract {
         void floorSelected(int position);
 
         /**
-         * Reacts when room has been selected
+         * Reacts when user starts navigation
          *
          * @param context    current context
          * @param roomNumber room number
          * @param floorIndex current floor index
          */
-        void roomSelected(Context context, int roomNumber, int floorIndex);
+        void startNavigation(Context context, int roomNumber, int floorIndex);
 
         /**
          * Reacts when empty room selected
