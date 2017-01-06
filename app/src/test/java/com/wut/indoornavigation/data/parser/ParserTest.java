@@ -5,6 +5,7 @@ import com.wut.indoornavigation.data.model.Floor;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,11 +23,13 @@ public class ParserTest {
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
     Parser parser = new Parser(documentBuilderFactory);
 
+    @Ignore
     @Test
     public void generalParseTest() {
         Building building = parser.parse("C:\\Users\\sa\\Desktop\\IndoorNavigation\\app\\src\\test\\resources\\test.xml");
     }
 
+    @Ignore
     @Test
     public void objectsCountTest() {
         Building building = parser.parse("C:\\Users\\sa\\Desktop\\IndoorNavigation\\app\\src\\test\\resources\\test.xml");
@@ -61,5 +64,5 @@ public class ParserTest {
         Assert.assertEquals(building.getFloors().get(secondFloorIndex).getElevators().size(), secondFloorElevatorCount);
         Assert.assertEquals(building.getFloors().get(secondFloorIndex).getStairs().size(), secondFloorStairsCount);
     }
-    
+
 }

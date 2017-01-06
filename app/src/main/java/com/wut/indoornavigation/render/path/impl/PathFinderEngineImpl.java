@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngine {
     private static final float STROKE_WIDTH = 10f;
-    public static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
+    private static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
     private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private final SparseArray<Bitmap> pathBitmaps;
@@ -67,32 +67,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         getMapHeight(context);
         getMapWidth(context);
-    }
-
-    /**
-     * Computes path between point and destination point on map
-     *
-     * @param source                 source point
-     * @param destinationFloorNumber destination floor number
-     * @param destinationVertexIndex destination vertex index in vertices list
-     * @return list of scaled points (path)
-     */
-    private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
-        PathFinder pathFinder = mesh.getGraph();
-        //TODO: provide source and use it
-        Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
-        Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
-
-        List<Vertex> vertexPath = pathFinder.aStar(start, end);
-
-        List<Point> result = new ArrayList<>(vertexPath.size());
-
-        for (Vertex vertex : vertexPath) {
-            Point position = vertex.getPosition();
-            result.add(position);
-        }
-
-        return result;
     }
 
     @Override
@@ -157,6 +131,32 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         }
 
         throw new IllegalArgumentException("Incorrect floor index.");
+    }
+
+    /**
+     * Computes path between point and destination point on map
+     *
+     * @param source                 source point
+     * @param destinationFloorNumber destination floor number
+     * @param destinationVertexIndex destination vertex index in vertices list
+     * @return list of scaled points (path)
+     */
+    private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
+        PathFinder pathFinder = mesh.getGraph();
+        //TODO: provide source and use it
+        Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
+        Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
+
+        List<Vertex> vertexPath = pathFinder.aStar(start, end);
+
+        List<Point> result = new ArrayList<>(vertexPath.size());
+
+        for (Vertex vertex : vertexPath) {
+            Point position = vertex.getPosition();
+            result.add(position);
+        }
+
+        return result;
     }
 
     private Path produceCurvedPath(List<Point> points) {

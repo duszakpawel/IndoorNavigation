@@ -57,6 +57,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
     /**
      * Creates new instance of {@link MapFragment}
+     *
      * @return new instance of {@link MapFragment}
      */
     public static MapFragment newInstance() {
@@ -138,9 +139,11 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                int destinationRoomNumber = Integer.parseInt((String)roomSpinner.getSelectedItem());
-                int floorIndex = floorSpinner.getSelectedItemPosition();
+                if (position == 0) {
+                    return;
+                }
+                final int destinationRoomNumber = Integer.parseInt((String) roomSpinner.getSelectedItem());
+                final int floorIndex = floorSpinner.getSelectedItemPosition();
                 getPresenter().roomSelected(getContext(), destinationRoomNumber, floorIndex);
             }
 

@@ -2,6 +2,7 @@ package com.wut.indoornavigation.presenter.map.fragment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.model.Point;
@@ -25,13 +26,14 @@ import timber.log.Timber;
 public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragmentContract.View>
         implements MapFragmentContract.Presenter {
 
+    @VisibleForTesting
+    boolean initialized;
+
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
 
     @NonNull
     private Subscription pathFinderSubscription;
-
-    private boolean initialized;
 
     @Inject
     MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
