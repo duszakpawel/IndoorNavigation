@@ -100,9 +100,10 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
 
     private String[] parseRoomNumbers() {
         final List<Integer> roomNumberList = mapEngine.getRoomNumbers();
-        final String[] roomNumbers = new String[roomNumberList.size()];
+        final String[] roomNumbers = new String[roomNumberList.size() + 1];
+        roomNumbers[0] = "";
         for (int i = 0; i < roomNumberList.size(); i++) {
-            roomNumbers[i] = String.valueOf(roomNumberList.get(i));
+            roomNumbers[i + 1] = String.valueOf(roomNumberList.get(i));
         }
 
         return roomNumbers;
