@@ -22,14 +22,15 @@ public class HeuristicFunction {
 
     /**
      * Calculates distance between two vertices in sense of heuristic function
-     * @param source source vertex
+     *
+     * @param source      source vertex
      * @param destination target vertex
      * @return distance between vertices in sense of heuristic function
      */
     public double execute(Vertex source, Vertex destination) {
-        double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());
-        double yDistance = abs(source.getPosition().getY() - destination.getPosition().getY());
-        double zDistance = abs(source.getPosition().getZ() - destination.getPosition().getZ());
+        final double xDistance = abs(source.getPosition().getX() - destination.getPosition().getX());
+        final double yDistance = abs(source.getPosition().getY() - destination.getPosition().getY());
+        final double zDistance = abs(source.getPosition().getZ() - destination.getPosition().getZ());
 
         return sqrt(pow(xDistance, 2) + pow(yDistance, 2) + pow(zDistance, 2));
     }

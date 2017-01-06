@@ -15,13 +15,15 @@ public interface MapEngine {
 
     /**
      * Renders building map
-     * @param context activity context
+     *
+     * @param context  activity context
      * @param building building object
      */
     void renderMap(Context context, @NonNull Building building);
 
     /**
      * Sets {@link OnMapReadyListener}
+     *
      * @param onMapReadyListener listener
      */
 
@@ -29,18 +31,21 @@ public interface MapEngine {
 
     /**
      * Gets floor numbers
+     *
      * @return floor numbers
      */
     List<Integer> getFloorNumbers();
 
     /**
      * Gets room numbers
+     *
      * @return room numbers
      */
     List<Integer> getRoomNumbers();
 
     /**
      * Gets map for selected floor
+     *
      * @param floorNumber selected floor number
      * @return floor map
      */

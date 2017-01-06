@@ -35,15 +35,15 @@ public final class MeshProvider {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */
-    private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
     /**
      * Edge weight for diagonal segment in mesh
      */
-    private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+    static final double DIAGONAL_EDGE_WEIGHT = 0.7;
     /**
      * Edge weight for elevator-elevator edge weight
      */
-    private static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    static final int EDGE_ELEVATOR_WEIGHT = 5000;
     /**
      * Edge weight for stairs-stairs edge weight
      */

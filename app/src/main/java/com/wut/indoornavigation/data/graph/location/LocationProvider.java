@@ -2,6 +2,7 @@ package com.wut.indoornavigation.data.graph.location;
 
 import android.support.annotation.NonNull;
 
+import com.wut.indoornavigation.data.exception.CollectionSizeNoEqualsException;
 import com.wut.indoornavigation.data.model.Point;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class LocationProvider {
     private static final int K = 1;
 
     @Inject
-    public LocationProvider() {
+    LocationProvider() {
 
     }
 
@@ -32,10 +33,9 @@ public class LocationProvider {
      * @param weights   weights of signals
      * @return User location computed by algorithm
      */
-    public Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
+    Point computeLocation(@NonNull List<Point> positions, @NonNull List<Float> weights) {
         if (positions.size() != weights.size()) {
-            // TODO: custom exception to be handled
-            throw new IllegalArgumentException("Collections must have equal length.");
+            throw new CollectionSizeNoEqualsException("Collections must have equal length.");
         }
 
         if (positions.size() == 0) {

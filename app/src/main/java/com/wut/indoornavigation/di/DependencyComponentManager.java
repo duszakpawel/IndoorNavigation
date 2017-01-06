@@ -22,6 +22,7 @@ public final class DependencyComponentManager {
 
     /**
      * Gets application component
+     *
      * @return {@link ApplicationComponent}
      */
     public ApplicationComponent getApplicationComponent() {
@@ -30,6 +31,7 @@ public final class DependencyComponentManager {
 
     /**
      * Gets map activity component
+     *
      * @return {@link MapActivityComponent}
      */
     public MapActivityComponent getMapActivityComponent() {
@@ -41,6 +43,7 @@ public final class DependencyComponentManager {
 
     /**
      * Gets splash activity component
+     *
      * @return {@link SplashActivityComponent}
      */
     public SplashActivityComponent getSplashActivityComponent() {

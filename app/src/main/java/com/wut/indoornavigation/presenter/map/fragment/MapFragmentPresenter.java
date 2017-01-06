@@ -31,7 +31,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @NonNull
     private Subscription pathFinderSubscription;
 
-    private boolean initialized = false;
+    private boolean initialized;
 
     @Inject
     MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
@@ -64,8 +64,6 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
 
     @Override
     public void roomSelected(Context context, int roomNumber, int floorIndex) {
-        // TODO: 12.12.2016 Start navigation to selected room
-        // these parameters need to be provided
         if (!initialized) {
             initialized = true;
             return;

@@ -34,6 +34,7 @@ public class BuildingStorage {
 
     /**
      * Gets building from memory
+     *
      * @return building object
      */
     public Building getBuilding() {
@@ -46,6 +47,7 @@ public class BuildingStorage {
 
     /**
      * Stores building in the memory
+     *
      * @param building building to be stored
      */
     public void storeBuilding(Building building) {

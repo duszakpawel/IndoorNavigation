@@ -28,9 +28,10 @@ public class VertexComparator implements Comparator<Integer> {
 
     /**
      * Initializes vertex comparator components
+     *
      * @param vertices vertices list
      * @param distance distance array
-     * @param target target vertex (for heuristic purposes)
+     * @param target   target vertex (for heuristic purposes)
      */
     public void initialize(List<Vertex> vertices, double[] distance, Vertex target) {
         this.target = target;
@@ -41,6 +42,7 @@ public class VertexComparator implements Comparator<Integer> {
 
     /**
      * Compares two vertices
+     *
      * @param x first vertex
      * @param y second vertex
      * @return number less than 0 if x < y, 0 if x == y, otherwise number greater than 0
@@ -50,6 +52,6 @@ public class VertexComparator implements Comparator<Integer> {
         final double xSum = heuristicFunction.execute(vertices.get(x), target) + distance[x];
         final double ySum = heuristicFunction.execute(vertices.get(y), target) + distance[y];
 
-        return (int)(xSum - ySum);
+        return (int) (xSum - ySum);
     }
 }

@@ -3,6 +3,7 @@ package com.wut.indoornavigation.data.graph.impl;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.wut.indoornavigation.data.exception.VertexNotExistException;
 import com.wut.indoornavigation.data.graph.Graph;
 import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
@@ -190,7 +191,7 @@ public class GraphImpl implements Graph {
         final Vertex tVertex = findVertex(t);
 
         if (sVertex == null || tVertex == null) {
-            throw new RuntimeException("One ore more vertices does not exist in graph.");
+            throw new VertexNotExistException("One ore more vertices does not exist in graph.");
         }
 
         return aStar(sVertex, tVertex);

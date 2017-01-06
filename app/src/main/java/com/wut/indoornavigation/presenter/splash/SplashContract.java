@@ -33,8 +33,9 @@ public interface SplashContract {
 
         /**
          * Prepares map for user
+         *
          * @param fileName map file name
-         * @param context current context
+         * @param context  current context
          */
         void prepareMap(String fileName, Context context);
     }

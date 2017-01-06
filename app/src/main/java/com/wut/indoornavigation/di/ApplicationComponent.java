@@ -20,6 +20,7 @@ public interface ApplicationComponent {
 
     /**
      * Adds {@link MapActivityComponent} dependencies to Application Component
+     *
      * @param module {@link MapActivityModule}
      * @return {@link MapActivityComponent}
      */
@@ -27,6 +28,7 @@ public interface ApplicationComponent {
 
     /**
      * Adds {@link SplashActivityComponent} dependencies to Application Component
+     *
      * @param module {@link SplashActivityModule}
      * @return {@link SplashActivityComponent}
      */
@@ -34,6 +36,7 @@ public interface ApplicationComponent {
 
     /**
      * Injects Application Component dependencies
+     *
      * @param indoorNavigationApp application
      */
     void inject(IndoorNavigationApp indoorNavigationApp);

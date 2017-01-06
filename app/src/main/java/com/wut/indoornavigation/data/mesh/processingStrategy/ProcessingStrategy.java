@@ -19,11 +19,12 @@ public abstract class ProcessingStrategy {
 
     /**
      * Process method invoked to process cell in FloorObject array
-     * @param position point position in 3D space (provided by algorithm)
-     * @param elements dictionary of elements of type corresponding to current sign
+     *
+     * @param position    point position in 3D space (provided by algorithm)
+     * @param elements    dictionary of elements of type corresponding to current sign
      * @param floorNumber floor number
-     * @param graph mesh
-     * @param id id for new vertex
+     * @param graph       mesh
+     * @param id          id for new vertex
      * @return added vertex to graph, otherwise null
      */
     @Nullable
@@ -31,7 +32,7 @@ public abstract class ProcessingStrategy {
 
     @NonNull
     protected Vertex addVertexToGraph(Point position, Graph graph, int id) {
-        Vertex vertex = Vertex.builder().id(id).position(position).build();
+        final Vertex vertex = Vertex.builder().id(id).position(position).build();
         graph.addVertex(vertex);
         return vertex;
     }

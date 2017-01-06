@@ -10,6 +10,9 @@ import com.wut.indoornavigation.data.model.mesh.MeshResult;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Path factory which produce path and scale and smooth path
+ */
 public interface PathFactory {
 
     /**

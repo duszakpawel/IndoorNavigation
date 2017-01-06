@@ -20,6 +20,7 @@ public class UnionFind {
 
     /**
      * Initializes set for union find
+     *
      * @param n elements count
      */
     public void initialize(int n) {
@@ -34,6 +35,7 @@ public class UnionFind {
     /**
      * Links p value with q value
      * If one of them is not in set then they are linked but value(s) may not be actually in set
+     *
      * @param p value
      * @param q value
      */
@@ -43,6 +45,7 @@ public class UnionFind {
 
     /**
      * Adds p value to set
+     *
      * @param p value
      */
     public boolean connected(int p) {
@@ -51,21 +54,23 @@ public class UnionFind {
 
     /**
      * Returns information whether p value belongs to the set
+     *
      * @param p value
      */
     public void union(int p) {
-        int q = id.length - 1;
+        final int q = id.length - 1;
         union(p, q);
     }
 
     /**
      * Returns information whether p value is connected with q value
+     *
      * @param p value
      * @param q value
      */
     public void union(int p, int q) {
-        int i = root(p);
-        int j = root(q);
+        final int i = root(p);
+        final int j = root(q);
         if (i == j) {
             return;
         }
@@ -77,7 +82,7 @@ public class UnionFind {
             sz[i] += sz[j];
         }
 
-        int k = root(p);
+        final int k = root(p);
         int l = root(id.length - 1);
         if (k == l) {
             return;

@@ -16,9 +16,9 @@ import java.util.List;
 public class GraphMocks {
 
     @Mock
-    static HeuristicFunction heuristicFunction = new HeuristicFunction();
+    static HeuristicFunction heuristicFunction;
     @Mock
-    static UnionFind unionFind = new UnionFind();
+    static UnionFind unionFind;
     @Mock
     private static VertexComparator vertexComparator = new VertexComparator(new HeuristicFunction());
     private static final int DEFAULT_EDGE_WEIGHT = 1;
