@@ -121,10 +121,10 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         int currentHeight = stepHeight * 2;
         int currentWidth = 0;
 
-        for (int i = 0 ; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 // TODO: make decision if the if statement will fix the bug with empty cells
-                if(map[i][j]!=null) {
+                if (map[i][j] != null) {
                     switch (map[i][j]) {
                         case SPACE:
                             break;

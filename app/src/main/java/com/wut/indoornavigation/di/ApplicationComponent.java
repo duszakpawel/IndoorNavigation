@@ -18,9 +18,23 @@ import dagger.Component;
  */
 public interface ApplicationComponent {
 
+    /**
+     * Adds {@link MapActivityComponent} dependencies to Application Component
+     * @param module {@link MapActivityModule}
+     * @return {@link MapActivityComponent}
+     */
     MapActivityComponent plus(MapActivityModule module);
 
+    /**
+     * Adds {@link SplashActivityComponent} dependencies to Application Component
+     * @param module {@link SplashActivityModule}
+     * @return {@link SplashActivityComponent}
+     */
     SplashActivityComponent plus(SplashActivityModule module);
 
+    /**
+     * Injects Application Component dependencies
+     * @param indoorNavigationApp application
+     */
     void inject(IndoorNavigationApp indoorNavigationApp);
 }

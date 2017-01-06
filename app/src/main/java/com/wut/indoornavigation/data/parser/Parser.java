@@ -24,6 +24,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Parser which parse document with building plan to proper clases
+ */
 @Singleton
 public final class Parser {
 
@@ -44,10 +47,16 @@ public final class Parser {
     private final DocumentBuilderFactory documentBuilderFactory;
 
     @Inject
-    public Parser(DocumentBuilderFactory documentBuilderFactory) {
+    Parser(DocumentBuilderFactory documentBuilderFactory) {
         this.documentBuilderFactory = documentBuilderFactory;
     }
 
+    /**
+     * Parse selected file
+     *
+     * @param filename selected file name
+     * @return parsed objects
+     */
     public Building parse(String filename) {
         try {
             final File fXmlFile = new File(filename);

@@ -12,6 +12,9 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Storage which contains parsed building objects in memory
+ */
 @Singleton
 public class BuildingStorage {
 
@@ -29,6 +32,10 @@ public class BuildingStorage {
 
     }
 
+    /**
+     * Gets building from memory
+     * @return building object
+     */
     public Building getBuilding() {
         try {
             return jsonAdapter.fromJson(preferences.getString(BUILDING, ""));
@@ -37,6 +44,10 @@ public class BuildingStorage {
         }
     }
 
+    /**
+     * Stores building in the memory
+     * @param building building to be stored
+     */
     public void storeBuilding(Building building) {
         preferences.edit().putString(BUILDING, jsonAdapter.toJson(building)).apply();
     }

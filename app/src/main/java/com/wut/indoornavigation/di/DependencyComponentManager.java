@@ -20,10 +20,18 @@ public final class DependencyComponentManager {
                 .build();
     }
 
+    /**
+     * Gets application component
+     * @return {@link ApplicationComponent}
+     */
     public ApplicationComponent getApplicationComponent() {
         return applicationComponent;
     }
 
+    /**
+     * Gets map activity component
+     * @return {@link MapActivityComponent}
+     */
     public MapActivityComponent getMapActivityComponent() {
         if (mapActivityComponent == null) {
             mapActivityComponent = applicationComponent.plus(new MapActivityModule());
@@ -31,6 +39,10 @@ public final class DependencyComponentManager {
         return mapActivityComponent;
     }
 
+    /**
+     * Gets splash activity component
+     * @return {@link SplashActivityComponent}
+     */
     public SplashActivityComponent getSplashActivityComponent() {
         if (splashActivityComponent == null) {
             splashActivityComponent = applicationComponent.plus(new SplashActivityModule());
@@ -38,10 +50,16 @@ public final class DependencyComponentManager {
         return splashActivityComponent;
     }
 
+    /**
+     * Releases splash activity component
+     */
     public void releaseSplashActivityComponent() {
         splashActivityComponent = null;
     }
 
+    /**
+     * Releases map activity component
+     */
     public void releaseMapActivityComponent() {
         mapActivityComponent = null;
     }

@@ -33,24 +33,47 @@ public class ApplicationModule {
         this.context = context;
     }
 
+    /**
+     * Provides Singleton MapEngine
+     *
+     * @return {@link MapEngineImpl}
+     */
     @Singleton
     @Provides
     MapEngine provideMapEngine() {
         return new MapEngineImpl();
     }
 
+    /**
+     * Provides Singleton Document Builder Factory
+     *
+     * @return {@link DocumentBuilderFactory}
+     */
     @Singleton
     @Provides
     DocumentBuilderFactory provideDocumentBuilder() {
         return DocumentBuilderFactory.newInstance();
     }
 
+    /**
+     * Provides Singleton PathFinderEngine
+     *
+     * @param meshProvider    mesh provider
+     * @param buildingStorage building storage
+     * @param pathFactory     path factory
+     * @return {@link PathFinderEngineImpl}
+     */
     @Singleton
     @Provides
-    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider, BuildingStorage buildingStorage, PathFactory pathSmoothingTool) {
-        return new PathFinderEngineImpl(meshProvider, buildingStorage, pathSmoothingTool);
+    PathFinderEngine providePathFinderEngine(MeshProvider meshProvider, BuildingStorage buildingStorage, PathFactory pathFactory) {
+        return new PathFinderEngineImpl(meshProvider, buildingStorage, pathFactory);
     }
 
+    /**
+     * Provides Singleton {@link SharedPreferences} for building storage
+     *
+     * @return {@link SharedPreferences} for building storage
+     */
     @Singleton
     @BuildingPreferences
     @Provides
@@ -58,9 +81,14 @@ public class ApplicationModule {
         return context.getSharedPreferences(BUILDING_PREFERENCES, Context.MODE_PRIVATE);
     }
 
+    /**
+     * Provides path factory
+     *
+     * @return {@link PathFinderEngineImpl}
+     */
     @Singleton
     @Provides
-    PathFactory providePathSmoothingTool(){
+    PathFactory providePathFactory() {
         return new PathFactoryImpl();
     }
 }

@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface PathFactory {
+
     /**
      * Returns path based on of provided points
+     *
      * @param points points list
      * @return curved path
      */
@@ -30,5 +32,6 @@ public interface PathFactory {
      * @return scaled and smooth path of points
      */
     @NonNull
-    Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points, Building building, MeshResult mesh);
+    Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points,
+                                                  Building building, MeshResult mesh);
 }

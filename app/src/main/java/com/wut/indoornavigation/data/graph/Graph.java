@@ -13,6 +13,7 @@ import java.util.Map;
  * Graph interface
  */
 public interface Graph extends PathFinder {
+
     /**
      * Sets vertices in graph
      * @param vertices vertices list

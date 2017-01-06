@@ -19,14 +19,12 @@ import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.Stairs;
 import com.wut.indoornavigation.data.model.graph.Edge;
 import com.wut.indoornavigation.data.model.graph.Vertex;
+import com.wut.indoornavigation.data.model.mesh.MeshDetails;
 import com.wut.indoornavigation.data.model.mesh.MeshResult;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -37,20 +35,19 @@ public final class MeshProvider {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */
-    public static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
     /**
      * Edge weight for diagonal segment in mesh
      */
-    public static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+    private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
     /**
      * Edge weight for elevator-elevator edge weight
      */
-    public static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    private static final int EDGE_ELEVATOR_WEIGHT = 5000;
     /**
      * Edge weight for stairs-stairs edge weight
      */
-    public static final int EDGE_STAIRS_WEIGHT = 5000;
-
+    private static final int EDGE_STAIRS_WEIGHT = 5000;
     private static final int ID_SEED_INIT = -1;
     private static final int START_POINT_X_SEED = 0;
     private static final int START_POINT_Y_SEED = 0;
@@ -65,7 +62,7 @@ public final class MeshProvider {
     private MeshDetails meshDetails;
 
     @Inject
-    public MeshProvider(StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind){
+    public MeshProvider(StrategyProvider strategyProvider, HeuristicFunction heuristicFunction, UnionFind unionFind) {
         this.processingStrategyProvider = strategyProvider;
         this.heuristicFunction = heuristicFunction;
         this.unionFind = unionFind;
@@ -74,7 +71,7 @@ public final class MeshProvider {
     /**
      * Creates mesh (graph) for building
      *
-     * @param building          Building object
+     * @param building Building object
      * @return MeshProvider result object
      */
     public MeshResult create(Building building) {
@@ -99,12 +96,12 @@ public final class MeshProvider {
     }
 
     private void prepareVerticesAndBeaconsSets(Floor floor) {
-        List<Vertex> floorDestinationVertices = meshDetails.getDestinationVerticesDict().get(floor.getNumber());
-        List<Vertex> floorStairsVertices = meshDetails.getStairsVerticesDict().get(floor.getNumber());
-        List<Vertex> floorElevatorsVertices = meshDetails.getElevatorsVerticesDict().get(floor.getNumber());
-        List<Point> floorBeacons = meshDetails.getBeaconsDict().get(floor.getNumber());
+        final List<Vertex> floorDestinationVertices = meshDetails.getDestinationVerticesDict().get(floor.getNumber());
+        final List<Vertex> floorStairsVertices = meshDetails.getStairsVerticesDict().get(floor.getNumber());
+        final List<Vertex> floorElevatorsVertices = meshDetails.getElevatorsVerticesDict().get(floor.getNumber());
+        final List<Point> floorBeacons = meshDetails.getBeaconsDict().get(floor.getNumber());
 
-        Comparator<Vertex> by2dPosition = (v1, v2) -> {
+        final Comparator<Vertex> by2dPosition = (v1, v2) -> {
             if (v1.getPosition().getY() - v2.getPosition().getY() == 0) {
                 return Math.round(v1.getPosition().getX() - v2.getPosition().getX());
             } else {
@@ -135,18 +132,18 @@ public final class MeshProvider {
     }
 
     private void processFloor(Graph graph, Floor floor) {
-        int floorNumber = floor.getNumber();
-        FloorObject[][] enumMap = floor.getEnumMap();
+        final int floorNumber = floor.getNumber();
+        final FloorObject[][] enumMap = floor.getEnumMap();
 
-        int width = enumMap.length;
-        int height = enumMap[0].length;
+        final int width = enumMap.length;
+        final int height = enumMap[0].length;
 
-        boolean[][] visited = new boolean[width][height];
-        boolean[][] processedNeighbours = new boolean[width][height];
+        final boolean[][] visited = new boolean[width][height];
+        final boolean[][] processedNeighbours = new boolean[width][height];
 
-        Pair<Integer, Integer> startPosition = findStartPositionOnFloor(width, height, enumMap);
-        int x = startPosition.first;
-        int y = startPosition.second;
+        final Pair<Integer, Integer> startPosition = findStartPositionOnFloor(width, height, enumMap);
+        final int x = startPosition.first;
+        final int y = startPosition.second;
 
 
         if (x == START_POINT_X_SEED || x == width || y == START_POINT_Y_SEED || y == height) {
@@ -183,7 +180,7 @@ public final class MeshProvider {
         }
 
         for (int i = 0; i < meshDetails.getElevatorsVerticesDict().get(floorNumber).size(); i++) {
-            Elevator elevator = floor.getElevators().get(i);
+            final Elevator elevator = floor.getElevators().get(i);
             linkElevatorOnFloor(building, graph, floorNumber, i, elevator);
         }
     }
@@ -194,18 +191,18 @@ public final class MeshProvider {
                 continue;
             }
 
-            Floor kFloor = getFloorByNumber(building, k);
+            final Floor kFloor = getFloorByNumber(building, k);
 
             if (kFloor == null) {
                 continue;
             }
 
-            List<Elevator> endFloorElevators = kFloor.getElevators();
-            List<Vertex> endFloorElevatorsGraphVertices = meshDetails.getElevatorsVerticesDict().get(k);
-            int endVertexIndex = findMatchingObjectOnFloor(elevator, endFloorElevators);
+            final List<Elevator> endFloorElevators = kFloor.getElevators();
+            final List<Vertex> endFloorElevatorsGraphVertices = meshDetails.getElevatorsVerticesDict().get(k);
+            final int endVertexIndex = findMatchingObjectOnFloor(elevator, endFloorElevators);
 
-            Vertex startVertex = meshDetails.getElevatorsVerticesDict().get(floorNumber).get(i);
-            Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
+            final Vertex startVertex = meshDetails.getElevatorsVerticesDict().get(floorNumber).get(i);
+            final Vertex endVertex = endFloorElevatorsGraphVertices.get(endVertexIndex);
             addEdgesBetweenElevators(graph, startVertex, endVertex);
 
             break;
@@ -243,36 +240,35 @@ public final class MeshProvider {
         }
 
         for (int i = 0; i < meshDetails.getStairsVerticesDict().get(floorNumber).size(); i++) {
-            Stairs stairs = floor.getStairs().get(i);
-            linkStairOnFloor(building, graph, floorNumber, i, stairs);
+            linkStairOnFloor(building, graph, floorNumber, i, floor.getStairs().get(i));
         }
     }
 
     private void linkStairOnFloor(Building building, Graph graph, int floorNumber, int i, Stairs stairs) {
         if (stairs.getEndfloor() != floorNumber) {
-            int k = stairs.getEndfloor();
+            final int k = stairs.getEndfloor();
 
             if (building.getFloors().size() < k + 1 || meshDetails.getStairsVerticesDict().size() < k + 1) {
                 return;
             }
 
-            Floor kFloor = getFloorByNumber(building, k);
+            final Floor kFloor = getFloorByNumber(building, k);
 
             if (kFloor == null) {
                 return;
             }
 
-            List<Stairs> endFloorStairs = kFloor.getStairs();
+            final List<Stairs> endFloorStairs = kFloor.getStairs();
 
             if (stairs.getEndfloor() == floorNumber) {
                 return;
             }
 
-            List<Vertex> endFloorStairsGraphVertices = meshDetails.getStairsVerticesDict().get(k);
-            int endVertexIndex = findMatchingObjectOnFloor(stairs, endFloorStairs);
+            final List<Vertex> endFloorStairsGraphVertices = meshDetails.getStairsVerticesDict().get(k);
+            final int endVertexIndex = findMatchingObjectOnFloor(stairs, endFloorStairs);
 
-            Vertex startVertex = meshDetails.getStairsVerticesDict().get(floorNumber).get(i);
-            Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
+            final Vertex startVertex = meshDetails.getStairsVerticesDict().get(floorNumber).get(i);
+            final Vertex endVertex = endFloorStairsGraphVertices.get(endVertexIndex);
 
             listStairOnFloor(graph, startVertex, endVertex);
         }
@@ -309,10 +305,10 @@ public final class MeshProvider {
 
         visited[x][y] = true;
 
-        ProcessingStrategy strategy = processingStrategyProvider.provideStrategy(enumMap[x][y]);
-        Point coordinates = new Point((float) y / 2, (float) x / 2, floorNumber);
+        final ProcessingStrategy strategy = processingStrategyProvider.provideStrategy(enumMap[x][y]);
+        final Point coordinates = new Point((float) y / 2, (float) x / 2, floorNumber);
 
-        Vertex resultVertex = strategy.process(coordinates, meshDetails, floorNumber, graph, idSeed);
+        final Vertex resultVertex = strategy.process(coordinates, meshDetails, floorNumber, graph, idSeed);
 
         if (resultVertex != null) {
             idSeed--;
@@ -326,14 +322,14 @@ public final class MeshProvider {
         final int width = enumMap.length;
         final int height = enumMap[0].length;
 
-        int startPosX = (x - 1 < 0) ? x : x - 1;
-        int startPosY = (y - 1 < 0) ? y : y - 1;
-        int endPosX = (x + 1 > width - 1) ? x : x + 1;
-        int endPosY = (y + 1 > height - 1) ? y : y + 1;
+        final int startPosX = (x - 1 < 0) ? x : x - 1;
+        final int startPosY = (y - 1 < 0) ? y : y - 1;
+        final int endPosX = (x + 1 > width - 1) ? x : x + 1;
+        final int endPosY = (y + 1 > height - 1) ? y : y + 1;
 
         for (int rowNum = startPosX; rowNum <= endPosX; rowNum++) {
             for (int colNum = startPosY; colNum <= endPosY; colNum++) {
-                Vertex v = processCell(rowNum, colNum, enumMap, floorNumber, visited, graph);
+                final Vertex v = processCell(rowNum, colNum, enumMap, floorNumber, visited, graph);
 
                 if (v != null) {
                     double weight;
@@ -343,9 +339,9 @@ public final class MeshProvider {
                         weight = HORIZONTAL_VERTICAL_EDGE_WEIGHT;
                     }
 
-                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ()){// && weight!=DIAGONAL_EDGE_WEIGHT) {
-                        FloorObject previousSign = enumMap[x][y];
-                        if(weight == HORIZONTAL_VERTICAL_EDGE_WEIGHT || (weight == DIAGONAL_EDGE_WEIGHT && previousSign!=FloorObject.ROOM && previousSign!=FloorObject.DOOR && enumMap[rowNum][colNum]!=FloorObject.ROOM && enumMap[rowNum][colNum]!=FloorObject.DOOR)){
+                    if (v.getId() != vertex.getId() && v.getPosition().getZ() == vertex.getPosition().getZ()) {// && weight!=DIAGONAL_EDGE_WEIGHT) {
+                        final FloorObject previousSign = enumMap[x][y];
+                        if (weight == HORIZONTAL_VERTICAL_EDGE_WEIGHT || (weight == DIAGONAL_EDGE_WEIGHT && previousSign != FloorObject.ROOM && previousSign != FloorObject.DOOR && enumMap[rowNum][colNum] != FloorObject.ROOM && enumMap[rowNum][colNum] != FloorObject.DOOR)) {
                             graph.addEdge(new Edge(v, vertex, weight));
                             graph.addEdge(new Edge(vertex, v, weight));
                         }

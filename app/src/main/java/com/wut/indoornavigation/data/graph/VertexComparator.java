@@ -20,10 +20,6 @@ public class VertexComparator implements Comparator<Integer> {
     private double[] distance;
     private Vertex target;
 
-    /**
-     * Vertex comparator constructor
-     * @param heuristicFunction heuristic function object
-     */
     @Inject
     public VertexComparator(HeuristicFunction heuristicFunction) {
         this.heuristicFunction = heuristicFunction;

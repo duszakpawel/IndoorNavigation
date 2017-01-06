@@ -15,9 +15,6 @@ import static java.lang.Math.pow;
 @Singleton
 public class HeuristicFunction {
 
-    /**
-     * Constructor of heuristic function command
-     */
     @Inject
     public HeuristicFunction() {
 

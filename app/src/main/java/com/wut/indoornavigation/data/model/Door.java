@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+/**
+ * Class representing door
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Door extends BuildingObject {

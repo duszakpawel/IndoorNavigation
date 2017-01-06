@@ -8,6 +8,7 @@ import java.util.List;
  * Path finder interface
  */
 public interface PathFinder {
+
     /**
      * Computes shortest path between two vertices in graph
      * @param source vertex

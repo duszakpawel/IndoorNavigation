@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.wut.indoornavigation.data.graph.Graph;
-import com.wut.indoornavigation.data.mesh.MeshDetails;
+import com.wut.indoornavigation.data.model.mesh.MeshDetails;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
