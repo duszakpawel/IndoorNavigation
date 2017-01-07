@@ -1,12 +1,10 @@
-package com.wut.indoornavigation.render.map;
+package com.wut.indoornavigation.render.map.impl;
 
 import com.wut.indoornavigation.data.exception.MapNotFoundException;
-import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
-import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
+import com.wut.indoornavigation.render.RenderEngine;
 import com.wut.indoornavigation.render.RenderEngineTest;
-import com.wut.indoornavigation.render.map.impl.MapEngineImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,36 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MapEngineTest extends RenderEngineTest{
+public class MapEngineImplTest extends RenderEngineTest {
 
-    private static final int FLOOR_NUMBER = 0;
-    private static final int ROOM_COUNT = 10;
-    private static final int FLOOR_SIZE = 10;
-    private static final List<Room> ROOM_LIST = new LinkedList<>();
-    private static final List<Floor> FLOOR_LIST = new LinkedList<>();
-    private static final Building BUILDING;
+    private final MapEngineImpl mapEngine = new MapEngineImpl();
 
-    static {
-        for (int i = 0; i < ROOM_COUNT; i++) {
-            ROOM_LIST.add(Room.builder()
-                    .number(i)
-                    .build());
-        }
-        FLOOR_LIST.add(Floor.builder()
-                .number(FLOOR_NUMBER)
-                .enumMap(new FloorObject[FLOOR_SIZE][FLOOR_SIZE])
-                .rooms(ROOM_LIST)
-                .build());
-        BUILDING = Building.builder()
-                .floors(FLOOR_LIST)
-                .build();
+    @Override
+    protected RenderEngine getRenderEngine() {
+        return mapEngine;
     }
-
-    private MapEngine mapEngine = new MapEngineImpl();
 
     @Before
     public void setUp() {

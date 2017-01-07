@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
+import com.wut.indoornavigation.data.model.Building;
+import com.wut.indoornavigation.data.model.Floor;
+import com.wut.indoornavigation.data.model.FloorObject;
+import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.render.map.impl.MapEngineImpl;
 
 import junit.framework.Assert;
@@ -13,6 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -26,6 +33,28 @@ public class RenderEngineTest {
     private static final int BUILDING_WIDTH = 5;
     private static final int BUILDING_HEIGHT = 7;
     private static final float DIMENSION_MOCK = 10f;
+    private static final int ROOM_COUNT = 10;
+    private static final int FLOOR_SIZE = 10;
+    protected static final int FLOOR_NUMBER = 0;
+    protected static final List<Room> ROOM_LIST = new LinkedList<>();
+    protected static final List<Floor> FLOOR_LIST = new LinkedList<>();
+    protected static final Building BUILDING;
+
+    static {
+        for (int i = 0; i < ROOM_COUNT; i++) {
+            ROOM_LIST.add(Room.builder()
+                    .number(i)
+                    .build());
+        }
+        FLOOR_LIST.add(Floor.builder()
+                .number(FLOOR_NUMBER)
+                .enumMap(new FloorObject[FLOOR_SIZE][FLOOR_SIZE])
+                .rooms(ROOM_LIST)
+                .build());
+        BUILDING = Building.builder()
+                .floors(FLOOR_LIST)
+                .build();
+    }
 
     @Mock
     protected Context context;
@@ -36,10 +65,15 @@ public class RenderEngineTest {
     @Mock
     protected DisplayMetrics displayMetrics;
 
-    private RenderEngine renderEngine = new MapEngineImpl();
+    private RenderEngine renderEngine;
+
+    protected RenderEngine getRenderEngine() {
+        return new MapEngineImpl();
+    }
 
     @Before
     public void setUp() {
+        this.renderEngine = getRenderEngine();
         when(context.getResources()).thenReturn(resources);
         when(resources.getDisplayMetrics()).thenReturn(displayMetrics);
         when(resources.getDimension(anyInt())).thenReturn(DIMENSION_MOCK);
