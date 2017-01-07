@@ -27,6 +27,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
 
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
+    private boolean isNavigating = false;
 
     @NonNull
     private Subscription pathFinderSubscription;
@@ -57,7 +58,12 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void floorSelected(int position) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+        if(isNavigating){
+            getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(position)));
+        }
+        else {
+            getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+        }
     }
 
     @Override
@@ -65,7 +71,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         getView().showProgressDialog();
         final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
-
+        isNavigating = true;
         // TODO: 15.12.2016 Provide user point
         pathFinderSubscription = Observable.just(new Point(0, 0, 0))
                 .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
