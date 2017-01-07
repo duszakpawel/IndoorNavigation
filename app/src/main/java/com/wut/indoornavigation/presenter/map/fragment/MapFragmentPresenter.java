@@ -2,6 +2,7 @@ package com.wut.indoornavigation.presenter.map.fragment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.model.Point;
@@ -24,6 +25,9 @@ import timber.log.Timber;
  */
 public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragmentContract.View>
         implements MapFragmentContract.Presenter {
+
+    @VisibleForTesting
+    boolean isNavigating;
 
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
@@ -57,15 +61,19 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void floorSelected(int position) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+        if(isNavigating){
+            getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(position)));
+        }
+        else {
+            getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+        }
     }
 
     @Override
     public void startNavigation(Context context, int roomNumber, int floorIndex) {
         getView().showProgressDialog();
-        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
+        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
-
         // TODO: 15.12.2016 Provide user point
         pathFinderSubscription = Observable.just(new Point(0, 0, 0))
                 .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
@@ -78,11 +86,12 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
                 .subscribe(getView()::showMap, throwable -> {
                     Timber.e(throwable, "Error while rendering path");
                     getView().showError(throwable.getMessage());
-                });
+                }, () -> isNavigating = true);
     }
 
     @Override
     public void emptyRoomSelected(int floorIndex) {
+        isNavigating = false;
         final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
         getView().showMap(mapEngine.getMapForFloor(destinationFloorNumber));
     }
