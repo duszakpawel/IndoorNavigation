@@ -66,8 +66,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
         pathPaint.setAntiAlias(true);
 
-        getMapHeight(context);
-        getMapWidth(context);
+        calculateMapHeight(context);
+        calculateMapWidth(context);
     }
 
     @Override

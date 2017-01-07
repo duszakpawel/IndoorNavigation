@@ -10,7 +10,10 @@ import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
-public class RxSyncTestRule implements TestRule {
+/**
+ * Test helper class which allows to synchronize RxJava operations
+ */
+public final class RxSyncTestRule implements TestRule {
 
     @Override
     public Statement apply(final Statement base, Description description) {

@@ -1,7 +1,6 @@
 package com.wut.indoornavigation.render.map.impl;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -23,8 +22,6 @@ import com.wut.indoornavigation.render.map.OnMapReadyListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * Implementation of {@link MapEngine}
  */
@@ -42,12 +39,8 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
     private final List<Integer> keyList;
     private final List<Integer> roomNumbers;
 
-    private float textSize;
-    private float textPadding;
-
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
-    @Inject
     public MapEngineImpl() {
         keyList = new LinkedList<>();
         roomNumbers = new LinkedList<>();
@@ -55,9 +48,6 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
     }
 
     private void init(Context context) {
-        final Resources resources = context.getResources();
-        textSize = resources.getDimension(R.dimen.map_text_size);
-        textPadding = resources.getDimension(R.dimen.max_text_padding);
         wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
         doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
         roomPaint.setColor(ContextCompat.getColor(context, R.color.roomColor));
@@ -66,8 +56,8 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
 
-        getMapHeight(context);
-        getMapWidth(context);
+        calculateMapHeight(context);
+        calculateMapWidth(context);
     }
 
     @Override
