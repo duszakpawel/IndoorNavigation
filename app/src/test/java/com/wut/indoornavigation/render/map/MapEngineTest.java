@@ -1,33 +1,24 @@
 package com.wut.indoornavigation.render.map;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
-
 import com.wut.indoornavigation.data.exception.MapNotFoundException;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Room;
+import com.wut.indoornavigation.render.RenderEngineTest;
 import com.wut.indoornavigation.render.map.impl.MapEngineImpl;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
-public class MapEngineTest {
+public class MapEngineTest extends RenderEngineTest{
 
     private static final int FLOOR_NUMBER = 0;
     private static final int ROOM_COUNT = 10;
@@ -52,27 +43,12 @@ public class MapEngineTest {
                 .build();
     }
 
-    @Mock
-    Context context;
-    @Mock
-    Resources.Theme theme;
-    @Mock
-    Resources resources;
-    @Mock
-    DisplayMetrics displayMetrics;
-
     private MapEngine mapEngine = new MapEngineImpl();
 
     @Before
     public void setUp() {
-        when(context.getResources()).thenReturn(resources);
-        when(context.getTheme()).thenReturn(theme);
-        when(theme.resolveAttribute(anyInt(), any(), anyBoolean())).thenReturn(true);
-        when(resources.getDisplayMetrics()).thenReturn(displayMetrics);
-        displayMetrics.heightPixels = 100;
-        displayMetrics.widthPixels = 100;
+        super.setUp();
     }
-
 
     @Test
     public void shouldBeNoErrorsWhenProperBuildingDelivered() {
@@ -86,22 +62,6 @@ public class MapEngineTest {
         }
         //then
         Assert.assertNull(ex);
-    }
-
-    @Test
-    public void shouldThrowIllegalStateExceptionWhenCannotResolveToolbar() {
-        //given
-        when(theme.resolveAttribute(anyInt(), any(), anyBoolean())).thenReturn(false);
-        Exception ex = null;
-        //when
-        try {
-            mapEngine.renderMap(context, BUILDING);
-        } catch (Exception e) {
-            ex = e;
-        }
-        //then
-        Assert.assertNotNull(ex);
-        Assert.assertTrue(ex instanceof IllegalStateException);
     }
 
     @Test
