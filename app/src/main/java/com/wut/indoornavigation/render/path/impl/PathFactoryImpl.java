@@ -56,7 +56,6 @@ public class PathFactoryImpl implements PathFactory {
 
             final List<Point> passagePoints = mesh.getMeshDetails().getPassageVerticesDict().get(floorNumber);
             smoothedPaths = smoothFloorPoints(mesh, floorNumber, floorPoints, passagePoints, smoothedPaths);
-            //smothedPaths.put?
 
             final List<Point> pointsToScale = smoothedPaths.get(floorNumber);
 
@@ -74,7 +73,6 @@ public class PathFactoryImpl implements PathFactory {
     }
 
     private Map<Integer, List<Point>> smoothFloorPoints(MeshResult mesh, int floorNumber, List<Point> floorPoints, List<Point> passagePoints,  Map<Integer, List<Point>> smoothedPaths) {
-        //final Map<Integer, List<Point>> smoothedPaths = new HashMap<>();
 
         for (int i = 0; i < floorPoints.size(); ) {
             final List<Point> bufor = new ArrayList<>();
