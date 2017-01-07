@@ -23,7 +23,7 @@ public interface PathFinderEngine {
     /**
      * Renders path
      *
-     * @param mapEngine
+     * @param mapEngine              map engine
      * @param context                context object
      * @param source                 source point
      * @param destinationFloorIndex  destination floor index
@@ -51,8 +51,8 @@ public interface PathFinderEngine {
     /**
      * Gets destination floor number
      *
-     * @param floorIndex floor index
+     * @param roomIndex room index
      * @return destination floor number
      */
-    int destinationFloorNumber(int floorIndex);
+    int destinationFloorNumber(int roomIndex);
 }

@@ -34,6 +34,7 @@ import java.util.Map;
  * Path finder engine implementation
  */
 public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngine {
+
     private static final float STROKE_WIDTH = 10f;
     private static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
     private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -124,7 +125,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     @Override
     public int destinationFloorNumber(int roomNumber) {
-
         for (final Floor floor : storage.getBuilding().getFloors()) {
             for (final Room room : floor.getRooms()) {
                 if (room.getNumber() == roomNumber) {

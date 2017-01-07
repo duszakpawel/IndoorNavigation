@@ -72,7 +72,9 @@ public class PathFactoryImpl implements PathFactory {
         return smoothedPaths;
     }
 
-    private Map<Integer, List<Point>> smoothFloorPoints(MeshResult mesh, int floorNumber, List<Point> floorPoints, List<Point> passagePoints,  Map<Integer, List<Point>> smoothedPaths) {
+    private Map<Integer, List<Point>> smoothFloorPoints(MeshResult mesh, int floorNumber,
+                                                        List<Point> floorPoints, List<Point> passagePoints,
+                                                        Map<Integer, List<Point>> smoothedPaths) {
 
         for (int i = 0; i < floorPoints.size(); ) {
             final List<Point> bufor = new ArrayList<>();
