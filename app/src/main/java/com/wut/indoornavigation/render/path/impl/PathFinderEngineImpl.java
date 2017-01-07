@@ -123,11 +123,14 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     }
 
     @Override
-    public int destinationFloorNumber(int floorIndex) {
-        final Floor floor = storage.getBuilding().getFloors().get(floorIndex);
+    public int destinationFloorNumber(int roomNumber) {
 
-        if (floor != null) {
-            return floor.getNumber();
+        for (final Floor floor : storage.getBuilding().getFloors()) {
+            for (final Room room : floor.getRooms()) {
+                if (room.getNumber() == roomNumber) {
+                    return floor.getNumber();
+                }
+            }
         }
 
         throw new IllegalArgumentException("Incorrect floor index.");

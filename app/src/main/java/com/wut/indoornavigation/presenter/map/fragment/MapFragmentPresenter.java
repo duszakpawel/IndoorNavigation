@@ -63,7 +63,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void startNavigation(Context context, int roomNumber, int floorIndex) {
         getView().showProgressDialog();
-        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
+        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
 
         // TODO: 15.12.2016 Provide user point
