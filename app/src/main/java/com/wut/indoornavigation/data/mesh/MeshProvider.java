@@ -31,7 +31,7 @@ import javax.inject.Inject;
 /**
  * MeshProvider creator for building
  */
-public final class MeshProvider {
+public class MeshProvider {
     /**
      * Edge weight for horizontal or vertical segment in mesh
      */

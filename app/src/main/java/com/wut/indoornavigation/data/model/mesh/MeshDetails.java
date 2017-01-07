@@ -1,5 +1,7 @@
 package com.wut.indoornavigation.data.model.mesh;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.model.graph.Vertex;
 
@@ -24,6 +26,15 @@ public class MeshDetails {
 
     public MeshDetails() {
         destinationVerticesDict = new HashMap<>();
+        elevatorsVerticesDict = new HashMap<>();
+        stairsVerticesDict = new HashMap<>();
+        passageVerticesDict = new HashMap<>();
+        beaconsDict = new HashMap<>();
+    }
+
+    @VisibleForTesting
+    public MeshDetails(Map<Integer, List<Vertex>> destinationVerticesDict) {
+        this.destinationVerticesDict = destinationVerticesDict;
         elevatorsVerticesDict = new HashMap<>();
         stairsVerticesDict = new HashMap<>();
         passageVerticesDict = new HashMap<>();

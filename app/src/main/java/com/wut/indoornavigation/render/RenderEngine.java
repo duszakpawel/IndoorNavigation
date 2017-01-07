@@ -20,11 +20,11 @@ public abstract class RenderEngine {
     protected int mapWidth;
 
     /**
-     * Gets map width
+     * Calculates map width
      *
      * @param context context
      */
-    protected void getMapWidth(Context context) {
+    protected void calculateMapWidth(Context context) {
         final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
         final int width = context.getResources().getDisplayMetrics().widthPixels;
 
@@ -32,11 +32,11 @@ public abstract class RenderEngine {
     }
 
     /**
-     * Gets map height
+     * Calculates map height
      *
      * @param context context
      */
-    protected void getMapHeight(Context context) {
+    protected void calculateMapHeight(Context context) {
         final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
         final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
         final int height = context.getResources().getDisplayMetrics().heightPixels;
@@ -68,9 +68,7 @@ public abstract class RenderEngine {
         final TypedValue tv = new TypedValue();
 
         if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
-            if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
-                return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-            }
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 
         throw new IllegalStateException("Cannot resolve action bar size");

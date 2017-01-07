@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import com.wut.indoornavigation.R;
+import com.wut.indoornavigation.data.exception.MapNotFoundException;
 import com.wut.indoornavigation.data.graph.PathFinder;
 import com.wut.indoornavigation.data.mesh.MeshProvider;
 import com.wut.indoornavigation.data.model.Building;
@@ -66,8 +67,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
         pathPaint.setAntiAlias(true);
 
-        getMapHeight(context);
-        getMapWidth(context);
+        calculateMapHeight(context);
+        calculateMapWidth(context);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         if (bitmap != null) {
             return bitmap;
         }
-        throw new IllegalStateException("There is no map for floor: " + floorNumber);
+        throw new MapNotFoundException("There is no map for floor: " + floorNumber);
     }
 
     @Override
@@ -133,7 +134,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
             }
         }
 
-        throw new IllegalArgumentException("Incorrect floor index.");
+        throw new IllegalArgumentException("Incorrect room number.");
     }
 
     /**

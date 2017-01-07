@@ -51,8 +51,8 @@ public interface PathFinderEngine {
     /**
      * Gets destination floor number
      *
-     * @param roomIndex room index
+     * @param roomNumber room number
      * @return destination floor number
      */
-    int destinationFloorNumber(int roomIndex);
+    int destinationFloorNumber(int roomNumber);
 }

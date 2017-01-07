@@ -90,6 +90,30 @@ public class MapFragmentPresenterTest {
     }
 
     @Test
+    public void shouldGetMapWithPathWhenIsNavigationMode() {
+        //given
+        when(mapEngine.getFloorNumbers()).thenReturn(FLOOR_LIST);
+        when(pathFinderEngine.getMapWithPathForFloor(anyInt())).thenReturn(MOCK_BITMAP);
+        presenter.isNavigating = true;
+        //when
+        presenter.floorSelected(FLOOR_NUMBER);
+        //then
+        verify(pathFinderEngine).getMapWithPathForFloor(anyInt());
+    }
+
+    @Test
+    public void shouldGetMapFromMapEngineWhenNoNavigationMode() {
+        //given
+        when(mapEngine.getFloorNumbers()).thenReturn(FLOOR_LIST);
+        when(mapEngine.getMapForFloor(anyInt())).thenReturn(MOCK_BITMAP);
+        presenter.isNavigating = false;
+        //when
+        presenter.floorSelected(FLOOR_NUMBER);
+        //then
+        verify(mapEngine).getMapForFloor(anyInt());
+    }
+
+    @Test
     public void shouldShowMapWhenFloorSelected() {
         //given
         when(mapEngine.getFloorNumbers()).thenReturn(FLOOR_LIST);
