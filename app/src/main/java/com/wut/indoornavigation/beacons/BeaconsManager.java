@@ -30,8 +30,8 @@ public final class BeaconsManager {
     private BeaconManager beaconManager;
     private String scanId;
     private Region region;
-    private List<com.wut.indoornavigation.data.model.Beacon> inRangeBuildingBeacons;
-    private int floorNumber;
+    public List<com.wut.indoornavigation.data.model.Beacon> inRangeBuildingBeacons;
+    public int floorNumber;
 
     @Inject
     public BeaconsManager(Context applicationContext, Building building) {

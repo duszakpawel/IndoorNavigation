@@ -2,29 +2,21 @@ package com.wut.indoornavigation.positioning;
 
 import com.wut.indoornavigation.beacons.BeaconsManager;
 import com.wut.indoornavigation.data.model.Beacon;
-import com.wut.indoornavigation.data.model.Building;
-import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.Point;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/**
- * Created by sa on 14.01.2017.
- */
-
+@Singleton
 public class Positioner {
 
     private final BeaconsManager beaconsManager;
 
-    List<Beacon> inRangeBeacons;
-
     @Inject
     Positioner(BeaconsManager beaconsManager){
         this.beaconsManager = beaconsManager;
-        inRangeBeacons = new ArrayList<>();
     }
 
     private Point evaluatePosition(List<Beacon> beacons, int floornum){
@@ -40,15 +32,15 @@ public class Positioner {
         x /= weightsum;
         y /= weightsum;
 
-        z = floornum; // nie wykrywa pietra, wiec przypisane takie jakie jest
+        z = floornum;
 
         return new Point(x,y,z);
     }
 
-    public Point getUserPosition(int floorNum){
-        if(inRangeBeacons.size() == 0)
+    public Point getUserPosition(){
+        if(beaconsManager.inRangeBuildingBeacons.size() == 0)
             return new Point(0,0,0);
         else
-            return evaluatePosition(inRangeBeacons, floorNum);
+            return evaluatePosition(beaconsManager.inRangeBuildingBeacons, beaconsManager.floorNumber);
     }
 }

@@ -6,6 +6,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.positioning.Positioner;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
 
@@ -31,14 +32,16 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
 
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
+    private final Positioner positioner;
 
     @NonNull
     private Subscription pathFinderSubscription;
 
     @Inject
-    MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine) {
+    MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Positioner positioner) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;
+        this.positioner = positioner;
         pathFinderSubscription = Subscriptions.unsubscribed();
     }
 
@@ -75,7 +78,9 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
         final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
         // TODO: 15.12.2016 Provide user point
-        pathFinderSubscription = Observable.just(new Point(0, 0, 0))
+        Point userPosition = positioner.getUserPosition();
+
+        pathFinderSubscription = Observable.just(userPosition)
                 .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
                         context, point, destinationFloorNumber, destinationRoomIndex))
                 .map(point -> mapEngine.getFloorNumbers().get(floorIndex))

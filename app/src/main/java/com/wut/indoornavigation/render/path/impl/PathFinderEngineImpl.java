@@ -80,7 +80,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     public void renderPath(MapEngine mapEngine, Context context, Point source, int destinationFloorNumber, int destinationVertexIndex) {
         init(context);
 
-        final FloorObject[][] map = building.getFloors().get(0).getEnumMap();
+        final FloorObject[][] map = building.getFloors().get((int)(source.getZ())).getEnumMap();
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
