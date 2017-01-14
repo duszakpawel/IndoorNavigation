@@ -23,12 +23,6 @@ public class PathFactoryImpl implements PathFactory
     private static final float X_MESH_STEP = 0.5f;
     private static final int DIST_EPS = 2;
 
-    @Inject
-    public PathFactoryImpl()
-    {
-
-    }
-
     @NonNull
     @Override
     public Path producePath(List<Point> points)
@@ -121,24 +115,28 @@ public class PathFactoryImpl implements PathFactory
                 {
                     nextPassage = floorPoints.get(j - 1);
                     smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
-                    if(smoothingPossible){
+                    if (smoothingPossible)
+                    {
                         break;
-                    } else{
-                        int k=j-1;
+                    } else
+                    {
+                        int k = j - 1;
                         boolean found = false;
-                        while(k>=i){
+                        while (k >= i)
+                        {
                             nextPassage = floorPoints.get(k);
                             smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
-                            if(smoothingPossible)
+                            if (smoothingPossible)
                             {
                                 found = true;
-                                j=k;
+                                j = k;
                                 break;
                             }
                             k--;
                         }
 
-                        if(found){
+                        if (found)
+                        {
                             break;
                         }
                     }
@@ -242,9 +240,9 @@ public class PathFactoryImpl implements PathFactory
         float marginX = nearWall ? 0 : X_MESH_STEP;
         float marginY = nearWall ? 0 : Y_MESH_STEP;
 
-        for (float row = minY + marginY; row <= maxY - marginY; row+=Y_MESH_STEP)
+        for (float row = minY + marginY; row <= maxY - marginY; row += Y_MESH_STEP)
         {
-            for (float col = minX + marginX; col <= maxX - marginX; col+=X_MESH_STEP)
+            for (float col = minX + marginX; col <= maxX - marginX; col += X_MESH_STEP)
             {
                 if (mesh.getGraph().getVertexByCoordinates(col, row, floorNumber) == null)
                 {
