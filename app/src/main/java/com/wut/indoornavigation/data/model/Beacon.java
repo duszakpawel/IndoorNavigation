@@ -18,8 +18,9 @@ public class Beacon extends BuildingObject {
     int major;
     int minor;
     int rssi;
+
     @Builder(toBuilder = true)
-    public Beacon(int id, int x, int y, int major, int minor) {
+    private Beacon(int id, int x, int y, int major, int minor) {
         super(id, x, y);
         this.major = major;
         this.minor = minor;
