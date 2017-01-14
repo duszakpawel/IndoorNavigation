@@ -13,14 +13,17 @@ import java.util.Map;
  * Graph interface
  */
 public interface Graph extends PathFinder {
+
     /**
      * Sets vertices in graph
+     *
      * @param vertices vertices list
      */
     void setVertices(@NonNull List<Vertex> vertices);
 
     /**
      * Adds edge to graph
+     *
      * @param edge edge object
      * @return true if operation succeeded, otherwise false
      */
@@ -28,12 +31,14 @@ public interface Graph extends PathFinder {
 
     /**
      * Counts vertices in graph
+     *
      * @return vertices count
      */
     int verticesCount();
 
     /**
      * Returns out edges for vertex with specified id
+     *
      * @param vertexId id of vertex
      * @return list of edges
      */
@@ -41,6 +46,7 @@ public interface Graph extends PathFinder {
 
     /**
      * Returns out vertices for vertex
+     *
      * @param vertex vertex object
      * @return list of vertices
      */
@@ -49,6 +55,7 @@ public interface Graph extends PathFinder {
     /**
      * Only for testing purposes.
      * Computes shortest path between two vertices in graph
+     *
      * @param sourceId source vertex id
      * @param targetId target vertex id
      * @return (ordered list of vertices)
@@ -58,6 +65,7 @@ public interface Graph extends PathFinder {
 
     /**
      * Adds vertex to graph
+     *
      * @param vertex vertex object
      * @return true if vertex was added, otherwise false
      */
@@ -65,6 +73,7 @@ public interface Graph extends PathFinder {
 
     /**
      * Returns information whether graph contains edge between two vertices
+     *
      * @param vId id of first vertex
      * @param wId id of second vertex
      * @return true if yes, otherwise false
@@ -73,6 +82,7 @@ public interface Graph extends PathFinder {
 
     /**
      * Only for testing purposes.
+     *
      * @return vertices list
      */
     @VisibleForTesting
@@ -80,6 +90,7 @@ public interface Graph extends PathFinder {
 
     /**
      * Only for testing purposes.
+     *
      * @return edges map
      */
     @VisibleForTesting

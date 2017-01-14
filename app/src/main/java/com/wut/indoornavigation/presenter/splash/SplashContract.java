@@ -24,6 +24,12 @@ public interface SplashContract {
          * Hides loading view
          */
         void hideLoadingView();
+
+        /**
+         * Shows error to user
+         * @param message message for user
+         */
+        void showError(String message);
     }
 
     /**
@@ -33,8 +39,9 @@ public interface SplashContract {
 
         /**
          * Prepares map for user
+         *
          * @param fileName map file name
-         * @param context current context
+         * @param context  current context
          */
         void prepareMap(String fileName, Context context);
     }

@@ -14,7 +14,17 @@ import dagger.Subcomponent;
 @Subcomponent(modules = MapActivityModule.class)
 public interface MapActivityComponent {
 
+    /**
+     * Injects dependencies to MapActivity
+     *
+     * @param activity {@link MapActivity}
+     */
     void inject(MapActivity activity);
 
+    /**
+     * Injects dependencies to MapFragment
+     *
+     * @param fragment {@link MapFragment}
+     */
     void inject(MapFragment fragment);
 }

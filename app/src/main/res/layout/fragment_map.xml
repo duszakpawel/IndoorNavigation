@@ -7,52 +7,53 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/map_fragment_header_height"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:weightSum="2">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/floor"
-                android:layout_marginStart="@dimen/map_fragment_header_margin"
-                android:layout_marginEnd="@dimen/map_fragment_header_margin"
-                android:layout_marginTop="@dimen/map_fragment_header_margin"/>
-
-            <Spinner
-                android:id="@+id/fragment_map_floor_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/map_fragment_header_margin"
-                android:layout_marginEnd="@dimen/map_fragment_header_margin"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/room"
-                android:layout_marginStart="@dimen/map_fragment_header_margin"
                 android:layout_marginEnd="@dimen/map_fragment_header_margin"
-                android:layout_marginTop="@dimen/map_fragment_header_margin"/>
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginTop="@dimen/map_fragment_header_margin"
+                android:text="@string/floor" />
+
+            <Spinner
+                android:id="@+id/fragment_map_floor_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"
+                android:layout_marginStart="@dimen/map_fragment_header_margin" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"
+                android:layout_marginStart="@dimen/map_fragment_header_margin"
+                android:layout_marginTop="@dimen/map_fragment_header_margin"
+                android:text="@string/room" />
 
             <Spinner
                 android:id="@+id/fragment_map_room_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/map_fragment_header_margin"
-                android:layout_marginEnd="@dimen/map_fragment_header_margin"/>
+                android:layout_marginEnd="@dimen/map_fragment_header_margin"
+                android:layout_marginStart="@dimen/map_fragment_header_margin" />
 
         </LinearLayout>
     </LinearLayout>
@@ -65,13 +66,14 @@
             android:id="@+id/fragment_map_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@null"/>
+            android:contentDescription="@null" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/events_fab"
+            android:id="@+id/map_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_navigation_white_24dp"
             android:tint="@color/white" />
 
     </android.support.design.widget.CoordinatorLayout>

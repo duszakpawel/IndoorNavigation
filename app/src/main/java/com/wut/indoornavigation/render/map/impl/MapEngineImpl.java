@@ -1,7 +1,6 @@
 package com.wut.indoornavigation.render.map.impl;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -10,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import com.wut.indoornavigation.R;
+import com.wut.indoornavigation.data.exception.MapNotFoundException;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -21,8 +21,6 @@ import com.wut.indoornavigation.render.map.OnMapReadyListener;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Implementation of {@link MapEngine}
@@ -41,12 +39,8 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
     private final List<Integer> keyList;
     private final List<Integer> roomNumbers;
 
-    private float textSize;
-    private float textPadding;
-
     private OnMapReadyListener onMapReadyListener = OnMapReadyListener.NULL;
 
-    @Inject
     public MapEngineImpl() {
         keyList = new LinkedList<>();
         roomNumbers = new LinkedList<>();
@@ -54,9 +48,6 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
     }
 
     private void init(Context context) {
-        final Resources resources = context.getResources();
-        textSize = resources.getDimension(R.dimen.map_text_size);
-        textPadding = resources.getDimension(R.dimen.max_text_padding);
         wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
         doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
         roomPaint.setColor(ContextCompat.getColor(context, R.color.roomColor));
@@ -65,8 +56,8 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
         textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
 
-        getMapHeight(context);
-        getMapWidth(context);
+        calculateMapHeight(context);
+        calculateMapWidth(context);
     }
 
     @Override
@@ -107,7 +98,7 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         if (bitmap != null) {
             return bitmap;
         }
-        throw new IllegalStateException("There is no map for floor: " + floorNumber);
+        throw new MapNotFoundException("There is no map for floor: " + floorNumber);
     }
 
     private void renderFloor(Bitmap bitmap, Floor floor) {
@@ -121,10 +112,9 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         int currentHeight = stepHeight * 2;
         int currentWidth = 0;
 
-        for (int i = 0 ; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                // TODO: make decision if the if statement will fix the bug with empty cells
-                if(map[i][j]!=null) {
+                if (map[i][j] != null) {
                     switch (map[i][j]) {
                         case SPACE:
                             break;

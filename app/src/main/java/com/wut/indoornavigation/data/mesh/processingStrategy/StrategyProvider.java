@@ -18,6 +18,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class StrategyProvider {
+
     @Inject
     public StrategyProvider() {
 
@@ -48,8 +49,7 @@ public class StrategyProvider {
             case SPACE:
                 return new SpaceProcessingStrategyImpl();
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("There is no strategy for object: " + object.toString());
         }
     }
-
 }

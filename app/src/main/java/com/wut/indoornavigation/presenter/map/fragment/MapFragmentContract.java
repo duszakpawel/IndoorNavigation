@@ -18,6 +18,7 @@ public interface MapFragmentContract {
 
         /**
          * Shows map for user
+         *
          * @param bitmap map
          */
         void showMap(Bitmap bitmap);
@@ -34,6 +35,7 @@ public interface MapFragmentContract {
 
         /**
          * Shows error message
+         *
          * @param message error message
          */
         void showError(String message);
@@ -46,28 +48,39 @@ public interface MapFragmentContract {
 
         /**
          * Gets data for floor spinner
+         *
          * @return floor spinner data
          */
         String[] getFloorSpinnerData();
 
         /**
          * Gets room spinner data
+         *
          * @return room spinner data
          */
         String[] getRoomSpinnerData();
 
         /**
          * Reacts when floor has been selected
+         *
          * @param position selected floor position
          */
         void floorSelected(int position);
 
         /**
-         * Reacts when room has been selected
-         * @param context current context
+         * Reacts when user starts navigation
+         *
+         * @param context    current context
          * @param roomNumber room number
          * @param floorIndex current floor index
          */
-        void roomSelected(Context context, int roomNumber, int floorIndex);
+        void startNavigation(Context context, int roomNumber, int floorIndex);
+
+        /**
+         * Reacts when empty room selected
+         *
+         * @param floorIndex current floor index
+         */
+        void emptyRoomSelected(int floorIndex);
     }
 }

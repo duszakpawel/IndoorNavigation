@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -57,6 +58,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
     /**
      * Creates new instance of {@link MapFragment}
+     *
      * @return new instance of {@link MapFragment}
      */
     public static MapFragment newInstance() {
@@ -105,6 +107,15 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         progressDialog.dismiss();
     }
 
+    @OnClick(R.id.map_fab)
+    public void onFabButtonClick() {
+        if (roomSpinner.getSelectedItemPosition() != 0) {
+            final int destinationRoomNumber = Integer.parseInt((String) roomSpinner.getSelectedItem());
+            final int floorIndex = floorSpinner.getSelectedItemPosition();
+            getPresenter().startNavigation(getContext(), destinationRoomNumber, floorIndex);
+        }
+    }
+
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -138,10 +149,9 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         roomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                int destinationRoomNumber = Integer.parseInt((String)roomSpinner.getSelectedItem());
-                int floorIndex = floorSpinner.getSelectedItemPosition();
-                getPresenter().roomSelected(getContext(), destinationRoomNumber, floorIndex);
+                if (position == 0) {
+                    getPresenter().emptyRoomSelected(floorSpinner.getSelectedItemPosition());
+                }
             }
 
             @Override

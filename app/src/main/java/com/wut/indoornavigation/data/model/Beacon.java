@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+/**
+ * Class representing beacon
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Beacon extends BuildingObject {

@@ -8,8 +8,10 @@ import java.util.List;
  * Path finder interface
  */
 public interface PathFinder {
+
     /**
      * Computes shortest path between two vertices in graph
+     *
      * @param source vertex
      * @param target vertex
      * @return path (ordered list of vertices)
@@ -18,8 +20,9 @@ public interface PathFinder {
 
     /**
      * Returns vertex with specified coordinates
-     * @param x x-coordinate
-     * @param y y-coordinate
+     *
+     * @param x           x-coordinate
+     * @param y           y-coordinate
      * @param floorNumber floor number
      * @return desired vertex
      */

@@ -16,4 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true" />
+
+    <TextView
+        style="@style/Font18.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/splash_loading_margin_top"
+        android:text="@string/splash_loading_text"/>
 </FrameLayout>

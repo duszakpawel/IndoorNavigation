@@ -5,6 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Abstract class representing building object with id
+ */
 @Getter
 @AllArgsConstructor
 @ToString

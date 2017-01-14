@@ -5,18 +5,38 @@ import android.util.TypedValue;
 
 import com.wut.indoornavigation.R;
 
+/**
+ * Base class for render engines
+ */
 public abstract class RenderEngine {
+
+    /**
+     * Map height
+     */
     protected int mapHeight;
+    /**
+     * Map width
+     */
     protected int mapWidth;
 
-    protected void getMapWidth(Context context) {
+    /**
+     * Calculates map width
+     *
+     * @param context context
+     */
+    protected void calculateMapWidth(Context context) {
         final int widthPadding = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
         final int width = context.getResources().getDisplayMetrics().widthPixels;
 
         mapWidth = width - 2 * widthPadding;
     }
 
-    protected void getMapHeight(Context context) {
+    /**
+     * Calculates map height
+     *
+     * @param context context
+     */
+    protected void calculateMapHeight(Context context) {
         final int heightPadding = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
         final int headerHeight = (int) context.getResources().getDimension(R.dimen.map_fragment_header_height);
         final int height = context.getResources().getDisplayMetrics().heightPixels;
@@ -24,23 +44,33 @@ public abstract class RenderEngine {
         mapHeight = height - 2 * heightPadding - headerHeight - getToolbarHeight(context);
     }
 
-    private int getToolbarHeight(Context context) {
-        final TypedValue tv = new TypedValue();
-
-        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
-            if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
-                return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-            }
-        }
-
-        throw new IllegalStateException("Cannot resolve action bar size");
-    }
-
+    /**
+     * Calculates step width
+     *
+     * @param buildingWidth building width
+     * @return step width
+     */
     protected int calculateStepWidth(int buildingWidth) {
         return mapWidth / buildingWidth;
     }
 
+    /**
+     * Calculates step height
+     *
+     * @param buildingHeight building height
+     * @return step height
+     */
     protected int calculateStepHeight(int buildingHeight) {
         return mapHeight / buildingHeight;
+    }
+
+    private int getToolbarHeight(Context context) {
+        final TypedValue tv = new TypedValue();
+
+        if (context.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+
+        throw new IllegalStateException("Cannot resolve action bar size");
     }
 }

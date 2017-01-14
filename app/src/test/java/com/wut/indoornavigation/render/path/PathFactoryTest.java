@@ -1,9 +1,8 @@
-package com.wut.indoornavigation.data.path;
+package com.wut.indoornavigation.render.path;
 
 import android.graphics.Path;
 
 import com.wut.indoornavigation.data.model.Point;
-import com.wut.indoornavigation.render.path.PathFactory;
 import com.wut.indoornavigation.render.path.impl.PathFactoryImpl;
 
 import org.junit.Assert;

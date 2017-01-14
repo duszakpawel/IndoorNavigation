@@ -11,7 +11,6 @@ import java.util.List;
 
 public class PathFinderTests {
 
-
     @Test
     public void aStarTestForSmallDirectedGraph() {
         Graph g = GraphMocks.getMockGraph();

@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+/**
+ * Class representing stairs
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class Stairs extends BuildingObject {
