@@ -14,25 +14,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PathFactoryImpl implements PathFactory {
+import javax.inject.Inject;
+
+public class PathFactoryImpl implements PathFactory
+{
 
     private static final float Y_MESH_STEP = 0.5f;
     private static final float X_MESH_STEP = 0.5f;
+    private static final int DIST_EPS = 2;
 
     @NonNull
     @Override
-    public Path producePath(List<Point> points) {
-        final Path path = new Path();
+    public Path producePath(List<Point> points)
+    {
+        Path path = new Path();
 
-        if (points == null) {
+        if (points == null)
+        {
             return path;
         }
         boolean first = true;
-        for (Point point : points) {
-            if (first) {
+        for (Point point : points)
+        {
+            if (first)
+            {
                 first = false;
                 path.moveTo(point.getX(), point.getY());
-            } else {
+            } else
+            {
                 path.lineTo(point.getX(), point.getY());
             }
         }
@@ -41,30 +50,34 @@ public class PathFactoryImpl implements PathFactory {
     }
 
     @NonNull
-    @Override
-    public Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points, Building building, MeshResult mesh) {
-        final Map<Integer, List<Point>> paths = splitPointsDueToFloorNumber(points);
+    public Map<Integer, List<Point>> getScaledSmoothPath(int stepWidth, int stepHeight, List<Point> points, Building building, MeshResult mesh)
+    {
+        Map<Integer, List<Point>> paths = splitPointsDueToFloorNumber(points);
         Map<Integer, List<Point>> smoothedPaths = new HashMap<>();
 
-        for (Floor floor : building.getFloors()) {
+        for (Floor floor : building.getFloors())
+        {
             int floorNumber = floor.getNumber();
-            final List<Point> floorPoints = paths.get(floorNumber);
+            List<Point> floorPoints = paths.get(floorNumber);
 
-            if (floorPoints == null || floorPoints.isEmpty()) {
+            if (floorPoints == null || floorPoints.isEmpty())
+            {
                 continue;
             }
 
-            final List<Point> passagePoints = mesh.getMeshDetails().getPassageVerticesDict().get(floorNumber);
-            smoothedPaths = smoothFloorPoints(mesh, floorNumber, floorPoints, passagePoints, smoothedPaths);
+            List<Point> passagePoints = mesh.getMeshDetails().getPassageVerticesDict().get(floorNumber);
+            smoothedPaths = smoothFloorPoints(mesh, floorNumber, floorPoints, passagePoints);
 
-            final List<Point> pointsToScale = smoothedPaths.get(floorNumber);
+            List<Point> pointsToScale = smoothedPaths.get(floorNumber);
 
-            if (pointsToScale == null || pointsToScale.isEmpty()) {
+            if (pointsToScale == null || pointsToScale.isEmpty())
+            {
                 continue;
             }
 
-            for (int i = 0; i < pointsToScale.size(); i++) {
-                final Point scaledPoint = calculateScaledPoint(stepWidth, stepHeight, pointsToScale.get(i));
+            for (int i = 0; i < pointsToScale.size(); i++)
+            {
+                Point scaledPoint = calculateScaledPoint(stepWidth, stepHeight, pointsToScale.get(i));
                 pointsToScale.set(i, scaledPoint);
             }
         }
@@ -72,60 +85,90 @@ public class PathFactoryImpl implements PathFactory {
         return smoothedPaths;
     }
 
-    private Map<Integer, List<Point>> smoothFloorPoints(MeshResult mesh, int floorNumber,
-                                                        List<Point> floorPoints, List<Point> passagePoints,
-                                                        Map<Integer, List<Point>> smoothedPaths) {
+    private Map<Integer, List<Point>> smoothFloorPoints(MeshResult mesh, int floorNumber, List<Point> floorPoints, List<Point> passagePoints)
+    {
+        Map<Integer, List<Point>> smoothedPaths = new HashMap<>();
 
-        for (int i = 0; i < floorPoints.size(); ) {
-            final List<Point> bufor = new ArrayList<>();
+        for (int i = 0; i < floorPoints.size(); )
+        {
+            List<Point> buffer = new ArrayList<>();
             Point iPoint = floorPoints.get(i);
-            bufor.add(iPoint);
+            buffer.add(iPoint);
             i++;
 
-            if (i >= floorPoints.size()) {
+            if (i >= floorPoints.size())
+            {
                 break;
             }
             iPoint = floorPoints.get(i);
-            if (i > 0 && i < floorPoints.size()) {
-                bufor.add(iPoint);
+            if (i > 0 && i < floorPoints.size())
+            {
+                buffer.add(iPoint);
             }
 
             int j = i + 1;
             Point nextPassage = null;
-            while (j < floorPoints.size()) {
-                if (passagePoints.contains(floorPoints.get(j))) {
+            boolean smoothingPossible;
+            while (j < floorPoints.size())
+            {
+                if (passagePoints.contains(floorPoints.get(j)))
+                {
                     nextPassage = floorPoints.get(j - 1);
-                    break;
+                    smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                    if (smoothingPossible)
+                    {
+                        break;
+                    } else
+                    {
+                        int k = j - 1;
+                        boolean found = false;
+                        while (k >= i)
+                        {
+                            nextPassage = floorPoints.get(k);
+                            smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                            if (smoothingPossible)
+                            {
+                                found = true;
+                                j = k;
+                                break;
+                            }
+                            k--;
+                        }
+
+                        if (found)
+                        {
+                            break;
+                        }
+                    }
                 }
                 j++;
             }
 
-            if (j == floorPoints.size()) {
+            if (j == floorPoints.size())
+            {
                 throw new IllegalStateException("No matching passage found.");
-            } else {
-                bufor.add(nextPassage);
-                if (nextPassage == null) {
-                    throw new IllegalStateException("Not possible to smooth floor ponts");
+            } else
+            {
+                buffer.add(nextPassage);
+                if (nextPassage == null)
+                {
+                    throw new IllegalStateException("No matching passage found.");
                 }
 
-                boolean smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
-                if (smoothingPossible) {
-                    appendResultWithSmoothing(floorNumber, smoothedPaths, bufor);
-                } else {
+                smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                if (smoothingPossible)
+                {
+                    appendResultWithSmoothing(floorNumber, smoothedPaths, buffer);
+                } else
+                {
                     appendResultWithoutSmoothing(floorNumber, floorPoints, smoothedPaths, i, j);
                 }
 
                 i = j;
 
-                if (j == floorPoints.size() - 1) {
-                    List<Point> pts = new ArrayList<>();
-                    if (!smoothedPaths.containsKey(floorNumber)) {
-                        smoothedPaths.put(floorNumber, pts);
-                    } else {
-                        pts = smoothedPaths.get(floorNumber);
-                    }
-
-                    pts.add(floorPoints.get(j));
+                if (j == floorPoints.size() - 1)
+                {
+                    finishPath(floorNumber, floorPoints, smoothedPaths, j);
 
                     break;
                 }
@@ -135,25 +178,38 @@ public class PathFactoryImpl implements PathFactory {
         return smoothedPaths;
     }
 
-    private void appendResultWithoutSmoothing(int floorNumber, List<Point> floorPoints, Map<Integer, List<Point>> smoothedPaths, int i, int j) {
-        for (int k = i; k <= j; k++) {
-            List<Point> pts = new ArrayList<>();
-            if (!smoothedPaths.containsKey(floorNumber)) {
-                smoothedPaths.put(floorNumber, pts);
-            } else {
-                pts = smoothedPaths.get(floorNumber);
-            }
+    private void finishPath(int floorNumber, List<Point> floorPoints, Map<Integer, List<Point>> smoothedPaths, int j)
+    {
+        List<Point> pts = new ArrayList<>();
+        if (!smoothedPaths.containsKey(floorNumber))
+        {
+            smoothedPaths.put(floorNumber, pts);
+        } else
+        {
+            pts = smoothedPaths.get(floorNumber);
+        }
 
-            pts.add(floorPoints.get(k));
+        pts.add(floorPoints.get(j));
+    }
+
+    private void appendResultWithoutSmoothing(int floorNumber, List<Point> floorPoints, Map<Integer, List<Point>> smoothedPaths, int i, int j)
+    {
+        for (int k = i; k <= j; k++)
+        {
+            finishPath(floorNumber, floorPoints, smoothedPaths, k);
         }
     }
 
-    private void appendResultWithSmoothing(int floorNumber, Map<Integer, List<Point>> smoothedPaths, List<Point> segment) {
+    private void appendResultWithSmoothing(int floorNumber, Map<Integer, List<Point>> smoothedPaths, List<Point> segment)
+    {
         List<Point> pts = new ArrayList<>();
-        for (int i = 0; i < segment.size(); i++) {
-            if (!smoothedPaths.containsKey(floorNumber)) {
+        for (int i = 0; i < segment.size(); i++)
+        {
+            if (!smoothedPaths.containsKey(floorNumber))
+            {
                 smoothedPaths.put(floorNumber, pts);
-            } else {
+            } else
+            {
                 pts = smoothedPaths.get(floorNumber);
             }
 
@@ -170,12 +226,26 @@ public class PathFactoryImpl implements PathFactory {
      * @param end         end point
      * @return true if yes, otherwise no
      */
-    private boolean isSmoothingSegmentPossible(MeshResult mesh, int floorNumber, Point start, Point end) {
+    private boolean isSmoothingSegmentPossible(MeshResult mesh, int floorNumber, Point start, Point end)
+    {
         boolean smoothed = true;
 
-        for (float row = start.getY() + Y_MESH_STEP; row <= end.getY() - Y_MESH_STEP; row++) {
-            for (float col = start.getX() + X_MESH_STEP; col <= end.getX() - X_MESH_STEP; col++) {
-                if (mesh.getGraph().getVertexByCoordinates(col, row, floorNumber) == null) {
+        float minY = Math.min(start.getY(), end.getY());
+        float maxY = Math.max(start.getY(), end.getY());
+        float minX = Math.min(start.getX(), end.getX());
+        float maxX = Math.max(start.getX(), end.getX());
+        boolean nearWallX = Math.abs(start.getX() - end.getX()) < DIST_EPS;
+        boolean nearWallY = Math.abs(start.getY() - end.getY()) < DIST_EPS;
+        boolean nearWall = (nearWallX || nearWallY) && !(nearWallX && nearWallY);
+        float marginX = nearWall ? 0 : X_MESH_STEP;
+        float marginY = nearWall ? 0 : Y_MESH_STEP;
+
+        for (float row = minY + marginY; row <= maxY - marginY; row += Y_MESH_STEP)
+        {
+            for (float col = minX + marginX; col <= maxX - marginX; col += X_MESH_STEP)
+            {
+                if (mesh.getGraph().getVertexByCoordinates(col, row, floorNumber) == null)
+                {
                     smoothed = false;
                     break;
                 }
@@ -194,9 +264,10 @@ public class PathFactoryImpl implements PathFactory {
      * @return scaled point
      */
     @NonNull
-    private Point calculateScaledPoint(int stepWidth, int stepHeight, Point position) {
-        final float xValue = position.getX() * 2 * stepWidth + stepWidth / 2;
-        final float yValue = position.getY() * 2 * stepWidth + 2 * stepHeight;
+    private Point calculateScaledPoint(int stepWidth, int stepHeight, Point position)
+    {
+        float xValue = position.getX() * 2 * stepWidth + stepWidth / 2;
+        float yValue = position.getY() * 2 * stepWidth + 2 * stepHeight;
 
         return new Point(xValue, yValue, position.getZ());
     }
@@ -207,20 +278,25 @@ public class PathFactoryImpl implements PathFactory {
      * @param points list of points
      * @return dictionary: key is floor number, value is list of points on specific floor
      */
-    private Map<Integer, List<Point>> splitPointsDueToFloorNumber(List<Point> points) {
-        final Map<Integer, List<Point>> result = new HashMap<>();
+    private Map<Integer, List<Point>> splitPointsDueToFloorNumber(List<Point> points)
+    {
+        Map<Integer, List<Point>> result = new HashMap<>();
 
-        if (points == null || points.isEmpty()) {
+        if (points == null || points.isEmpty())
+        {
             return result;
         }
 
-        for (final Point point : points) {
+        for (final Point point : points)
+        {
             int floorNumber = (int) point.getZ();
             List<Point> buffer;
 
-            if (result.containsKey(floorNumber)) {
+            if (result.containsKey(floorNumber))
+            {
                 buffer = result.get(floorNumber);
-            } else {
+            } else
+            {
                 buffer = new ArrayList<>();
                 result.put(floorNumber, buffer);
             }
