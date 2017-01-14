@@ -6,6 +6,7 @@ import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,15 +18,16 @@ import javax.inject.Inject;
 public class Positioner {
 
     private final BeaconsManager beaconsManager;
-    private final Building building;
+
+    List<Beacon> inRangeBeacons;
 
     @Inject
-    Positioner(BeaconsManager beaconsManager, Building building){
+    Positioner(BeaconsManager beaconsManager){
         this.beaconsManager = beaconsManager;
-        this.building = building;
+        inRangeBeacons = new ArrayList<>();
     }
 
-    private Point evaluatePosition(List<Beacon> beacons, Floor floor){
+    private Point evaluatePosition(List<Beacon> beacons, int floornum){
         float x =0, y =0, z=0, weightsum =0;
 
         for (Beacon beacon: beacons) {
@@ -38,8 +40,15 @@ public class Positioner {
         x /= weightsum;
         y /= weightsum;
 
-        z = floor.getNumber(); // nie wykrywa pietra, wiec przypisane takie jakie jest
+        z = floornum; // nie wykrywa pietra, wiec przypisane takie jakie jest
 
         return new Point(x,y,z);
+    }
+
+    public Point getUserPosition(int floorNum){
+        if(inRangeBeacons.size() == 0)
+            return new Point(0,0,0);
+        else
+            return evaluatePosition(inRangeBeacons, floorNum);
     }
 }
