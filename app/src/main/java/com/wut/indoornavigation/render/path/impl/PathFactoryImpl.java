@@ -19,8 +19,9 @@ import javax.inject.Inject;
 public class PathFactoryImpl implements PathFactory
 {
 
-    public static final float Y_MESH_STEP = 0.5f;
-    public static final float X_MESH_STEP = 0.5f;
+    private static final float Y_MESH_STEP = 0.5f;
+    private static final float X_MESH_STEP = 0.5f;
+    private static final int DIST_EPS = 2;
 
     @Inject
     public PathFactoryImpl()
@@ -96,9 +97,9 @@ public class PathFactoryImpl implements PathFactory
 
         for (int i = 0; i < floorPoints.size(); )
         {
-            List<Point> bufor = new ArrayList<>();
+            List<Point> buffer = new ArrayList<>();
             Point iPoint = floorPoints.get(i);
-            bufor.add(iPoint);
+            buffer.add(iPoint);
             i++;
 
             if (i >= floorPoints.size())
@@ -108,17 +109,39 @@ public class PathFactoryImpl implements PathFactory
             iPoint = floorPoints.get(i);
             if (i > 0 && i < floorPoints.size())
             {
-                bufor.add(iPoint);
+                buffer.add(iPoint);
             }
 
             int j = i + 1;
             Point nextPassage = null;
+            boolean smoothingPossible;
             while (j < floorPoints.size())
             {
                 if (passagePoints.contains(floorPoints.get(j)))
                 {
                     nextPassage = floorPoints.get(j - 1);
-                    break;
+                    smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                    if(smoothingPossible){
+                        break;
+                    } else{
+                        int k=j-1;
+                        boolean found = false;
+                        while(k>=i){
+                            nextPassage = floorPoints.get(k);
+                            smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                            if(smoothingPossible)
+                            {
+                                found = true;
+                                j=k;
+                                break;
+                            }
+                            k--;
+                        }
+
+                        if(found){
+                            break;
+                        }
+                    }
                 }
                 j++;
             }
@@ -128,16 +151,16 @@ public class PathFactoryImpl implements PathFactory
                 throw new IllegalStateException("No matching passage found.");
             } else
             {
-                bufor.add(nextPassage);
+                buffer.add(nextPassage);
                 if (nextPassage == null)
                 {
-                    throw new IllegalStateException("Not possible");
+                    throw new IllegalStateException("No matching passage found.");
                 }
 
-                boolean smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
+                smoothingPossible = isSmoothingSegmentPossible(mesh, floorNumber, iPoint, nextPassage);
                 if (smoothingPossible)
                 {
-                    appendResultWithSmoothing(floorNumber, smoothedPaths, bufor);
+                    appendResultWithSmoothing(floorNumber, smoothedPaths, buffer);
                 } else
                 {
                     appendResultWithoutSmoothing(floorNumber, floorPoints, smoothedPaths, i, j);
@@ -147,16 +170,7 @@ public class PathFactoryImpl implements PathFactory
 
                 if (j == floorPoints.size() - 1)
                 {
-                    List<Point> pts = new ArrayList<>();
-                    if (!smoothedPaths.containsKey(floorNumber))
-                    {
-                        smoothedPaths.put(floorNumber, pts);
-                    } else
-                    {
-                        pts = smoothedPaths.get(floorNumber);
-                    }
-
-                    pts.add(floorPoints.get(j));
+                    finishPath(floorNumber, floorPoints, smoothedPaths, j);
 
                     break;
                 }
@@ -166,20 +180,25 @@ public class PathFactoryImpl implements PathFactory
         return smoothedPaths;
     }
 
+    private void finishPath(int floorNumber, List<Point> floorPoints, Map<Integer, List<Point>> smoothedPaths, int j)
+    {
+        List<Point> pts = new ArrayList<>();
+        if (!smoothedPaths.containsKey(floorNumber))
+        {
+            smoothedPaths.put(floorNumber, pts);
+        } else
+        {
+            pts = smoothedPaths.get(floorNumber);
+        }
+
+        pts.add(floorPoints.get(j));
+    }
+
     private void appendResultWithoutSmoothing(int floorNumber, List<Point> floorPoints, Map<Integer, List<Point>> smoothedPaths, int i, int j)
     {
         for (int k = i; k <= j; k++)
         {
-            List<Point> pts = new ArrayList<>();
-            if (!smoothedPaths.containsKey(floorNumber))
-            {
-                smoothedPaths.put(floorNumber, pts);
-            } else
-            {
-                pts = smoothedPaths.get(floorNumber);
-            }
-
-            pts.add(floorPoints.get(k));
+            finishPath(floorNumber, floorPoints, smoothedPaths, k);
         }
     }
 
@@ -213,9 +232,19 @@ public class PathFactoryImpl implements PathFactory
     {
         boolean smoothed = true;
 
-        for (float row = start.getY() + Y_MESH_STEP; row <= end.getY() - Y_MESH_STEP; row++)
+        float minY = Math.min(start.getY(), end.getY());
+        float maxY = Math.max(start.getY(), end.getY());
+        float minX = Math.min(start.getX(), end.getX());
+        float maxX = Math.max(start.getX(), end.getX());
+        boolean nearWallX = Math.abs(start.getX() - end.getX()) < DIST_EPS;
+        boolean nearWallY = Math.abs(start.getY() - end.getY()) < DIST_EPS;
+        boolean nearWall = (nearWallX || nearWallY) && !(nearWallX && nearWallY);
+        float marginX = nearWall ? 0 : X_MESH_STEP;
+        float marginY = nearWall ? 0 : Y_MESH_STEP;
+
+        for (float row = minY + marginY; row <= maxY - marginY; row+=Y_MESH_STEP)
         {
-            for (float col = start.getX() + X_MESH_STEP; col <= end.getX() - X_MESH_STEP; col++)
+            for (float col = minX + marginX; col <= maxX - marginX; col+=X_MESH_STEP)
             {
                 if (mesh.getGraph().getVertexByCoordinates(col, row, floorNumber) == null)
                 {
