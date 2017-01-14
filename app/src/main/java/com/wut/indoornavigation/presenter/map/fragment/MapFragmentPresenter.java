@@ -92,8 +92,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void emptyRoomSelected(int floorIndex) {
         isNavigating = false;
-        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(floorIndex);
-        getView().showMap(mapEngine.getMapForFloor(destinationFloorNumber));
+        getView().showMap(mapEngine.getMapForFloor(floorIndex));
     }
 
     private String[] parseFloorNumbers() {

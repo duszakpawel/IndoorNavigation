@@ -43,6 +43,8 @@ public class Parser {
     private static final String ID_ATTR_TAG = "id";
     private static final String END_FLOOR_ATTR_TAG = "endfloor";
     private static final String END_ID_TAG = "endid";
+    private static final String MAJOR_TAG = "major";
+    private static final String MINOR_TAG = "minor";
 
     private final DocumentBuilderFactory documentBuilderFactory;
 
@@ -172,6 +174,8 @@ public class Parser {
 
                 beaconList.add(Beacon.builder()
                         .id(Integer.parseInt(beaconNode.getAttribute(ID_ATTR_TAG)))
+                        .major(Integer.parseInt(beaconNode.getAttribute(MAJOR_TAG)))
+                        .minor(Integer.parseInt(beaconNode.getAttribute(MINOR_TAG)))
                         .build());
             }
             final int beaconsFloorIndex = findFloorIndex(floors, floorNumber);

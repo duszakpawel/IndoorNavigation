@@ -148,7 +148,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
         final PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
-        final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(1).get(0);
+        final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
         final Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         final List<Vertex> vertexPath = pathFinder.aStar(start, end);
