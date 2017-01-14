@@ -172,11 +172,17 @@ public class Parser {
             for (int j = 0; j < beaconNodes.getLength(); j++) {
                 final Element beaconNode = (Element) (beaconNodes.item(j));
 
-                beaconList.add(Beacon.builder()
-                        .id(Integer.parseInt(beaconNode.getAttribute(ID_ATTR_TAG)))
-                        .major(Integer.parseInt(beaconNode.getAttribute(MAJOR_TAG)))
-                        .minor(Integer.parseInt(beaconNode.getAttribute(MINOR_TAG)))
-                        .build());
+                beaconList.add( new Beacon(
+                        Integer.parseInt(beaconNode.getAttribute(ID_ATTR_TAG)),
+                        0,0,
+                        Integer.parseInt(beaconNode.getAttribute(MAJOR_TAG)),
+                        Integer.parseInt(beaconNode.getAttribute(MINOR_TAG))
+                        ));
+                        //Beacon.builder()
+                       // .id(Integer.parseInt(beaconNode.getAttribute(ID_ATTR_TAG)))
+                      //  .major(Integer.parseInt(beaconNode.getAttribute(MAJOR_TAG)))
+                      //  .minor(Integer.parseInt(beaconNode.getAttribute(MINOR_TAG)))
+                      //  .build());
             }
             final int beaconsFloorIndex = findFloorIndex(floors, floorNumber);
             final Floor beaconsFloor = floors.get(beaconsFloorIndex);
@@ -240,7 +246,7 @@ public class Parser {
                             newMap[r - 1][c / 2] = FloorObject.BEACON;
                             int beaconInd = findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++);
                             Beacon beacon = currentFloor.getBeacons().get(beaconInd);
-                            beacon = beacon.toBuilder().x(r - 1).y(c / 2).build();
+                            beacon = new Beacon(beacon.getId(), r-1, c/2, beacon.getMajor(), beacon.getMinor()); //beacon.toBuilder().x(r - 1).y(c / 2).build();
                             currentFloor.getBeacons().set(beaconInd, beacon);
                             break;
 
