@@ -39,7 +39,7 @@ public final class BeaconsManager {
     public BeaconsManager(Context applicationContext, BuildingStorage buildingStorage) {
         this.applicationContext = applicationContext;
         this.buildingStorage = buildingStorage;
-        region = new Region("Region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null );
+        region = new Region("Region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
         inRangeBuildingBeacons = new ArrayList<>();
         initialize();
     }
@@ -52,12 +52,7 @@ public final class BeaconsManager {
 
     public void startDiscoveringBeacons() {
         //beaconManager.connect(() -> scanId = beaconManager.startEddystoneScanning());
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startRanging(region);
-            }
-        });
+        beaconManager.connect(() -> beaconManager.startRanging(region));
     }
 
     public void stopDiscoveringBeacons() {
@@ -73,23 +68,20 @@ public final class BeaconsManager {
         beaconManager.disconnect();
     }
 
-    private void configureRangingListener(){
-        beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-            @Override
-            public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                if (list.size()>2) {
-                    //  funkcja przypisania dystansu do bikonuf buildingu
-                    updateInRangeBuildingBeacons(list);
-                }
+    private void configureRangingListener() {
+        beaconManager.setRangingListener((region1, list) -> {
+            if (list.size() > 2) {
+                //  funkcja przypisania dystansu do bikonuf buildingu
+                updateInRangeBuildingBeacons(list);
             }
         });
     }
 
-    private com.wut.indoornavigation.data.model.Beacon findBuildingBeacon(Beacon inRangeBeacon){
-        for (Floor floor: buildingStorage.getBuilding().getFloors()) {
-            for (com.wut.indoornavigation.data.model.Beacon buildingBeacon: floor.getBeacons()) {
-                if(buildingBeacon.getMajor() == inRangeBeacon.getMajor() && buildingBeacon.getMinor() == inRangeBeacon.getMinor())
-                    return  buildingBeacon;
+    private com.wut.indoornavigation.data.model.Beacon findBuildingBeacon(Beacon inRangeBeacon) {
+        for (Floor floor : buildingStorage.getBuilding().getFloors()) {
+            for (com.wut.indoornavigation.data.model.Beacon buildingBeacon : floor.getBeacons()) {
+                if (buildingBeacon.getMajor() == inRangeBeacon.getMajor() && buildingBeacon.getMinor() == inRangeBeacon.getMinor())
+                    return buildingBeacon;
             }
         }
         return null;
@@ -103,6 +95,9 @@ public final class BeaconsManager {
         List<com.wut.indoornavigation.data.model.Beacon> possibleBeacons = new ArrayList<>();
         for (Beacon inRangeBeacon : inRangeBeacons) {
             currentBeacon = findBuildingBeacon(inRangeBeacon);
+            if (currentBeacon == null) {
+                continue;
+            }
             currentBeacon.setDistance(Utils.computeAccuracy(inRangeBeacon));
 
             if (currentBeacon.getDistance() < nearestDistance) {
@@ -125,10 +120,11 @@ public final class BeaconsManager {
             }
         }
     }
-    private Floor findBeaconsFloor(com.wut.indoornavigation.data.model.Beacon buildingBeacon){
-        for (Floor floor: buildingStorage.getBuilding().getFloors()) {
-            for (com.wut.indoornavigation.data.model.Beacon beacon: floor.getBeacons()) {
-                if(beacon.getMajor() == buildingBeacon.getMajor() && beacon.getMinor() == buildingBeacon.getMinor())
+
+    private Floor findBeaconsFloor(com.wut.indoornavigation.data.model.Beacon buildingBeacon) {
+        for (Floor floor : buildingStorage.getBuilding().getFloors()) {
+            for (com.wut.indoornavigation.data.model.Beacon beacon : floor.getBeacons()) {
+                if (beacon.getMajor() == buildingBeacon.getMajor() && beacon.getMinor() == buildingBeacon.getMinor())
                     return floor;
             }
         }

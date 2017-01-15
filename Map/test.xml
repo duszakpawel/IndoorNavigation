@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<Description>
+    <RoomsCollection>    
+     <Rooms floor="0">
+            <Room>201</Room>
+            <Room>202</Room>
+            <Room>203</Room>
+            <Room>204</Room>
+            <Room>205</Room>
+            <Room>206</Room>
+            <Room>207</Room>
+            <Room>208</Room>
+     </Rooms>
+     <Rooms floor="1">
+            <Room>301</Room>
+            <Room>302</Room>
+            <Room>303</Room>
+            <Room>304</Room>
+            <Room>305</Room>
+            <Room>306</Room>
+            <Room>307</Room>
+            <Room>308</Room>
+     </Rooms>
+</RoomsCollection>
+<StairsCollection>
+     <Stairs floor="0">
+	       <Stair id="0" endfloor="1" endid="0" />
+     </Stairs>
+     <Stairs floor="1">
+	       <Stair id="0" endfloor="0" endid="0" />
+     </Stairs>
+</StairsCollection>
+<ElevatorsCollection>
+     <Elevators floor="0">
+
+     </Elevators>
+     <Elevators floor="1">
+
+     </Elevators>
+</ElevatorsCollection>
+<BeaconsCollection>
+	<Beacons floor="0">
+		<Beacon id="0" major="1" minor="2" />
+		<Beacon id="1" major="3" minor="4" />
+		<Beacon id="2" major="5" minor="6" />
+		<Beacon id="1" major="3" minor="4" />
+		<Beacon id="2" major="5" minor="6" />
+	</Beacons>
+	<Beacons floor="1">
+		<Beacon id="0" major="1" minor="2" />
+		<Beacon id="1" major="3" minor="4" />
+		<Beacon id="1" major="3" minor="4" />
+		<Beacon id="2" major="5" minor="6" />
+	</Beacons>
+</BeaconsCollection>
+    <Maps>
+        <Map floor="0">
+                              ~ - - - - - - - - - - - - - - - - - - - - - - - - - - - - ~                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                S    -         -                         -                              
+                              -                     P         -                         -                              
+                              -                     -         -                         -                              
+                              ~ - - - - - - - - - - - - - - - - - - - - - - - - - - - - ~                              
+        </Map>
+        <Map floor="1">
+                              ~ - - - - - - - - - - - - - - - - - - - - - - - - - - - - ~                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     D         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         - - - - - - - - - - - - - -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         -                         -                              
+                              - - - - - - - - - - - -         -                         -                              
+                              -                     -         -                         -                              
+                              -                     -         D                         -                              
+                              -                     -         -                         -                              
+                              -                S    -         -                         -                              
+                              -                     P         -                         -                              
+                              -                     -         -                         -                              
+                              ~ - - - - - - - - - - - - - - - - - - - - - - - - - - - - ~                              
+        </Map>
+    </Maps>
+</Description>
