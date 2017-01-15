@@ -88,7 +88,7 @@ public final class BeaconsManager {
     }
 
     private void updateInRangeBuildingBeacons(List<Beacon> inRangeBeacons) {
-        double nearestDistance = 999;
+        double nearestDistance = 9999;
         Floor floor;
         com.wut.indoornavigation.data.model.Beacon strongestBeacon = null, currentBeacon;
 
@@ -112,9 +112,11 @@ public final class BeaconsManager {
             if (floor != null) {
                 inRangeBuildingBeacons = new ArrayList<>();
                 for (com.wut.indoornavigation.data.model.Beacon beacon : possibleBeacons) {
-                    if ((floor.getBeacons().contains(beacon))) {
-                        inRangeBuildingBeacons.add(beacon);
+                    for (com.wut.indoornavigation.data.model.Beacon floorBeacon:floor.getBeacons()) {
+                        if(beacon.getId() == floorBeacon.getId())
+                            inRangeBuildingBeacons.add(beacon);
                     }
+
                 }
                 floorNumber = floor.getNumber();
             }
