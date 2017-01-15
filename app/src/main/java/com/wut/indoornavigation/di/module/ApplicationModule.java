@@ -37,6 +37,17 @@ public class ApplicationModule {
     }
 
     /**
+     * Provides application context
+     *
+     * @return application context
+     */
+    @Singleton
+    @Provides
+    Context provideApplicationContext() {
+        return context.getApplicationContext();
+    }
+
+    /**
      * Provides Singleton MapEngine
      *
      * @return {@link MapEngineImpl}

@@ -11,6 +11,7 @@ import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
+import com.wut.indoornavigation.data.storage.BuildingStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public final class BeaconsManager {
     private static final String APP_TOKEN = "appToken";
 
     private final Context applicationContext;
-    public final Building building;
+    private final BuildingStorage buildingStorage;
 
     private BeaconManager beaconManager;
     private String scanId;
@@ -35,9 +36,9 @@ public final class BeaconsManager {
     public int floorNumber;
 
     @Inject
-    public BeaconsManager(Context applicationContext, Building building) {
+    public BeaconsManager(Context applicationContext, BuildingStorage buildingStorage) {
         this.applicationContext = applicationContext;
-        this.building = building;
+        this.buildingStorage = buildingStorage;
         region = new Region("Region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null );
         inRangeBuildingBeacons = new ArrayList<>();
     }
@@ -84,7 +85,7 @@ public final class BeaconsManager {
     }
 
     private com.wut.indoornavigation.data.model.Beacon findBuildingBeacon(Beacon inRangeBeacon){
-        for (Floor floor: building.getFloors()) {
+        for (Floor floor: buildingStorage.getBuilding().getFloors()) {
             for (com.wut.indoornavigation.data.model.Beacon buildingBeacon: floor.getBeacons()) {
                 if(buildingBeacon.getMajor() == inRangeBeacon.getMajor() && buildingBeacon.getMinor() == inRangeBeacon.getMinor())
                     return  buildingBeacon;
@@ -124,7 +125,7 @@ public final class BeaconsManager {
         }
     }
     private Floor findBeaconsFloor(com.wut.indoornavigation.data.model.Beacon buildingBeacon){
-        for (Floor floor: building.getFloors()) {
+        for (Floor floor: buildingStorage.getBuilding().getFloors()) {
             for (com.wut.indoornavigation.data.model.Beacon beacon: floor.getBeacons()) {
                 if(beacon.getMajor() == buildingBeacon.getMajor() && beacon.getMinor() == buildingBeacon.getMinor())
                     return floor;
