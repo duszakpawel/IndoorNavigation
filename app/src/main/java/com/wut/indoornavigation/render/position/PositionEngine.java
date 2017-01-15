@@ -31,6 +31,11 @@ public class PositionEngine extends RenderEngine {
         userPositionPaint.setColor(ContextCompat.getColor(context, R.color.userPositionColor));
     }
 
+    public void init(Context context) {
+        calculateMapHeight(context);
+        calculateMapWidth(context);
+    }
+
     public Bitmap renderMapWithUserPosition(Bitmap map, Point userPosition) {
         final Bitmap bitmap = map.copy(Bitmap.Config.ARGB_8888, true);
         final Canvas canvas = new Canvas(bitmap);
@@ -41,8 +46,10 @@ public class PositionEngine extends RenderEngine {
 
     @NonNull
     private Point calculateScaledPoint(int stepWidth, int stepHeight, Point position) {
-        final float xValue = position.getX() * 2 * stepWidth + stepWidth / 2;
-        final float yValue = position.getY() * 2 * stepWidth + 2 * stepHeight;
+        stepWidth /= 2;
+        stepHeight /= 2;
+        final float xValue = position.getY() * 2 * stepWidth + stepWidth / 2;
+        final float yValue = position.getX() * 2 * stepWidth + 2 * stepHeight;
 
         return new Point(xValue, yValue, position.getZ());
     }
@@ -53,7 +60,7 @@ public class PositionEngine extends RenderEngine {
 
         final Point scaledPoint = calculateScaledPoint(stepWidth, stepHeight, userPosition);
 
-        return new RectF(scaledPoint.getX(), scaledPoint.getY(),
-                scaledPoint.getX() + userPositionSize , scaledPoint.getY() + userPositionSize);
+        return new RectF(scaledPoint.getX() + userPositionSize / 2, scaledPoint.getY() + userPositionSize / 2,
+                scaledPoint.getX() + userPositionSize * 3 / 2, scaledPoint.getY() + userPositionSize * 3 / 2);
     }
 }

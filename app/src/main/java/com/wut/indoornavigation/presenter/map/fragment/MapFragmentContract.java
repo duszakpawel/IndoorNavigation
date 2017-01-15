@@ -111,5 +111,12 @@ public interface MapFragmentContract {
          * Starts user positioning
          */
         void startUserPositioning();
+
+        /**
+         * Inits user positioning engine
+         *
+         * @param context fragment ontext
+         */
+        void initUserPositioningEngine(Context context);
     }
 }

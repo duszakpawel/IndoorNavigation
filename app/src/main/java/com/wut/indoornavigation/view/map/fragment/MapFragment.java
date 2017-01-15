@@ -89,6 +89,7 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         mapAttacher = new PhotoViewAttacher(map);
         setToolbarFloorNumber(unknownPosition);
         getPresenter().startUserPositioning();
+        getPresenter().initUserPositioningEngine(getContext());
     }
 
     @NonNull

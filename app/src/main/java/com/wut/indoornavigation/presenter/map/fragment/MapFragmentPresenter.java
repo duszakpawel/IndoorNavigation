@@ -109,7 +109,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doAfterTerminate(getView()::hideProgressDialog)
-                    .subscribe(getView()::showMap, throwable -> {
+                    .subscribe(map -> Timber.d("Path rendered"), throwable -> {
                         Timber.e(throwable, "Error while rendering path");
                         getView().showError(throwable.getMessage());
                     }, () -> {
@@ -138,11 +138,18 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
                     Timber.d("Getting next user position " + point.toString());
                     if (currentUserPosition != point) {
                         currentUserPosition = point;
-                        showProperBitmap(mapEngine.getFloorNumbers().get(getView().getSelectedFloor()));
+                        if (!isNavigating) {
+                            showProperBitmap(mapEngine.getFloorNumbers().get(getView().getSelectedFloor()));
+                        }
                     }
                 })
                 .subscribe(point -> getView().setToolbarFloorNumber(String.valueOf((int) (point.getZ() + 2))),
                         throwable -> Timber.e(throwable, "Error while getting user position"));
+    }
+
+    @Override
+    public void initUserPositioningEngine(Context context) {
+        positionEngine.init(context);
     }
 
     private void startMapNavigationRefreshing() {
