@@ -75,8 +75,8 @@ public final class BeaconsManager {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                if (!list.isEmpty()) {
-                    //  funkcja przypisania rssi do bikonuf buildingu
+                if (list.size()>2) {
+                    //  funkcja przypisania dystansu do bikonuf buildingu
                     updateInRangeBuildingBeacons(list);
                 }
             }

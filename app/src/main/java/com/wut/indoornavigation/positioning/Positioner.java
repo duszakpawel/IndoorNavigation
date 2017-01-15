@@ -52,14 +52,14 @@ public class Positioner {
         if(map[x][y] == FloorObject.SPACE)
             return point;
 
-        if(map[x+1][y] == FloorObject.SPACE)
-            return new Point(x+1, y, point.getZ());
-        if(map[x-1][y] == FloorObject.SPACE)
-            return new Point(x-1, y, point.getZ());
-        if(map[x][y+1] == FloorObject.SPACE)
-            return new Point(x, y+1, point.getZ());
-        if(map[x][y-1] == FloorObject.SPACE)
-            return new Point(x, y-1, point.getZ());
+        if(map[Math.min(x+1, map.length)][y] == FloorObject.SPACE)
+            return new Point(Math.min(x+1, map.length), y, point.getZ());
+        if(map[Math.max(x-1, 0)][y] == FloorObject.SPACE)
+            return new Point(Math.max(x-1, 0), y, point.getZ());
+        if(map[x][Math.min(y+1, map[x].length)] == FloorObject.SPACE)
+            return new Point(x, Math.min(y+1, map[x].length), point.getZ());
+        if(map[x][Math.max(y-1, 0)] == FloorObject.SPACE)
+            return new Point(x,Math.max(y-1, 0), point.getZ());
 
         return point;
     }
