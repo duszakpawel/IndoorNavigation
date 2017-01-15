@@ -2,24 +2,24 @@
 <Description>
     <RoomsCollection>    
      <Rooms floor="0">
+            <Room>212</Room>
             <Room>201</Room>
             <Room>202</Room>
+            <Room>211</Room>
             <Room>203</Room>
             <Room>204</Room>
-            <Room>205</Room>
-            <Room>206</Room>
-            <Room>207</Room>
-            <Room>208</Room>
+            <Room>210</Room>
+            <Room>299</Room>
      </Rooms>
      <Rooms floor="1">
+            <Room>312</Room>
             <Room>301</Room>
             <Room>302</Room>
+            <Room>311</Room>
             <Room>303</Room>
             <Room>304</Room>
-            <Room>305</Room>
-            <Room>306</Room>
-            <Room>307</Room>
-            <Room>308</Room>
+            <Room>310</Room>
+            <Room>399</Room>
      </Rooms>
 </RoomsCollection>
 <StairsCollection>
@@ -40,17 +40,15 @@
 </ElevatorsCollection>
 <BeaconsCollection>
 	<Beacons floor="0">
-		<Beacon id="0" major="1" minor="2" />
-		<Beacon id="1" major="3" minor="4" />
-		<Beacon id="2" major="5" minor="6" />
-		<Beacon id="1" major="3" minor="4" />
-		<Beacon id="2" major="5" minor="6" />
+
 	</Beacons>
 	<Beacons floor="1">
-		<Beacon id="0" major="1" minor="2" />
-		<Beacon id="1" major="3" minor="4" />
-		<Beacon id="1" major="3" minor="4" />
-		<Beacon id="2" major="5" minor="6" />
+		<Beacon id="0" major="57383" minor="52601" />
+		<Beacon id="1" major="28791" minor="43161" />
+		<Beacon id="2" major="23334" minor="17056" />
+		<Beacon id="3" major="10327" minor="47098" />
+		<Beacon id="4" major="5881" minor="23283" />
+		<Beacon id="5" major="20738" minor="526" />
 	</Beacons>
 </BeaconsCollection>
     <Maps>
@@ -143,21 +141,21 @@
                               -                     -         -                         -                              
                               - - - - - - - - - - - -         -                         -                              
                               -                     -         -                         -                              
-                              -                     -         -                         -                              
+                              -                     B         -                         -                              
                               -                     D         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         - - - - - - - - - - - - - -                              
                               -                     -         -                         -                              
                               -                     -         D                         -                              
+                              -                     -         B                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
-                              -                     -         -                         -                              
-                              -                     -         -                         -                              
+                              -                     B         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               - - - - - - - - - - - -         - - - - - - - - - - - - - -                              
@@ -166,13 +164,13 @@
                               -                     D         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
+                              -                     -         B                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
-                              -                     -         -                         -                              
-                              -                     -         -                         -                              
+                              -                     B         -                         -                              
                               -                     -         - - - - - - - - - - - - - -                              
                               -                     -         -                         -                              
                               -                     -         -                         -                              
@@ -180,7 +178,7 @@
                               -                     -         -                         -                              
                               -                     -         -                         -                              
                               - - - - - - - - - - - -         -                         -                              
-                              -                     -         -                         -                              
+                              -                     -         B                         -                              
                               - - - - - - - - -     -         D                         -                              
                               -               S     -         -                         -                              
                               - - - - - - - - -     -         -                         -                              
