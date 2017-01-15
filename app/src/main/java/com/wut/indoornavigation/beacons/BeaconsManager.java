@@ -41,6 +41,7 @@ public final class BeaconsManager {
         this.buildingStorage = buildingStorage;
         region = new Region("Region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null );
         inRangeBuildingBeacons = new ArrayList<>();
+        initialize();
     }
 
     public void initialize() {
