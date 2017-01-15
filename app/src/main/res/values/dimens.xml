@@ -25,4 +25,5 @@
     <dimen name="pathWidth">4dp</dimen>
 
     <dimen name="splash_loading_margin_top">96dp</dimen>
+    <dimen name="user_position_size">10dp</dimen>
 </resources>

@@ -47,9 +47,22 @@ public interface MapFragmentContract {
          */
         void setToolbarFloorNumber(String floorNumber);
 
+        /**
+         * Starts navigation
+         */
         void startNavigation();
 
+        /**
+         * Cancels navigation
+         */
         void cancelNavigation();
+
+        /**
+         * Gets current selected floor index
+         *
+         * @return current selected floor index
+         */
+        int getSelectedFloor();
     }
 
     /**
@@ -95,8 +108,8 @@ public interface MapFragmentContract {
         void emptyRoomSelected(int floorIndex);
 
         /**
-         * Gets current floor number
+         * Starts user positioning
          */
-        void getCurrentFloorNumber();
+        void startUserPositioning();
     }
 }

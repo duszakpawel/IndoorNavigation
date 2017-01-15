@@ -16,4 +16,5 @@
     <string name="toolbar_title_floor">Current floor : %s</string>
 
     <string name="splash_loading_text">Loading map. Please wait</string>
+    <string name="unknown_position">unknown</string>
 </resources>

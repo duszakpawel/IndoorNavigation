@@ -48,6 +48,8 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
     String progressDialogMessage;
     @BindString(R.string.toolbar_title_floor)
     String toolbarTitle;
+    @BindString(R.string.unknown_position)
+    String unknownPosition;
 
     @BindView(R.id.fragment_map_floor_spinner)
     Spinner floorSpinner;
@@ -85,7 +87,8 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
         initializeFloorSpinner();
         initializeRoomSpinner();
         mapAttacher = new PhotoViewAttacher(map);
-        getPresenter().getCurrentFloorNumber();
+        setToolbarFloorNumber(unknownPosition);
+        getPresenter().startUserPositioning();
     }
 
     @NonNull
@@ -140,13 +143,22 @@ public class MapFragment extends BaseMvpFragment<MapFragmentContract.View, MapFr
 
     @Override
     public void startNavigation() {
+        roomSpinner.setEnabled(false);
+        floorSpinner.setEnabled(false);
         mapFabButton.setImageResource(R.drawable.ic_clear_white_24dp);
     }
 
     @Override
     public void cancelNavigation() {
+        roomSpinner.setEnabled(true);
+        floorSpinner.setEnabled(true);
         mapFabButton.setImageResource(R.drawable.ic_navigation_white_24dp);
         roomSpinner.setSelection(EMPTY_ROOM_INDEX);
+    }
+
+    @Override
+    public int getSelectedFloor() {
+        return floorSpinner.getSelectedItemPosition();
     }
 
     private void initializeFloorSpinner() {

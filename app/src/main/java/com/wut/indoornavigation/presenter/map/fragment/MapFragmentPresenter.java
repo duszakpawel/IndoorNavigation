@@ -1,6 +1,7 @@
 package com.wut.indoornavigation.presenter.map.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -9,8 +10,10 @@ import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.positioning.Positioner;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
+import com.wut.indoornavigation.render.position.PositionEngine;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -27,30 +30,43 @@ import timber.log.Timber;
 public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragmentContract.View>
         implements MapFragmentContract.Presenter {
 
+    private static final int USER_POSITION_REFRESH_INTERVAL = 2;
+
     @VisibleForTesting
     boolean isNavigating;
 
     private final MapEngine mapEngine;
     private final PathFinderEngine pathFinderEngine;
+    private final PositionEngine positionEngine;
     private final Positioner positioner;
 
     @NonNull
     private Subscription pathFinderSubscription;
+    @NonNull
+    private Subscription userPositionSubscription;
+    @NonNull
+    private Subscription mapRefreshSubscription;
 
-    private int currentFloorNumber = 2;
+    private Point currentUserPosition;
 
     @Inject
-    MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Positioner positioner) {
+    MapFragmentPresenter(MapEngine mapEngine, PositionEngine positionEngine,
+                         PathFinderEngine pathFinderEngine, Positioner positioner) {
         this.mapEngine = mapEngine;
         this.pathFinderEngine = pathFinderEngine;
+        this.positionEngine = positionEngine;
         this.positioner = positioner;
         pathFinderSubscription = Subscriptions.unsubscribed();
+        userPositionSubscription = Subscriptions.unsubscribed();
+        mapRefreshSubscription = Subscriptions.unsubscribed();
     }
 
     @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
         pathFinderSubscription.unsubscribe();
+        userPositionSubscription.unsubscribe();
+        mapRefreshSubscription.unsubscribe();
     }
 
     @Override
@@ -69,7 +85,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         if (isNavigating) {
             getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(position)));
         } else {
-            getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
+            showProperBitmap(floorNumberList.get(position));
         }
     }
 
@@ -79,14 +95,17 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
             getView().showProgressDialog();
             final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
             final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
-            // TODO: 15.12.2016 Provide user point
-            Point userPosition = positioner.getUserPosition();
+            final Point userPosition = positioner.getUserPosition();
 
             pathFinderSubscription = Observable.just(userPosition)
                     .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
                             context, point, destinationFloorNumber, destinationRoomIndex))
                     .map(point -> mapEngine.getFloorNumbers().get(floorIndex))
                     .map(pathFinderEngine::getMapWithPathForFloor)
+                    .flatMap(map -> {
+                        startMapNavigationRefreshing();
+                        return Observable.just(map);
+                    })
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doAfterTerminate(getView()::hideProgressDialog)
@@ -102,13 +121,6 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         }
     }
 
-    private void cancelNavigation(int position) {
-        isNavigating = false;
-        final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        getView().cancelNavigation();
-        getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
-    }
-
     @Override
     public void emptyRoomSelected(int floorIndex) {
         isNavigating = false;
@@ -117,8 +129,48 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
-    public void getCurrentFloorNumber() {
-        getView().setToolbarFloorNumber(String.valueOf(currentFloorNumber));
+    public void startUserPositioning() {
+        userPositionSubscription = Observable.interval(USER_POSITION_REFRESH_INTERVAL, TimeUnit.SECONDS)
+                .map(time -> positioner.getUserPosition())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(point -> {
+                    Timber.d("Getting next user position " + point.toString());
+                    if (currentUserPosition != point) {
+                        currentUserPosition = point;
+                        showProperBitmap(mapEngine.getFloorNumbers().get(getView().getSelectedFloor()));
+                    }
+                })
+                .subscribe(point -> getView().setToolbarFloorNumber(String.valueOf((int) (point.getZ() + 2))),
+                        throwable -> Timber.e(throwable, "Error while getting user position"));
+    }
+
+    private void startMapNavigationRefreshing() {
+        mapRefreshSubscription = Observable.interval(USER_POSITION_REFRESH_INTERVAL, TimeUnit.SECONDS)
+                .map(time -> mapEngine.getFloorNumbers().get((int) currentUserPosition.getZ()))
+                .map(pathFinderEngine::getMapWithPathForFloor)
+                .map(map -> positionEngine.renderMapWithUserPosition(map, currentUserPosition))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getView()::showMap,
+                        throwable -> Timber.e(throwable, "Error while showing map with user position"));
+    }
+
+    private void showProperBitmap(int floorNumber) {
+        final Bitmap map = mapEngine.getMapForFloor(floorNumber);
+        if (currentUserPosition == null || (int) currentUserPosition.getZ() != floorNumber) {
+            getView().showMap(map);
+        } else {
+            getView().showMap(positionEngine.renderMapWithUserPosition(map, currentUserPosition));
+        }
+    }
+
+    private void cancelNavigation(int position) {
+        mapRefreshSubscription.unsubscribe();
+        isNavigating = false;
+        final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
+        getView().cancelNavigation();
+        showProperBitmap(floorNumberList.get(position));
     }
 
     private String[] parseFloorNumbers() {
