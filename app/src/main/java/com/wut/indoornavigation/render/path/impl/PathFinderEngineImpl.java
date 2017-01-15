@@ -149,6 +149,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         final PathFinder pathFinder = mesh.getGraph();
         //TODO: provide source and use it
         final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
+        //final Vertex start = getStartVertex(source);
         final Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         final List<Vertex> vertexPath = pathFinder.aStar(start, end);
@@ -163,5 +164,17 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     private Path produceCurvedPath(List<Point> points) {
         return pathFactory.producePath(points);
+    }
+
+    private Vertex getStartVertex(Point source){
+        List<Vertex> vertices =  mesh.getGraph().getVertices();
+        float x = source.getX()/2;
+        float y = source.getY()/2;
+        for(Vertex vertex : vertices){
+            if (x == vertex.getPosition().getX() && y == vertex.getPosition().getY() && source.getZ() == vertex.getPosition().getZ())
+                return vertex;
+        }
+
+        return mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
     }
 }

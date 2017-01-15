@@ -8,6 +8,7 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
 
+import com.estimote.sdk.Utils;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Floor;
 
@@ -25,7 +26,7 @@ public final class BeaconsManager {
     private static final String APP_TOKEN = "appToken";
 
     private final Context applicationContext;
-    private final Building building;
+    public final Building building;
 
     private BeaconManager beaconManager;
     private String scanId;
@@ -93,17 +94,17 @@ public final class BeaconsManager {
     }
 
     private void updateInRangeBuildingBeacons(List<Beacon> inRangeBeacons) {
-        int strongestSignal = 0;
+        double nearestDistance = 0;
         Floor floor;
         com.wut.indoornavigation.data.model.Beacon strongestBeacon = null, currentBeacon;
 
         List<com.wut.indoornavigation.data.model.Beacon> possibleBeacons = new ArrayList<>();
         for (Beacon inRangeBeacon : inRangeBeacons) {
             currentBeacon = findBuildingBeacon(inRangeBeacon);
-            currentBeacon.setRssi(inRangeBeacon.getRssi());
+            currentBeacon.setDistance(Utils.computeAccuracy(inRangeBeacon));
 
-            if (currentBeacon.getRssi() > strongestSignal) {
-                strongestSignal = currentBeacon.getRssi();
+            if (currentBeacon.getDistance() < nearestDistance) {
+                nearestDistance = currentBeacon.getDistance();
                 strongestBeacon = currentBeacon;
             }
 

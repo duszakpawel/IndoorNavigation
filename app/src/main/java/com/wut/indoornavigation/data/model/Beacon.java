@@ -17,7 +17,7 @@ public class Beacon extends BuildingObject {
 
     int major;
     int minor;
-    int rssi;
+    double distance;
 
     @Builder(toBuilder = true)
     private Beacon(int id, int x, int y, int major, int minor) {

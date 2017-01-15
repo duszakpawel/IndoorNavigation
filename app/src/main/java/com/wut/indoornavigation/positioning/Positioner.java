@@ -2,6 +2,7 @@ package com.wut.indoornavigation.positioning;
 
 import com.wut.indoornavigation.beacons.BeaconsManager;
 import com.wut.indoornavigation.data.model.Beacon;
+import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 
 import java.util.List;
@@ -9,10 +10,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton
 public class Positioner {
 
-    private final BeaconsManager beaconsManager;
+    public final BeaconsManager beaconsManager;
 
     @Inject
     Positioner(BeaconsManager beaconsManager){
@@ -33,14 +33,34 @@ public class Positioner {
         y /= weightsum;
 
         z = floornum;
-
-        return new Point(x,y,z);
+        x = (int)x;
+        y = (int)y;
+        return pointToNearestSpace(new Point(x,y,z));
     }
 
     public Point getUserPosition(){
         if(beaconsManager.inRangeBuildingBeacons.size() == 0)
-            return new Point(0,0,0);
+            return new Point(0,0,beaconsManager.floorNumber);
         else
             return evaluatePosition(beaconsManager.inRangeBuildingBeacons, beaconsManager.floorNumber);
+    }
+
+    private Point pointToNearestSpace(Point point){
+        int x = (int)point.getX();
+        int y = (int)point.getY();
+        FloorObject[][] map = beaconsManager.building.getFloors().get(beaconsManager.floorNumber).getEnumMap();
+        if(map[x][y] == FloorObject.SPACE)
+            return point;
+
+        if(map[x+1][y] == FloorObject.SPACE)
+            return new Point(x+1, y, point.getZ());
+        if(map[x-1][y] == FloorObject.SPACE)
+            return new Point(x-1, y, point.getZ());
+        if(map[x][y+1] == FloorObject.SPACE)
+            return new Point(x, y+1, point.getZ());
+        if(map[x][y-1] == FloorObject.SPACE)
+            return new Point(x, y-1, point.getZ());
+
+        return point;
     }
 }

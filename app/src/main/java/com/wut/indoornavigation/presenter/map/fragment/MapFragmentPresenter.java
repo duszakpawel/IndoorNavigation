@@ -34,6 +34,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     private final PathFinderEngine pathFinderEngine;
     private final Positioner positioner;
 
+
     @NonNull
     private Subscription pathFinderSubscription;
 
@@ -98,6 +99,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     public void emptyRoomSelected(int floorIndex) {
         isNavigating = false;
         getView().showMap(mapEngine.getMapForFloor(floorIndex));
+        positioner.beaconsManager.startDiscoveringBeacons();
     }
 
     private String[] parseFloorNumbers() {
