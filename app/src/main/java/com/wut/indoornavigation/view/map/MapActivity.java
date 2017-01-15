@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.estimote.sdk.SystemRequirementsChecker;
 import com.wut.indoornavigation.IndoorNavigationApp;
 import com.wut.indoornavigation.R;
 import com.wut.indoornavigation.view.base.BaseActivity;
@@ -41,6 +42,7 @@ public class MapActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         initializeToolbar();
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
         if (savedInstanceState == null) {
             replaceFragment(R.id.activity_map_container, MapFragment.newInstance(),
                     MapFragment.TAG).commit();

@@ -23,7 +23,7 @@ public class Positioner {
         float x =0, y =0, z=0, weightsum =0;
 
         for (Beacon beacon: beacons) {
-            float w = 1/(float)(Math.sqrt((beacon.getRssi())));
+            float w = 1/(float)(beacon.getDistance());
             weightsum += w;
             x += beacon.getX() * w;
             y += beacon.getY() * w;
