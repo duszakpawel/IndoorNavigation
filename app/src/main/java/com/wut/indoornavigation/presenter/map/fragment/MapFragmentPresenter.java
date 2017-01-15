@@ -106,7 +106,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         final String[] floorNumbers = new String[floorNumberList.size()];
         for (int i = 0; i < floorNumberList.size(); i++) {
-            floorNumbers[i] = String.valueOf(floorNumberList.get(i));
+            floorNumbers[i] = String.valueOf(floorNumberList.get(i) + 2);
         }
 
         return floorNumbers;
