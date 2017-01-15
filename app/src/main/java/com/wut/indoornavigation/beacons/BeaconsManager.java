@@ -88,7 +88,7 @@ public final class BeaconsManager {
     }
 
     private void updateInRangeBuildingBeacons(List<Beacon> inRangeBeacons) {
-        double nearestDistance = 0;
+        double nearestDistance = 999;
         Floor floor;
         com.wut.indoornavigation.data.model.Beacon strongestBeacon = null, currentBeacon;
 

@@ -34,9 +34,10 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     private final PathFinderEngine pathFinderEngine;
     private final Positioner positioner;
 
-
     @NonNull
     private Subscription pathFinderSubscription;
+
+    private int currentFloorNumber = 2;
 
     @Inject
     MapFragmentPresenter(MapEngine mapEngine, PathFinderEngine pathFinderEngine, Positioner positioner) {
@@ -65,34 +66,47 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     @Override
     public void floorSelected(int position) {
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
-        if(isNavigating){
+        if (isNavigating) {
             getView().showMap(pathFinderEngine.getMapWithPathForFloor(floorNumberList.get(position)));
-        }
-        else {
+        } else {
             getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
         }
     }
 
     @Override
     public void startNavigation(Context context, int roomNumber, int floorIndex) {
-        getView().showProgressDialog();
-        final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
-        final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
-        // TODO: 15.12.2016 Provide user point
-        Point userPosition = positioner.getUserPosition();
+        if (!isNavigating) {
+            getView().showProgressDialog();
+            final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
+            final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
+            // TODO: 15.12.2016 Provide user point
+            Point userPosition = positioner.getUserPosition();
 
-        pathFinderSubscription = Observable.just(userPosition)
-                .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
-                        context, point, destinationFloorNumber, destinationRoomIndex))
-                .map(point -> mapEngine.getFloorNumbers().get(floorIndex))
-                .map(pathFinderEngine::getMapWithPathForFloor)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(getView()::hideProgressDialog)
-                .subscribe(getView()::showMap, throwable -> {
-                    Timber.e(throwable, "Error while rendering path");
-                    getView().showError(throwable.getMessage());
-                }, () -> isNavigating = true);
+            pathFinderSubscription = Observable.just(userPosition)
+                    .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
+                            context, point, destinationFloorNumber, destinationRoomIndex))
+                    .map(point -> mapEngine.getFloorNumbers().get(floorIndex))
+                    .map(pathFinderEngine::getMapWithPathForFloor)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doAfterTerminate(getView()::hideProgressDialog)
+                    .subscribe(getView()::showMap, throwable -> {
+                        Timber.e(throwable, "Error while rendering path");
+                        getView().showError(throwable.getMessage());
+                    }, () -> {
+                        isNavigating = true;
+                        getView().startNavigation();
+                    });
+        } else {
+            cancelNavigation(floorIndex);
+        }
+    }
+
+    private void cancelNavigation(int position) {
+        isNavigating = false;
+        final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
+        getView().cancelNavigation();
+        getView().showMap(mapEngine.getMapForFloor(floorNumberList.get(position)));
     }
 
     @Override
@@ -100,6 +114,11 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         isNavigating = false;
         getView().showMap(mapEngine.getMapForFloor(floorIndex));
         positioner.beaconsManager.startDiscoveringBeacons();
+    }
+
+    @Override
+    public void getCurrentFloorNumber() {
+        getView().setToolbarFloorNumber(String.valueOf(currentFloorNumber));
     }
 
     private String[] parseFloorNumbers() {

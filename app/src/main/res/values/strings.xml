@@ -13,6 +13,7 @@
 
     <string name="title_progress_path">Path</string>
     <string name="progress_looking_path">Looking for shortest path. Please wait</string>
+    <string name="toolbar_title_floor">Current floor : %s</string>
 
     <string name="splash_loading_text">Loading map. Please wait</string>
 </resources>

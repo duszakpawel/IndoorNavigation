@@ -39,6 +39,17 @@ public interface MapFragmentContract {
          * @param message error message
          */
         void showError(String message);
+
+        /**
+         * Sets toolbar floor number
+         *
+         * @param floorNumber current floor number
+         */
+        void setToolbarFloorNumber(String floorNumber);
+
+        void startNavigation();
+
+        void cancelNavigation();
     }
 
     /**
@@ -82,5 +93,10 @@ public interface MapFragmentContract {
          * @param floorIndex current floor index
          */
         void emptyRoomSelected(int floorIndex);
+
+        /**
+         * Gets current floor number
+         */
+        void getCurrentFloorNumber();
     }
 }
