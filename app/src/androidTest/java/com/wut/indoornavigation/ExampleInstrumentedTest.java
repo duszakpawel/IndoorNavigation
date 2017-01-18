@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.wut.indoornavigation", appContext.getPackageName());
+        assertEquals("com.wut.indoornavigation.debug", appContext.getPackageName());
     }
 }

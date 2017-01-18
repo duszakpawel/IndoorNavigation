@@ -170,15 +170,13 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     private Vertex getStartVertex(Point source){
         Timber.d(source.toString());
-        List<Vertex> vertices =  mesh.getGraph().getVertices();
+        Vertex vertex;
         float x = source.getY()/2;
         float y = source.getX()/2;
 
-        for(Vertex vertex : vertices){
-            if (x == vertex.getPosition().getX() && y == vertex.getPosition().getY() && source.getZ() == vertex.getPosition().getZ())
-                return vertex;
-        }
-
+        if(null !=( vertex = mesh.getGraph().getVertexByCoordinates(x, y, (int)source.getZ())))
+            return vertex;
+        
         return mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
     }
 }
