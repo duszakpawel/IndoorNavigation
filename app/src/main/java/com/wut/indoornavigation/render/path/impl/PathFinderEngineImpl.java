@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
+
 /**
  * Path finder engine implementation
  */
@@ -38,8 +40,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     private static final float STROKE_WIDTH = 10f;
     private static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
-    private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+    private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final SparseArray<Bitmap> pathBitmaps;
     private final MeshProvider meshProvider;
     private final BuildingStorage storage;
@@ -55,22 +57,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         pathBitmaps = new SparseArray<>();
     }
 
-    private void init(Context context) {
-        building = storage.getBuilding();
-        pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
-
-        pathPaint.setStyle(Paint.Style.STROKE);
-        pathPaint.setStrokeWidth(STROKE_WIDTH);
-        pathPaint.setStrokeJoin(Paint.Join.ROUND);
-        pathPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
-        pathPaint.setAntiAlias(true);
-
-        calculateMapHeight(context);
-        calculateMapWidth(context);
-    }
-
     @Override
     public void prepareMesh(Building building) {
         mesh = meshProvider.create(building);
@@ -80,7 +66,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     public void renderPath(MapEngine mapEngine, Context context, Point source, int destinationFloorNumber, int destinationVertexIndex) {
         init(context);
 
-        final FloorObject[][] map = building.getFloors().get(0).getEnumMap();
+        final FloorObject[][] map = building.getFloors().get((int)(source.getZ())).getEnumMap();
         final int stepWidth = calculateStepWidth(map[0].length);
         final int stepHeight = calculateStepHeight(map.length);
 
@@ -137,6 +123,22 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         throw new IllegalArgumentException("Incorrect room number.");
     }
 
+    private void init(Context context) {
+        building = storage.getBuilding();
+        pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
+
+        pathPaint.setStyle(Paint.Style.STROKE);
+        pathPaint.setStrokeWidth(STROKE_WIDTH);
+        pathPaint.setStrokeJoin(Paint.Join.ROUND);
+        pathPaint.setStrokeCap(Paint.Cap.ROUND);
+
+        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
+        pathPaint.setAntiAlias(true);
+
+        calculateMapHeight(context);
+        calculateMapWidth(context);
+    }
+
     /**
      * Computes path between point and destination point on map
      *
@@ -147,8 +149,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      */
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
         final PathFinder pathFinder = mesh.getGraph();
-        //TODO: provide source and use it
-        final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(1).get(0);
+        final Vertex start = getStartVertex(source);
         final Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
         final List<Vertex> vertexPath = pathFinder.aStar(start, end);
@@ -163,5 +164,16 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     private Path produceCurvedPath(List<Point> points) {
         return pathFactory.producePath(points);
+    }
+
+    private Vertex getStartVertex(Point source){
+        Vertex vertex;
+        final float x = source.getY()/2;
+        float y = source.getX()/2;
+
+        if(null !=( vertex = mesh.getGraph().getVertexByCoordinates(x, y, (int)source.getZ())))
+            return vertex;
+
+        return mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
     }
 }

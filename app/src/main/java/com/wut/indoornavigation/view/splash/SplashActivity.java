@@ -29,7 +29,7 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
         implements SplashContract.View {
 
     private static final int PERMISSION_REQUEST = 501;
-    private static final String FILE_NAME = "/test.xml";
+    private static final String FILE_NAME = "/indoorMap.xml";
 
     @BindView(R.id.loadingView)
     ProgressBar loadingView;

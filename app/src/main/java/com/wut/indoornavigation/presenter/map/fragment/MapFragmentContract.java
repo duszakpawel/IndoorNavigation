@@ -39,6 +39,30 @@ public interface MapFragmentContract {
          * @param message error message
          */
         void showError(String message);
+
+        /**
+         * Sets toolbar floor number
+         *
+         * @param floorNumber current floor number
+         */
+        void setToolbarFloorNumber(String floorNumber);
+
+        /**
+         * Starts navigation
+         */
+        void startNavigation();
+
+        /**
+         * Cancels navigation
+         */
+        void cancelNavigation();
+
+        /**
+         * Gets current selected floor index
+         *
+         * @return current selected floor index
+         */
+        int getSelectedFloor();
     }
 
     /**
@@ -82,5 +106,17 @@ public interface MapFragmentContract {
          * @param floorIndex current floor index
          */
         void emptyRoomSelected(int floorIndex);
+
+        /**
+         * Starts user positioning
+         */
+        void startUserPositioning();
+
+        /**
+         * Inits user positioning engine
+         *
+         * @param context fragment ontext
+         */
+        void initUserPositioningEngine(Context context);
     }
 }

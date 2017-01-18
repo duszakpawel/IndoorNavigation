@@ -8,6 +8,7 @@ import com.wut.indoornavigation.di.module.SplashActivityModule;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import dagger.Provides;
 
 @Singleton
 @Component(modules = {
@@ -16,6 +17,7 @@ import dagger.Component;
 /**
  * Dagger component for application
  */
+
 public interface ApplicationComponent {
 
     /**

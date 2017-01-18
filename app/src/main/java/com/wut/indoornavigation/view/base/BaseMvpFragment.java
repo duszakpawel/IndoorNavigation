@@ -14,6 +14,7 @@ import butterknife.Unbinder;
 
 /**
  * Base class for fragments with MVP pattern
+ *
  * @param <V> view contract
  * @param <P> presenter contract
  */

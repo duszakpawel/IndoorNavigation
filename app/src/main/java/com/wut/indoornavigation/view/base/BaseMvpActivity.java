@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 
 /**
  * Base class for activities with MVP pattern
+ *
  * @param <V> view contract
  * @param <P> presenter contract
  */
@@ -51,13 +52,14 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 
     /**
      * Replaces fragment in selected container
+     *
      * @param containerViewId selected container id
-     * @param fragment selected fragment
-     * @param tag selected fragment tag
+     * @param fragment        selected fragment
+     * @param tag             selected fragment tag
      * @return instance of {@link FragmentTransaction}
      */
     protected FragmentTransaction replaceFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerViewId, fragment, tag);
         return ft;
     }

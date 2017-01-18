@@ -46,13 +46,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Replaces fragment in selected container
+     *
      * @param containerViewId selected container id
-     * @param fragment selected fragment
-     * @param tag selected fragment tag
+     * @param fragment        selected fragment
+     * @param tag             selected fragment tag
      * @return instance of {@link FragmentTransaction}
      */
     protected FragmentTransaction replaceFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerViewId, fragment, tag);
         return ft;
     }

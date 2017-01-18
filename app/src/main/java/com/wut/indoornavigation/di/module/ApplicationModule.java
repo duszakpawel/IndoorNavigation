@@ -37,6 +37,17 @@ public class ApplicationModule {
     }
 
     /**
+     * Provides application context
+     *
+     * @return application context
+     */
+    @Singleton
+    @Provides
+    Context provideApplicationContext() {
+        return context.getApplicationContext();
+    }
+
+    /**
      * Provides Singleton MapEngine
      *
      * @return {@link MapEngineImpl}
@@ -95,12 +106,23 @@ public class ApplicationModule {
         return new PathFactoryImpl();
     }
 
+    /**
+     * Provides instance of Moshi
+     *
+     * @return {@link Moshi}
+     */
     @Singleton
     @Provides
     Moshi provideMoshi() {
         return new Moshi.Builder().build();
     }
 
+    /**
+     * Provides json adapter for {@link Building}
+     *
+     * @param moshi moshi instance
+     * @return {@link JsonAdapter} for {@link Building}
+     */
     @Singleton
     @Provides
     JsonAdapter<Building> provideBuildinJsonAdapter(Moshi moshi) {
