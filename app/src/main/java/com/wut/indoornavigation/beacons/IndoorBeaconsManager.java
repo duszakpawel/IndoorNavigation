@@ -32,16 +32,17 @@ public class IndoorBeaconsManager {
 
     private final Context applicationContext;
     private final BuildingStorage buildingStorage;
+    private final BeaconManager beaconManager;
 
-    private BeaconManager beaconManager;
     private Region region;
     private List<IndoorBeacon> inRangeBuildingIndoorBeacons;
     private int floorNumber;
 
     @Inject
-    IndoorBeaconsManager(Context applicationContext, BuildingStorage buildingStorage) {
+    IndoorBeaconsManager(Context applicationContext, BuildingStorage buildingStorage, BeaconManager beaconManager) {
         this.applicationContext = applicationContext;
         this.buildingStorage = buildingStorage;
+        this.beaconManager = beaconManager;
         region = new Region(REGION, UUID.fromString(ProximityUUID), null, null);
         inRangeBuildingIndoorBeacons = new ArrayList<>();
         initialize();
@@ -81,7 +82,6 @@ public class IndoorBeaconsManager {
 
     private void initialize() {
         EstimoteSDK.initialize(applicationContext, APP_ID, APP_TOKEN);
-        beaconManager = new BeaconManager(applicationContext);
         configureRangingListener();
     }
 

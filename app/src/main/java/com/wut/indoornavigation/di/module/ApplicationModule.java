@@ -3,6 +3,7 @@ package com.wut.indoornavigation.di.module;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.estimote.sdk.BeaconManager;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.wut.indoornavigation.data.mesh.MeshProvider;
@@ -127,5 +128,16 @@ public class ApplicationModule {
     @Provides
     JsonAdapter<Building> provideBuildinJsonAdapter(Moshi moshi) {
         return moshi.adapter(Building.class);
+    }
+
+    /**
+     * Provides Estimote beacon manager
+     *
+     * @return instance of {@link BeaconManager}
+     */
+    @Singleton
+    @Provides
+    BeaconManager provideBeaconManager() {
+        return new BeaconManager(context);
     }
 }
