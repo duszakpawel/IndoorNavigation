@@ -16,6 +16,9 @@ import com.wut.indoornavigation.render.RenderEngine;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Engine for drawing user position on the map
+ */
 @Singleton
 public class PositionEngine extends RenderEngine {
 
@@ -31,11 +34,23 @@ public class PositionEngine extends RenderEngine {
         userPositionPaint.setColor(ContextCompat.getColor(context, R.color.userPositionColor));
     }
 
+    /**
+     * Inits position engine
+     *
+     * @param context view context
+     */
     public void init(Context context) {
         calculateMapHeight(context);
         calculateMapWidth(context);
     }
 
+    /**
+     * Renders user position on the map
+     *
+     * @param map          map
+     * @param userPosition current user position
+     * @return bitmap with user position
+     */
     public Bitmap renderMapWithUserPosition(Bitmap map, Point userPosition) {
         final Bitmap bitmap = map.copy(Bitmap.Config.ARGB_8888, true);
         final Canvas canvas = new Canvas(bitmap);

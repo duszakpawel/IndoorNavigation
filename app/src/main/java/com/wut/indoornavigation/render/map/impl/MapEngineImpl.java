@@ -47,19 +47,6 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         mapBitmaps = new SparseArray<>();
     }
 
-    private void init(Context context) {
-        wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
-        doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
-        roomPaint.setColor(ContextCompat.getColor(context, R.color.roomColor));
-        elevatorPaint.setColor(ContextCompat.getColor(context, R.color.elevatorColor));
-        stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
-        textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
-        textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
-
-        calculateMapHeight(context);
-        calculateMapWidth(context);
-    }
-
     @Override
     public void renderMap(Context context, @NonNull Building building) {
         init(context);
@@ -146,6 +133,18 @@ public final class MapEngineImpl extends RenderEngine implements MapEngine {
         }
     }
 
+    private void init(Context context) {
+        wallPaint.setColor(ContextCompat.getColor(context, R.color.wallColor));
+        doorPaint.setColor(ContextCompat.getColor(context, R.color.doorColor));
+        roomPaint.setColor(ContextCompat.getColor(context, R.color.roomColor));
+        elevatorPaint.setColor(ContextCompat.getColor(context, R.color.elevatorColor));
+        stairsPaint.setColor(ContextCompat.getColor(context, R.color.stairsColor));
+        textPaint.setColor(ContextCompat.getColor(context, R.color.textColor));
+        textBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.textBackgroundColor));
+
+        calculateMapHeight(context);
+        calculateMapWidth(context);
+    }
 
     private void addRoomNumbers(List<Room> rooms) {
         for (final Room room : rooms) {

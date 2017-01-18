@@ -30,6 +30,7 @@ public class MapActivity extends BaseActivity {
 
     /**
      * Starts {@link MapActivity} instance
+     *
      * @param context current context
      */
     public static void startActivity(Context context) {

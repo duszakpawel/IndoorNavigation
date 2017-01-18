@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 public class StrategyProvider {
 
     @Inject
-    public StrategyProvider() {
+    StrategyProvider() {
 
     }
 

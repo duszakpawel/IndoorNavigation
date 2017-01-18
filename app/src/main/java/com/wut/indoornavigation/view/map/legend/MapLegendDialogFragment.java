@@ -20,6 +20,7 @@ public class MapLegendDialogFragment extends DialogFragment {
 
     /**
      * Creates new instance of {@link MapLegendDialogFragment}
+     *
      * @return new instance of {@link MapLegendDialogFragment}
      */
     public static MapLegendDialogFragment newInstance() {

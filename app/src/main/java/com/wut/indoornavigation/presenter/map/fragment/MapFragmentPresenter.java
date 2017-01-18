@@ -125,7 +125,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     public void emptyRoomSelected(int floorIndex) {
         isNavigating = false;
         getView().showMap(mapEngine.getMapForFloor(floorIndex));
-        positioner.beaconsManager.startDiscoveringBeacons();
+        positioner.getBeaconsManager().startDiscoveringBeacons();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
                         }
                     }
                 })
-                .subscribe(point -> getView().setToolbarFloorNumber(String.valueOf((int) (point.getZ() + 2))),
+                .subscribe(point -> getView().setToolbarFloorNumber(String.valueOf((int) (point.getZ()))),
                         throwable -> Timber.e(throwable, "Error while getting user position"));
     }
 
@@ -184,7 +184,7 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
         final List<Integer> floorNumberList = mapEngine.getFloorNumbers();
         final String[] floorNumbers = new String[floorNumberList.size()];
         for (int i = 0; i < floorNumberList.size(); i++) {
-            floorNumbers[i] = String.valueOf(floorNumberList.get(i) + 2);
+            floorNumbers[i] = String.valueOf(floorNumberList.get(i));
         }
 
         return floorNumbers;

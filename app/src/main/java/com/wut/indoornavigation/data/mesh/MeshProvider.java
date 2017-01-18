@@ -32,18 +32,19 @@ import javax.inject.Inject;
  * MeshProvider creator for building
  */
 public class MeshProvider {
-    /**
-     * Edge weight for horizontal or vertical segment in mesh
-     */
-    static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
-    /**
-     * Edge weight for diagonal segment in mesh
-     */
-    static final double DIAGONAL_EDGE_WEIGHT = 0.7;
+
     /**
      * Edge weight for elevator-elevator edge weight
      */
     static final int EDGE_ELEVATOR_WEIGHT = 5000;
+    /**
+     * Edge weight for horizontal or vertical segment in mesh
+     */
+    private static final double HORIZONTAL_VERTICAL_EDGE_WEIGHT = 0.5;
+    /**
+     * Edge weight for diagonal segment in mesh
+     */
+    private static final double DIAGONAL_EDGE_WEIGHT = 0.7;
     /**
      * Edge weight for stairs-stairs edge weight
      */

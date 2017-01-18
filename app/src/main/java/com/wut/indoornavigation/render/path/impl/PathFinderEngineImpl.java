@@ -40,8 +40,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
     private static final float STROKE_WIDTH = 10f;
     private static final float CORNER_PATH_EFFECT_RADIUS = 360.0f;
-    private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+    private final Paint pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final SparseArray<Bitmap> pathBitmaps;
     private final MeshProvider meshProvider;
     private final BuildingStorage storage;
@@ -55,22 +55,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         this.storage = storage;
         this.pathFactory = pathSmoothingTool;
         pathBitmaps = new SparseArray<>();
-    }
-
-    private void init(Context context) {
-        building = storage.getBuilding();
-        pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
-
-        pathPaint.setStyle(Paint.Style.STROKE);
-        pathPaint.setStrokeWidth(STROKE_WIDTH);
-        pathPaint.setStrokeJoin(Paint.Join.ROUND);
-        pathPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
-        pathPaint.setAntiAlias(true);
-
-        calculateMapHeight(context);
-        calculateMapWidth(context);
     }
 
     @Override
@@ -139,6 +123,22 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
         throw new IllegalArgumentException("Incorrect room number.");
     }
 
+    private void init(Context context) {
+        building = storage.getBuilding();
+        pathPaint.setColor(ContextCompat.getColor(context, R.color.pathColor));
+
+        pathPaint.setStyle(Paint.Style.STROKE);
+        pathPaint.setStrokeWidth(STROKE_WIDTH);
+        pathPaint.setStrokeJoin(Paint.Join.ROUND);
+        pathPaint.setStrokeCap(Paint.Cap.ROUND);
+
+        pathPaint.setPathEffect(new CornerPathEffect(CORNER_PATH_EFFECT_RADIUS));
+        pathPaint.setAntiAlias(true);
+
+        calculateMapHeight(context);
+        calculateMapWidth(context);
+    }
+
     /**
      * Computes path between point and destination point on map
      *
@@ -149,8 +149,6 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
      */
     private List<Point> computePath(Point source, int destinationFloorNumber, int destinationVertexIndex) {
         final PathFinder pathFinder = mesh.getGraph();
-        //TODO: provide source and use it
-       // final Vertex start = mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
         final Vertex start = getStartVertex(source);
         final Vertex end = mesh.getMeshDetails().getDestinationVerticesDict().get(destinationFloorNumber).get(destinationVertexIndex);
 
@@ -169,9 +167,8 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
     }
 
     private Vertex getStartVertex(Point source){
-        Timber.d(source.toString());
         Vertex vertex;
-        float x = source.getY()/2;
+        final float x = source.getY()/2;
         float y = source.getX()/2;
 
         if(null !=( vertex = mesh.getGraph().getVertexByCoordinates(x, y, (int)source.getZ())))

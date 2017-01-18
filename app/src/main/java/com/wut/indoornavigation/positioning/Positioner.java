@@ -12,12 +12,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- *  Class for evaluating user's current position
+ * Class for evaluating user's current position
  */
 @Singleton
 public class Positioner {
 
-    public final BeaconsManager beaconsManager;
+    private final BeaconsManager beaconsManager;
     private final BuildingStorage buildingStorage;
 
     @Inject
@@ -26,40 +26,38 @@ public class Positioner {
         this.buildingStorage = buildingStorage;
     }
 
-    private Point evaluatePosition(List<Beacon> beacons, int floornum) {
-        float x = 0, y = 0, z, weightsum = 0;
-
-        for (Beacon beacon : beacons) {
-            float w = 1 / (float) (beacon.getDistance());
-            weightsum += w;
-            x += beacon.getX() * w;
-            y += beacon.getY() * w;
-        }
-
-        x /= weightsum;
-        y /= weightsum;
-
-        z = floornum;
-        x = (int) x;
-        y = (int) y;
-        return pointToNearestSpace(new Point(x, y, z));
-    }
-
     /**
+     * Method for getting user position
      *
      * @return user's current position based on information from beacons in range; if no beacons in range, returns point (0, 0, floorNumber)
      */
     public Point getUserPosition() {
-        if (beaconsManager.getInRangeBeacons().size() == 0)
+        if (beaconsManager.getInRangeBeacons().isEmpty()) {
             return new Point(0, 0, beaconsManager.getFloorNumber());
-        else
+        } else {
             return evaluatePosition(beaconsManager.getInRangeBeacons(), beaconsManager.getFloorNumber());
+        }
+    }
+
+    private Point evaluatePosition(List<Beacon> beacons, int floorNumber) {
+        float x = 0, y = 0, weightSum = 0;
+
+        for (final Beacon beacon : beacons) {
+            final float w = 1 / (float) (beacon.getDistance());
+            weightSum += w;
+            x += beacon.getX() * w;
+            y += beacon.getY() * w;
+        }
+
+        x /= weightSum;
+        y /= weightSum;
+        return pointToNearestSpace(new Point((int) x, (int) y, floorNumber));
     }
 
     private Point pointToNearestSpace(Point point) {
-        int x = (int) point.getX();
-        int y = (int) point.getY();
-        FloorObject[][] map = buildingStorage.getBuilding().getFloors().get(beaconsManager.getFloorNumber()).getEnumMap();
+        final int x = (int) point.getX();
+        final int y = (int) point.getY();
+        final FloorObject[][] map = buildingStorage.getBuilding().getFloors().get(beaconsManager.getFloorNumber()).getEnumMap();
         if (map[x][y] == FloorObject.SPACE)
             return point;
 
