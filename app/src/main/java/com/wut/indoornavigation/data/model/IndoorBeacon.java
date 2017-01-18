@@ -20,10 +20,11 @@ public class IndoorBeacon extends BuildingObject {
     double distance;
 
     @Builder(toBuilder = true)
-    private IndoorBeacon(int id, int x, int y, int major, int minor) {
+    private IndoorBeacon(int id, int x, int y, int major, int minor, double distance) {
         super(id, x, y);
         this.major = major;
         this.minor = minor;
+        this.distance = distance;
     }
 }
 

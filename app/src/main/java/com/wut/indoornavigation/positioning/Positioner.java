@@ -1,5 +1,7 @@
 package com.wut.indoornavigation.positioning;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.wut.indoornavigation.beacons.IndoorBeaconsManager;
 import com.wut.indoornavigation.data.model.IndoorBeacon;
 import com.wut.indoornavigation.data.model.FloorObject;
@@ -17,6 +19,11 @@ import javax.inject.Singleton;
 @Singleton
 public class Positioner {
 
+    @VisibleForTesting
+    static final float DEFAULT_X = 0;
+    @VisibleForTesting
+    static final float DEFAULT_Y = 0;
+
     private final IndoorBeaconsManager beaconsManager;
     private final BuildingStorage buildingStorage;
 
@@ -33,7 +40,7 @@ public class Positioner {
      */
     public Point getUserPosition() {
         if (beaconsManager.getInRangeBeacons().isEmpty()) {
-            return new Point(0, 0, beaconsManager.getFloorNumber());
+            return new Point(DEFAULT_X, DEFAULT_Y, beaconsManager.getFloorNumber());
         } else {
             return evaluatePosition(beaconsManager.getInRangeBeacons(), beaconsManager.getFloorNumber());
         }
