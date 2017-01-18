@@ -1,7 +1,7 @@
 package com.wut.indoornavigation.positioning;
 
-import com.wut.indoornavigation.beacons.BeaconsManager;
-import com.wut.indoornavigation.data.model.Beacon;
+import com.wut.indoornavigation.beacons.IndoorBeaconsManager;
+import com.wut.indoornavigation.data.model.IndoorBeacon;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
@@ -17,11 +17,11 @@ import javax.inject.Singleton;
 @Singleton
 public class Positioner {
 
-    private final BeaconsManager beaconsManager;
+    private final IndoorBeaconsManager beaconsManager;
     private final BuildingStorage buildingStorage;
 
     @Inject
-    Positioner(BeaconsManager beaconsManager, BuildingStorage buildingStorage) {
+    Positioner(IndoorBeaconsManager beaconsManager, BuildingStorage buildingStorage) {
         this.beaconsManager = beaconsManager;
         this.buildingStorage = buildingStorage;
     }
@@ -39,14 +39,23 @@ public class Positioner {
         }
     }
 
-    private Point evaluatePosition(List<Beacon> beacons, int floorNumber) {
+    /**
+     * Gets instance of beacons manager
+     *
+     * @return instance of {@link IndoorBeaconsManager}
+     */
+    public IndoorBeaconsManager getBeaconsManager() {
+        return beaconsManager;
+    }
+
+    private Point evaluatePosition(List<IndoorBeacon> indoorBeacons, int floorNumber) {
         float x = 0, y = 0, weightSum = 0;
 
-        for (final Beacon beacon : beacons) {
-            final float w = 1 / (float) (beacon.getDistance());
+        for (final IndoorBeacon indoorBeacon : indoorBeacons) {
+            final float w = 1 / (float) (indoorBeacon.getDistance());
             weightSum += w;
-            x += beacon.getX() * w;
-            y += beacon.getY() * w;
+            x += indoorBeacon.getX() * w;
+            y += indoorBeacon.getY() * w;
         }
 
         x /= weightSum;
