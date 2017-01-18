@@ -27,7 +27,7 @@ public final class BeaconsManager {
     private static final String APP_TOKEN = "appToken";
     private static final int INFINITY = 10000;
     private static final String ProximityUUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
-
+    private  static  final int MINIMUM_BEACON_COUNT = 2;
 
     private final Context applicationContext;
     private final BuildingStorage buildingStorage;
@@ -61,7 +61,7 @@ public final class BeaconsManager {
 
     private void configureRangingListener() {
         beaconManager.setRangingListener((region1, list) -> {
-            if (list.size() > 2) {
+            if (list.size() > MINIMUM_BEACON_COUNT) {
                 updateInRangeBuildingBeacons(list);
             }
         });
