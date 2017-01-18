@@ -25,53 +25,43 @@ public final class BeaconsManager {
 
     private static final String APP_ID = "appId";
     private static final String APP_TOKEN = "appToken";
+    private static final int INFINITY = 10000;
+    private static final String ProximityUUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
+
 
     private final Context applicationContext;
     private final BuildingStorage buildingStorage;
 
     private BeaconManager beaconManager;
-    private String scanId;
     private Region region;
-    public List<com.wut.indoornavigation.data.model.Beacon> inRangeBuildingBeacons;
-    public int floorNumber;
+    private List<com.wut.indoornavigation.data.model.Beacon> inRangeBuildingBeacons;
+    private int floorNumber;
 
     @Inject
-    public BeaconsManager(Context applicationContext, BuildingStorage buildingStorage) {
+    BeaconsManager(Context applicationContext, BuildingStorage buildingStorage) {
         this.applicationContext = applicationContext;
         this.buildingStorage = buildingStorage;
-        region = new Region("Region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
+        region = new Region("Region", UUID.fromString(ProximityUUID), null, null);
         inRangeBuildingBeacons = new ArrayList<>();
         initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
         EstimoteSDK.initialize(applicationContext, APP_ID, APP_TOKEN);
         beaconManager = new BeaconManager(applicationContext);
         configureRangingListener();
     }
 
+    /**
+     * starts monitoring beacons and start updating the data of beacons found
+     */
     public void startDiscoveringBeacons() {
-        //beaconManager.connect(() -> scanId = beaconManager.startEddystoneScanning());
         beaconManager.connect(() -> beaconManager.startRanging(region));
-    }
-
-    public void stopDiscoveringBeacons() {
-        //beaconManager.stopEddystoneScanning(scanId);
-        beaconManager.stopRanging(region);
-    }
-
-    public void setOnEddystoneFoundListener(@NonNull BeaconManager.EddystoneListener eddystoneListener) {
-        beaconManager.setEddystoneListener(eddystoneListener);
-    }
-
-    public void disconnectBeaconsManager() {
-        beaconManager.disconnect();
     }
 
     private void configureRangingListener() {
         beaconManager.setRangingListener((region1, list) -> {
             if (list.size() > 2) {
-                //  funkcja przypisania dystansu do bikonuf buildingu
                 updateInRangeBuildingBeacons(list);
             }
         });
@@ -88,7 +78,7 @@ public final class BeaconsManager {
     }
 
     private void updateInRangeBuildingBeacons(List<Beacon> inRangeBeacons) {
-        double nearestDistance = 9999;
+        double nearestDistance = INFINITY;
         Floor floor;
         com.wut.indoornavigation.data.model.Beacon strongestBeacon = null, currentBeacon;
 
@@ -131,5 +121,21 @@ public final class BeaconsManager {
             }
         }
         return null;
+    }
+
+    /**
+     *
+     * @return beacons in range
+     */
+    public List<com.wut.indoornavigation.data.model.Beacon> getInRangeBeacons(){
+        return inRangeBuildingBeacons;
+    }
+
+    /**
+     *
+     * @return user's floorNumber
+     */
+    public int getFloorNumber(){
+        return floorNumber;
     }
 }

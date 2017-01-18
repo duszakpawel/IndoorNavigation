@@ -11,6 +11,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ *  Class for evaluating user's current position
+ */
 @Singleton
 public class Positioner {
 
@@ -24,7 +27,7 @@ public class Positioner {
     }
 
     private Point evaluatePosition(List<Beacon> beacons, int floornum) {
-        float x = 0, y = 0, z = 0, weightsum = 0;
+        float x = 0, y = 0, z, weightsum = 0;
 
         for (Beacon beacon : beacons) {
             float w = 1 / (float) (beacon.getDistance());
@@ -42,17 +45,21 @@ public class Positioner {
         return pointToNearestSpace(new Point(x, y, z));
     }
 
+    /**
+     *
+     * @return user's current position based on information from beacons in range; if no beacons in range, returns point (0, 0, floorNumber)
+     */
     public Point getUserPosition() {
-        if (beaconsManager.inRangeBuildingBeacons.size() == 0)
-            return new Point(0, 0, beaconsManager.floorNumber);
+        if (beaconsManager.getInRangeBeacons().size() == 0)
+            return new Point(0, 0, beaconsManager.getFloorNumber());
         else
-            return evaluatePosition(beaconsManager.inRangeBuildingBeacons, beaconsManager.floorNumber);
+            return evaluatePosition(beaconsManager.getInRangeBeacons(), beaconsManager.getFloorNumber());
     }
 
     private Point pointToNearestSpace(Point point) {
         int x = (int) point.getX();
         int y = (int) point.getY();
-        FloorObject[][] map = buildingStorage.getBuilding().getFloors().get(beaconsManager.floorNumber).getEnumMap();
+        FloorObject[][] map = buildingStorage.getBuilding().getFloors().get(beaconsManager.getFloorNumber()).getEnumMap();
         if (map[x][y] == FloorObject.SPACE)
             return point;
 

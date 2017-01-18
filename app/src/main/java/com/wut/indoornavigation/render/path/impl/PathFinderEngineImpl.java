@@ -176,7 +176,7 @@ public class PathFinderEngineImpl extends RenderEngine implements PathFinderEngi
 
         if(null !=( vertex = mesh.getGraph().getVertexByCoordinates(x, y, (int)source.getZ())))
             return vertex;
-        
+
         return mesh.getMeshDetails().getDestinationVerticesDict().get(0).get(0);
     }
 }
