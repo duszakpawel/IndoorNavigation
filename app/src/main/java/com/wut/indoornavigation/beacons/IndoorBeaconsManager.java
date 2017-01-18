@@ -93,17 +93,6 @@ public class IndoorBeaconsManager {
         });
     }
 
-    private IndoorBeacon findBuildingBeacon(Beacon inRangeBeacon) {
-        for (final Floor floor : buildingStorage.getBuilding().getFloors()) {
-            for (final IndoorBeacon buildingIndoorBeacon : floor.getIndoorBeacons()) {
-                if (buildingIndoorBeacon.getMajor() == inRangeBeacon.getMajor()
-                        && buildingIndoorBeacon.getMinor() == inRangeBeacon.getMinor())
-                    return buildingIndoorBeacon;
-            }
-        }
-        return null;
-    }
-
     private void updateInRangeBuildingBeacons(List<Beacon> inRangeBeacons) {
         double nearestDistance = INFINITY;
         Floor floor;
@@ -137,6 +126,17 @@ public class IndoorBeaconsManager {
                 floorNumber = floor.getNumber();
             }
         }
+    }
+
+    private IndoorBeacon findBuildingBeacon(Beacon inRangeBeacon) {
+        for (final Floor floor : buildingStorage.getBuilding().getFloors()) {
+            for (final IndoorBeacon buildingIndoorBeacon : floor.getIndoorBeacons()) {
+                if (buildingIndoorBeacon.getMajor() == inRangeBeacon.getMajor()
+                        && buildingIndoorBeacon.getMinor() == inRangeBeacon.getMinor())
+                    return buildingIndoorBeacon;
+            }
+        }
+        return null;
     }
 
     private Floor findBeaconsFloor(IndoorBeacon buildingIndoorBeacon) {
