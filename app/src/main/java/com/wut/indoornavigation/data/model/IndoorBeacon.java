@@ -13,17 +13,18 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class Beacon extends BuildingObject {
+public class IndoorBeacon extends BuildingObject {
 
     int major;
     int minor;
     double distance;
 
     @Builder(toBuilder = true)
-    private Beacon(int id, int x, int y, int major, int minor) {
+    private IndoorBeacon(int id, int x, int y, int major, int minor, double distance) {
         super(id, x, y);
         this.major = major;
         this.minor = minor;
+        this.distance = distance;
     }
 }
 

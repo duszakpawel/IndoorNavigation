@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.wut.indoornavigation.RxSyncTestRule;
+import com.wut.indoornavigation.beacons.IndoorBeaconsManager;
+import com.wut.indoornavigation.data.model.Point;
+import com.wut.indoornavigation.positioning.Positioner;
 import com.wut.indoornavigation.render.map.MapEngine;
 import com.wut.indoornavigation.render.path.PathFinderEngine;
+import com.wut.indoornavigation.render.position.PositionEngine;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,6 +25,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,11 +48,19 @@ public class MapFragmentPresenterTest {
     @Mock
     MapEngine mapEngine;
     @Mock
+    PositionEngine positionEngine;
+    @Mock
+    Positioner positioner;
+    @Mock
     PathFinderEngine pathFinderEngine;
     @Mock
     MapFragmentContract.View view;
     @Mock
+    IndoorBeaconsManager beaconsManager;
+    @Mock
     Context context;
+    @Mock
+    Bitmap bitmap;
 
     @InjectMocks
     MapFragmentPresenter presenter;
@@ -55,7 +68,26 @@ public class MapFragmentPresenterTest {
 
     @Before
     public void setUp() throws Exception {
+        when(positioner.getBeaconsManager()).thenReturn(beaconsManager);
+        when(positioner.getUserPosition()).thenReturn(new Point(0, 0, 0));
         presenter.attachView(view);
+    }
+
+    @Test
+    public void shouldStartBeaconsRangingWhenAttachingView() {
+        //given
+        //when
+        //then
+        verify(beaconsManager).startDiscoveringBeacons();
+    }
+
+    @Test
+    public void shouldStopBeaconsRangingWhenAttachingView() {
+        //given
+        //when
+        presenter.detachView(false);
+        //then
+        verify(beaconsManager).stopDiscoveringBeacons();
     }
 
     @Test
@@ -134,36 +166,17 @@ public class MapFragmentPresenterTest {
     }
 
     @Test
-    public void shouldRenderPathWhenUserStartsNavigation() {
-        //given
-        //when
-        presenter.startNavigation(context, ROOM_NUMBER, FLOOR_NUMBER);
-        //then
-        verify(pathFinderEngine).renderPath(any(), any(), any(), anyInt(), anyInt());
-    }
-
-    @Test
-    public void shouldGetMapWithPathUserStartsNavigation() {
+    public void shouldCallStartNavigationWhenUserStartsNavigation() {
         //given
         when(mapEngine.getFloorNumbers()).thenReturn(FLOOR_LIST);
         //when
         presenter.startNavigation(context, ROOM_NUMBER, FLOOR_NUMBER);
         //then
-        verify(pathFinderEngine).getMapWithPathForFloor(anyInt());
+        verify(view).startNavigation();
     }
 
     @Test
-    public void shouldShowMapWhenUserStartsNavigation() {
-        //given
-        when(mapEngine.getFloorNumbers()).thenReturn(FLOOR_LIST);
-        //when
-        presenter.startNavigation(context, ROOM_NUMBER, FLOOR_NUMBER);
-        //then
-        verify(view).showMap(any());
-    }
-
-    @Test
-    public void shouldHideProgressDialogWhenComputationCompleted() {
+    public void shouldHideProgressDialogWhenNavigationStartedCompleted() {
         //given
         //when
         presenter.startNavigation(context, ROOM_NUMBER, FLOOR_NUMBER);
@@ -172,13 +185,31 @@ public class MapFragmentPresenterTest {
     }
 
     @Test
-    public void shouldGetRoomIndexFromPathFinderEngineWhenEmptyRoomSelected() {
+    public void shouldGetUserPositionWhenStartingUserPositioning() {
+        //given
+        //when
+        presenter.startUserPositioning();
+        //then
+        verify(positioner).getUserPosition();
+    }
+
+    @Test
+    public void shouldInitPositioningEngineWhenInitUserPositioningEngineCalled() {
+        //given
+        //when
+        presenter.initUserPositioningEngine(context);
+        //then
+        verify(positionEngine).init(any());
+    }
+
+    @Test
+    public void shouldGetRoomIndexFromMapEngineWhenEmptyRoomSelected() {
         //given
         when(mapEngine.getMapForFloor(anyInt())).thenReturn(MOCK_BITMAP);
         //when
         presenter.emptyRoomSelected(ROOM_NUMBER);
         //then
-        verify(pathFinderEngine).destinationFloorNumber(anyInt());
+        verify(mapEngine).getMapForFloor(anyInt());
     }
 
     @Test

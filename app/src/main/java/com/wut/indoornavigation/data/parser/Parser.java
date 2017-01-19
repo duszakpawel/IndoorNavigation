@@ -1,12 +1,12 @@
 package com.wut.indoornavigation.data.parser;
 
 import com.wut.indoornavigation.data.exception.MapParseException;
-import com.wut.indoornavigation.data.model.Beacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.BuildingObject;
 import com.wut.indoornavigation.data.model.Elevator;
 import com.wut.indoornavigation.data.model.Floor;
 import com.wut.indoornavigation.data.model.FloorObject;
+import com.wut.indoornavigation.data.model.IndoorBeacon;
 import com.wut.indoornavigation.data.model.Room;
 import com.wut.indoornavigation.data.model.Stairs;
 
@@ -167,12 +167,12 @@ public class Parser {
             final int floorNumber = Integer.parseInt(((Element) (beaconsNodes.item(i)))
                     .getAttribute(FLOOR_NUMBER_ATTR_TAG));
             final NodeList beaconNodes = ((Element) (beaconsNodes.item(i))).getElementsByTagName((BEACON_TAG));
-            final List<Beacon> beaconList = new LinkedList<>();
+            final List<IndoorBeacon> beaconList = new LinkedList<>();
 
             for (int j = 0; j < beaconNodes.getLength(); j++) {
                 final Element beaconNode = (Element) (beaconNodes.item(j));
 
-                beaconList.add(Beacon.builder()
+                beaconList.add(IndoorBeacon.builder()
                         .id(Integer.parseInt(beaconNode.getAttribute(ID_ATTR_TAG)))
                         .major(Integer.parseInt(beaconNode.getAttribute(MAJOR_TAG)))
                         .minor(Integer.parseInt(beaconNode.getAttribute(MINOR_TAG)))
@@ -182,7 +182,7 @@ public class Parser {
             final Floor beaconsFloor = floors.get(beaconsFloorIndex);
 
             floors.set(beaconsFloorIndex, beaconsFloor.toBuilder()
-                    .beacons(beaconList)
+                    .indoorBeacons(beaconList)
                     .build());
         }
     }
@@ -238,10 +238,10 @@ public class Parser {
 
                         case 'B':
                             newMap[r - 1][c / 2] = FloorObject.BEACON;
-                            int beaconInd = findBuildingObjectIndex(currentFloor.getBeacons(), beaconIndex++);
-                            Beacon beacon = currentFloor.getBeacons().get(beaconInd);
+                            int beaconInd = findBuildingObjectIndex(currentFloor.getIndoorBeacons(), beaconIndex++);
+                            IndoorBeacon beacon = currentFloor.getIndoorBeacons().get(beaconInd);
                             beacon = beacon.toBuilder().x(r - 1).y(c / 2).build();
-                            currentFloor.getBeacons().set(beaconInd, beacon);
+                            currentFloor.getIndoorBeacons().set(beaconInd, beacon);
                             break;
 
                         case 'S':

@@ -1,7 +1,9 @@
 package com.wut.indoornavigation.positioning;
 
-import com.wut.indoornavigation.beacons.BeaconsManager;
-import com.wut.indoornavigation.data.model.Beacon;
+import android.support.annotation.VisibleForTesting;
+
+import com.wut.indoornavigation.beacons.IndoorBeaconsManager;
+import com.wut.indoornavigation.data.model.IndoorBeacon;
 import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
@@ -17,11 +19,16 @@ import javax.inject.Singleton;
 @Singleton
 public class Positioner {
 
-    private final BeaconsManager beaconsManager;
+    @VisibleForTesting
+    static final float DEFAULT_X = 0;
+    @VisibleForTesting
+    static final float DEFAULT_Y = 0;
+
+    private final IndoorBeaconsManager beaconsManager;
     private final BuildingStorage buildingStorage;
 
     @Inject
-    Positioner(BeaconsManager beaconsManager, BuildingStorage buildingStorage) {
+    Positioner(IndoorBeaconsManager beaconsManager, BuildingStorage buildingStorage) {
         this.beaconsManager = beaconsManager;
         this.buildingStorage = buildingStorage;
     }
@@ -33,20 +40,29 @@ public class Positioner {
      */
     public Point getUserPosition() {
         if (beaconsManager.getInRangeBeacons().isEmpty()) {
-            return new Point(0, 0, beaconsManager.getFloorNumber());
+            return new Point(DEFAULT_X, DEFAULT_Y, beaconsManager.getFloorNumber());
         } else {
             return evaluatePosition(beaconsManager.getInRangeBeacons(), beaconsManager.getFloorNumber());
         }
     }
 
-    private Point evaluatePosition(List<Beacon> beacons, int floorNumber) {
+    /**
+     * Gets instance of beacons manager
+     *
+     * @return instance of {@link IndoorBeaconsManager}
+     */
+    public IndoorBeaconsManager getBeaconsManager() {
+        return beaconsManager;
+    }
+
+    private Point evaluatePosition(List<IndoorBeacon> indoorBeacons, int floorNumber) {
         float x = 0, y = 0, weightSum = 0;
 
-        for (final Beacon beacon : beacons) {
-            final float w = 1 / (float) (beacon.getDistance());
+        for (final IndoorBeacon indoorBeacon : indoorBeacons) {
+            final float w = 1 / (float) (indoorBeacon.getDistance());
             weightSum += w;
-            x += beacon.getX() * w;
-            y += beacon.getY() * w;
+            x += indoorBeacon.getX() * w;
+            y += indoorBeacon.getY() * w;
         }
 
         x /= weightSum;

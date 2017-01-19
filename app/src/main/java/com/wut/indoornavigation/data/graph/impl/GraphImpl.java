@@ -113,7 +113,6 @@ public class GraphImpl implements Graph {
         throw new IllegalStateException("Vertex does not belong to graph.");
     }
 
-
     @Override
     public List<Vertex> aStar(Vertex s, Vertex t) {
         final int verticesCount = verticesCount();

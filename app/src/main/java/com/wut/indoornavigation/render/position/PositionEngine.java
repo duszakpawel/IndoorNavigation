@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.wut.indoornavigation.R;
+import com.wut.indoornavigation.data.model.FloorObject;
 import com.wut.indoornavigation.data.model.Point;
 import com.wut.indoornavigation.data.storage.BuildingStorage;
 import com.wut.indoornavigation.render.RenderEngine;
@@ -22,16 +23,16 @@ import javax.inject.Singleton;
 @Singleton
 public class PositionEngine extends RenderEngine {
 
-    private final Paint userPositionPaint;
+    private static final float USER_POSITION_SCALE_DOWN = 2;
+    private static final float USER_POSITION_SCALE_UP = 3 / 2;
+
     private final BuildingStorage buildingStorage;
-    private final int userPositionSize;
+    private Paint userPositionPaint;
+    private int userPositionSize;
 
     @Inject
-    PositionEngine(Context context, BuildingStorage buildingStorage) {
+    PositionEngine(BuildingStorage buildingStorage) {
         this.buildingStorage = buildingStorage;
-        userPositionPaint = new Paint();
-        userPositionSize = (int) context.getResources().getDimension(R.dimen.user_position_size);
-        userPositionPaint.setColor(ContextCompat.getColor(context, R.color.userPositionColor));
     }
 
     /**
@@ -40,6 +41,9 @@ public class PositionEngine extends RenderEngine {
      * @param context view context
      */
     public void init(Context context) {
+        userPositionPaint = new Paint();
+        userPositionSize = (int) context.getResources().getDimension(R.dimen.user_position_size);
+        userPositionPaint.setColor(ContextCompat.getColor(context, R.color.userPositionColor));
         calculateMapHeight(context);
         calculateMapWidth(context);
     }
@@ -61,21 +65,25 @@ public class PositionEngine extends RenderEngine {
 
     @NonNull
     private Point calculateScaledPoint(int stepWidth, int stepHeight, Point position) {
-        stepWidth /= 2;
-        stepHeight /= 2;
-        final float xValue = position.getY() * 2 * stepWidth + stepWidth / 2;
-        final float yValue = position.getX() * 2 * stepWidth + 2 * stepHeight;
+        stepWidth /= USER_POSITION_SCALE_DOWN;
+        stepHeight /= USER_POSITION_SCALE_DOWN;
+        final float xValue = position.getY() * USER_POSITION_SCALE_DOWN * stepWidth + stepWidth / USER_POSITION_SCALE_DOWN;
+        final float yValue = position.getX() * USER_POSITION_SCALE_DOWN * stepWidth + USER_POSITION_SCALE_DOWN * stepHeight;
 
         return new Point(xValue, yValue, position.getZ());
     }
 
     private RectF getUserPositionOval(Point userPosition) {
-        final int stepWidth = calculateStepWidth(buildingStorage.getBuilding().getFloors().get(0).getEnumMap()[0].length);
-        final int stepHeight = calculateStepWidth(buildingStorage.getBuilding().getFloors().get(0).getEnumMap().length);
+        final FloorObject[][] buildingMap = buildingStorage.getBuilding().getFloors().get((int) userPosition.getZ()).getEnumMap();
+
+        final int stepWidth = calculateStepWidth(buildingMap[0].length);
+        final int stepHeight = calculateStepWidth(buildingMap.length);
 
         final Point scaledPoint = calculateScaledPoint(stepWidth, stepHeight, userPosition);
 
-        return new RectF(scaledPoint.getX() + userPositionSize / 2, scaledPoint.getY() + userPositionSize / 2,
-                scaledPoint.getX() + userPositionSize * 3 / 2, scaledPoint.getY() + userPositionSize * 3 / 2);
+        return new RectF(scaledPoint.getX() + userPositionSize / USER_POSITION_SCALE_DOWN,
+                scaledPoint.getY() + userPositionSize / USER_POSITION_SCALE_DOWN,
+                scaledPoint.getX() + userPositionSize * USER_POSITION_SCALE_UP,
+                scaledPoint.getY() + userPositionSize * USER_POSITION_SCALE_UP);
     }
 }

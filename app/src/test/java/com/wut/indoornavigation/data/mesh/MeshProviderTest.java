@@ -5,7 +5,7 @@ import com.wut.indoornavigation.data.graph.HeuristicFunction;
 import com.wut.indoornavigation.data.graph.UnionFind;
 import com.wut.indoornavigation.data.graph.impl.GraphImpl;
 import com.wut.indoornavigation.data.mesh.processingStrategy.StrategyProvider;
-import com.wut.indoornavigation.data.model.Beacon;
+import com.wut.indoornavigation.data.model.IndoorBeacon;
 import com.wut.indoornavigation.data.model.Building;
 import com.wut.indoornavigation.data.model.Door;
 import com.wut.indoornavigation.data.model.Elevator;
@@ -605,10 +605,10 @@ public class MeshProviderTest {
         doors.add(door2);
         List<Stairs> stairs = new ArrayList<>();
         List<Elevator> elevators = new ArrayList<>();
-        List<Beacon> beacons = new ArrayList<>();
-        beacons.add(Beacon.builder().id(0).build());
-        beacons.add(Beacon.builder().id(1).build());
-        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).beacons(beacons).build());
+        List<IndoorBeacon> indoorBeacons = new ArrayList<>();
+        indoorBeacons.add(IndoorBeacon.builder().id(0).build());
+        indoorBeacons.add(IndoorBeacon.builder().id(1).build());
+        floors.add(Floor.builder().enumMap(groundFloor).number(0).doors(doors).stairs(stairs).elevators(elevators).indoorBeacons(indoorBeacons).build());
         Building building = Building.builder().floors(floors).build();
 
         MeshResult result = mesh.create(building);

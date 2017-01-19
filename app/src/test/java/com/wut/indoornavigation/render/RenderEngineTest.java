@@ -36,11 +36,13 @@ public class RenderEngineTest {
     private static final int ROOM_COUNT = 10;
     private static final int FLOOR_SIZE = 10;
     protected static final int FLOOR_NUMBER = 0;
-    protected static final List<Room> ROOM_LIST = new LinkedList<>();
-    protected static final List<Floor> FLOOR_LIST = new LinkedList<>();
+    protected static final List<Room> ROOM_LIST;
+    protected static final List<Floor> FLOOR_LIST;
     protected static final Building BUILDING;
 
     static {
+        FLOOR_LIST = new LinkedList<>();
+        ROOM_LIST = new LinkedList<>();
         for (int i = 0; i < ROOM_COUNT; i++) {
             ROOM_LIST.add(Room.builder()
                     .number(i)

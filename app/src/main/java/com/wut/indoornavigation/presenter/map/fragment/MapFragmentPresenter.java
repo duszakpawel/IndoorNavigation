@@ -62,8 +62,15 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     }
 
     @Override
+    public void attachView(MapFragmentContract.View view) {
+        super.attachView(view);
+        positioner.getBeaconsManager().startDiscoveringBeacons();
+    }
+
+    @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
+        positioner.getBeaconsManager().stopDiscoveringBeacons();
         pathFinderSubscription.unsubscribe();
         userPositionSubscription.unsubscribe();
         mapRefreshSubscription.unsubscribe();
@@ -93,18 +100,10 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     public void startNavigation(Context context, int roomNumber, int floorIndex) {
         if (!isNavigating) {
             getView().showProgressDialog();
-            final int destinationFloorNumber = pathFinderEngine.destinationFloorNumber(roomNumber);
-            final int destinationRoomIndex = pathFinderEngine.getRoomIndex(roomNumber);
-            final Point userPosition = positioner.getUserPosition();
-
-            pathFinderSubscription = Observable.just(userPosition)
-                    .doOnNext(point -> pathFinderEngine.renderPath(mapEngine,
-                            context, point, destinationFloorNumber, destinationRoomIndex))
-                    .map(point -> mapEngine.getFloorNumbers().get(floorIndex))
-                    .map(pathFinderEngine::getMapWithPathForFloor)
-                    .flatMap(map -> {
+            pathFinderSubscription = Observable.just(currentUserPosition)
+                    .flatMap(position -> {
                         startMapNavigationRefreshing();
-                        return Observable.just(map);
+                        return Observable.just(position);
                     })
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -125,7 +124,6 @@ public class MapFragmentPresenter extends MvpNullObjectBasePresenter<MapFragment
     public void emptyRoomSelected(int floorIndex) {
         isNavigating = false;
         getView().showMap(mapEngine.getMapForFloor(floorIndex));
-        positioner.getBeaconsManager().startDiscoveringBeacons();
     }
 
     @Override
