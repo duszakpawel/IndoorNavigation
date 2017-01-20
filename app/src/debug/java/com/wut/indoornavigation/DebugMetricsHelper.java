@@ -20,7 +20,7 @@ import timber.log.Timber;
 public final class DebugMetricsHelper {
 
     @Inject
-    public DebugMetricsHelper() {
+    DebugMetricsHelper() {
 
     }
 

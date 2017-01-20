@@ -66,9 +66,6 @@ def compile_libs = [
         "com.hannesdorfmann.mosby:mvp:2.0.1",
         'com.jakewharton:butterknife:8.4.0',
         'com.jakewharton.timber:timber:4.3.1',
-        'org.parceler:parceler-api:1.1.6',
-        'com.f2prateek.rx.preferences:rx-preferences:1.0.2',
-        'com.jakewharton.threetenabp:threetenabp:1.0.4',
         'com.estimote:sdk:0.13.0@aar',
         'com.github.chrisbanes:PhotoView:1.3.1',
         'com.squareup.moshi:moshi:1.3.1',
@@ -87,7 +84,6 @@ def provided_libs = [
 def apt_libs = [
         'com.google.dagger:dagger-compiler:2.6',
         'com.jakewharton:butterknife-compiler:8.4.0',
-        'org.parceler:parceler:1.1.6',
 ]
 
 def test_compile_libs = [
